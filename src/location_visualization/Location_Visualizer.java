@@ -11,6 +11,7 @@ import gnu.io.PortInUseException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,12 @@ public class Location_Visualizer{
 	public static void main(String[] args) {
 		LOGGER.setLevel(Level.INFO);
 	    init_display();
-	    System.out.println(getAvailableSerialPorts().toString());
+	    HashSet<CommPortIdentifier> h = getAvailableSerialPorts();
+	    for (CommPortIdentifier obj : h) {
+	        System.out.println(obj.getName());
+	        System.out.println(obj.toString());
+	      } 
+	    
 	}
 	
 	private static void init_display() {
@@ -94,9 +100,9 @@ public class Location_Visualizer{
 	/**
      * @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
      */
-    public static HashSet getAvailableSerialPorts() {
-        HashSet h = new HashSet();
-        Enumeration thePorts = CommPortIdentifier.getPortIdentifiers();
+    public static HashSet<CommPortIdentifier> getAvailableSerialPorts() {
+        HashSet<CommPortIdentifier> h = new HashSet<CommPortIdentifier>();
+        Enumeration<?> thePorts = CommPortIdentifier.getPortIdentifiers();
         
         while (thePorts.hasMoreElements()) {
             CommPortIdentifier com = (CommPortIdentifier) thePorts.nextElement();
