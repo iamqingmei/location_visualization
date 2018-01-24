@@ -4,14 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
-import gnu.io.PortInUseException;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,11 +23,6 @@ public class Location_Visualizer{
 	public static void main(String[] args) {
 		LOGGER.setLevel(Level.INFO);
 	    init_display();
-	    HashSet<CommPortIdentifier> h = getAvailableSerialPorts();
-	    for (CommPortIdentifier obj : h) {
-	        System.out.println(obj.getName());
-	        System.out.println(obj.toString());
-	      } 
 	    
 	}
 	
@@ -52,8 +42,10 @@ public class Location_Visualizer{
 		
 		// Add PanelLayouts to content pane
 		Container contentPane = _appFrame.getContentPane();
-		contentPane.add(_inputPanel, BorderLayout.SOUTH);
-		contentPane.add(_MapPanel, BorderLayout.CENTER);
+		// horizontal layout
+		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
+		contentPane.add(_inputPanel);
+		contentPane.add(_MapPanel);
 		
 		// Display the application
 		_appFrame.pack();
@@ -70,11 +62,44 @@ public class Location_Visualizer{
 
 	
 	private static void initInputLayout() {
+		// vertical layout
+		_inputPanel.setLayout(new BoxLayout(_inputPanel, BoxLayout.Y_AXIS));
+//		select the available port
+		JPanel portPanel = new JPanel();
+		JComboBox<String> comboBox= new JComboBox<String>();  
+	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+	        comboBox.addItem(obj.getName());
+	      } 
+	    portPanel.add(comboBox);
+	    
+	    JButton btn_confirm_port = new JButton("Confirm");
+	    btn_confirm_port.setFont(new Font("Arial", Font.BOLD, 13));
+	    btn_confirm_port.setFocusPainted(false);
+	    btn_confirm_port.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				try
+			        {
+			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
+			        }
+			        catch ( Exception ex )
+			        {
+			            // TODO Auto-generated catch block
+			            ex.printStackTrace();
+			        }
+			}
+		});
+	    portPanel.add(btn_confirm_port);
+	    _inputPanel.add(portPanel);
+	    
+		
+	    JPanel coorPanel = new JPanel();
+//		Key in the coordination manually
 		TextField xInput = new TextField("0", 2);
 		TextField yInput = new TextField("0", 2);
-		_inputPanel.add(xInput);
-		_inputPanel.add(yInput);
+		coorPanel.add(xInput);
+		coorPanel.add(yInput);
 		
+//		submit the coordination manually
 		JButton btn_submit = new JButton("Submit");
 		btn_submit.setFont(new Font("Arial", Font.BOLD, 13));
 		btn_submit.setFocusPainted(false);
@@ -89,39 +114,18 @@ public class Location_Visualizer{
 				
 			}
 		});
+		coorPanel.add(btn_submit);
+		_inputPanel.add(coorPanel);
+
 		
-		_inputPanel.add(btn_submit);
 		
 		
 		return;
 		
 	}
 
-	/**
-     * @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
-     */
-    public static HashSet<CommPortIdentifier> getAvailableSerialPorts() {
-        HashSet<CommPortIdentifier> h = new HashSet<CommPortIdentifier>();
-        Enumeration<?> thePorts = CommPortIdentifier.getPortIdentifiers();
-        
-        while (thePorts.hasMoreElements()) {
-            CommPortIdentifier com = (CommPortIdentifier) thePorts.nextElement();
-            switch (com.getPortType()) {
-            case CommPortIdentifier.PORT_SERIAL:
-                try {
-                    CommPort thePort = com.open("CommUtil", 50);
-                    thePort.close();
-                    h.add(com);
-                } catch (PortInUseException e) {
-                    System.out.println("Port, "  + com.getName() +  ", is in use.");
-                } catch (Exception e) {
-                    System.err.println("Failed to open port " + com.getName());
-                    e.printStackTrace();
-                }
-            }
-        }
-        return h;
-    }
+	
+
 
 
 	    
