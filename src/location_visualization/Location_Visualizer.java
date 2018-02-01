@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import gnu.io.CommPortIdentifier;
+import param.Parameters;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -55,7 +56,7 @@ public class Location_Visualizer{
 	}
 	
 	private static void initMapLayout() {
-	    comp.setPreferredSize(new Dimension((int)(MapPointManager.MAXHEIGHT * 40 + 50), (int)(MapPointManager.MAXHEIGHT * 40) + 50));
+	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER) + Parameters.MAP_MARGIN));
 	    comp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	    _inputPanel.add(comp);
 	}
@@ -64,6 +65,53 @@ public class Location_Visualizer{
 	private static void initInputLayout() {
 		// vertical layout
 		_inputPanel.setLayout(new BoxLayout(_inputPanel, BoxLayout.Y_AXIS));
+	    
+		initPortPanel();
+		
+		initCoorPanel();
+		
+		initMapAdjustPanel();
+
+		return;
+		
+	}
+	
+	private static void initMapAdjustPanel() {
+		// Panel to adjust the map
+		JPanel map_adjust_panel = new JPanel();
+		JLabel pivot_label = new JLabel("Input the coordination of pivot: ");
+		TextField pivot_x_input = new TextField("0", 2);
+		TextField pivot_y_input = new TextField("0", 2);
+		map_adjust_panel.add(pivot_label);
+		map_adjust_panel.add(pivot_x_input);
+		map_adjust_panel.add(pivot_y_input);
+		
+		JLabel turning_degree_label = new JLabel("Input the turning degree (clockwise): " );
+		TextField turning_degree = new TextField("0", 2);
+		map_adjust_panel.add(turning_degree_label);
+		map_adjust_panel.add(turning_degree);
+		
+		JButton btn_submit_pivot = new JButton("Submit Pivot and Turning Degree");
+		btn_submit_pivot.setFont(new Font("Arial", Font.BOLD, 13));
+		btn_submit_pivot.setFocusPainted(false);
+		btn_submit_pivot.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				LOGGER.info("Submit button clicked");
+				MapPointManager mapPointManager = MapPointManager.getInstance();
+				ArrayList<Integer> coor = mapPointManager.getMapCoordination(Float.parseFloat(pivot_x_input.getText()), 
+						Float.parseFloat(pivot_y_input.getText()));
+				comp.setPivot(coor);
+				
+				comp.setTurningDegree(Float.parseFloat(turning_degree.getText()));
+			}
+		});
+		
+
+		map_adjust_panel.add(btn_submit_pivot);
+		_inputPanel.add(map_adjust_panel);
+	}
+	
+	private static void initPortPanel() {
 //		select the available port
 		JPanel portPanel = new JPanel();
 		JComboBox<String> comboBox= new JComboBox<String>();  
@@ -72,6 +120,7 @@ public class Location_Visualizer{
 	      } 
 	    portPanel.add(comboBox);
 	    
+	    // buttom to confirm the port selected
 	    JButton btn_confirm_port = new JButton("Confirm");
 	    btn_confirm_port.setFont(new Font("Arial", Font.BOLD, 13));
 	    btn_confirm_port.setFocusPainted(false);
@@ -90,20 +139,23 @@ public class Location_Visualizer{
 		});
 	    portPanel.add(btn_confirm_port);
 	    _inputPanel.add(portPanel);
-	    
-		
-	    JPanel coorPanel = new JPanel();
+	}
+	
+	private static void initCoorPanel() {
+		JPanel coorPanel = new JPanel();
 //		Key in the coordination manually
+	    JLabel coorLabel = new JLabel("Please input the coordination of new points: ");
 		TextField xInput = new TextField("0", 2);
 		TextField yInput = new TextField("0", 2);
+		coorPanel.add(coorLabel);
 		coorPanel.add(xInput);
 		coorPanel.add(yInput);
 		
 //		submit the coordination manually
-		JButton btn_submit = new JButton("Submit");
-		btn_submit.setFont(new Font("Arial", Font.BOLD, 13));
-		btn_submit.setFocusPainted(false);
-		btn_submit.addMouseListener(new MouseAdapter() {
+		JButton btn_submit_new_point = new JButton("Submit New Points");
+		btn_submit_new_point.setFont(new Font("Arial", Font.BOLD, 13));
+		btn_submit_new_point.setFocusPainted(false);
+		btn_submit_new_point.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				LOGGER.info("Submit button clicked");
 				float x = Float.parseFloat(xInput.getText());
@@ -114,14 +166,8 @@ public class Location_Visualizer{
 				
 			}
 		});
-		coorPanel.add(btn_submit);
+		coorPanel.add(btn_submit_new_point);
 		_inputPanel.add(coorPanel);
-
-		
-		
-		
-		return;
-		
 	}
 
 	

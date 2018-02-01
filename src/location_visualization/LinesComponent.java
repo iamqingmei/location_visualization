@@ -2,6 +2,7 @@ package location_visualization;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -13,7 +14,10 @@ public class LinesComponent extends JComponent{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private LinkedList<Line> lines = new LinkedList<Line>();
+	private LinkedList<ArrayList<Integer>> points = new LinkedList<ArrayList<Integer>>();
+	private ArrayList<Integer> pivot_point;
+	private float turning_degree;
 
 	private static class Line{
 	    final int x1; 
@@ -31,9 +35,6 @@ public class LinesComponent extends JComponent{
 	    }               
 	}
 	
-
-	private final LinkedList<Line> lines = new LinkedList<Line>();
-	private final LinkedList<ArrayList<Integer>> points = new LinkedList<ArrayList<Integer>>();
 
 	public void addLine(int x1, int x2, int x3, int x4) {
 	    addLine(x1, x2, x3, x4, Color.black);
@@ -56,8 +57,14 @@ public class LinesComponent extends JComponent{
 	    lines.clear();
 	    repaint();
 	}
-
 	
+	public void setPivot(ArrayList<Integer> p) {
+		this.pivot_point = p;
+	}
+	
+	public void setTurningDegree(float f) {
+		this.turning_degree = f;
+	}
 	@Override
 	protected void paintComponent(Graphics g) {
 	    super.paintComponent(g);

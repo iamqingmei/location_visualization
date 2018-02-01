@@ -8,9 +8,6 @@ import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 
@@ -65,7 +62,6 @@ public class TwoWaySerialComm
         {
             byte[] buffer = new byte[1024];
             int len = -1;
-            ArrayList<Byte> arrayList = new ArrayList<Byte>();
             try
             {
                 while ( ( len = this.in.read(buffer)) > -1 )

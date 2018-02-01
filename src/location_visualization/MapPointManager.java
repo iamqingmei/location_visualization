@@ -3,6 +3,8 @@ package location_visualization;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import param.Parameters;
+
 public class MapPointManager {
 	private class MapPoint {
 		private float x;
@@ -20,8 +22,7 @@ public class MapPointManager {
 			return res;
 		}
 	}
-	public static float MAXHEIGHT = 10;
-	public static float MAXWIDTH = 10;
+
 	private final static Logger LOGGER = Logger.getLogger(MapPointManager.class.getName());
    private static MapPointManager instance = null;
    private ArrayList<MapPoint> allPoints = new ArrayList<MapPoint>();
@@ -39,10 +40,19 @@ public class MapPointManager {
 	allPoints.add(new MapPoint(x, y));
 	LOGGER.info("Add new point:" + allPointsToString());
 	ArrayList<Integer> res = new ArrayList<Integer>();
-	res.add((int) Math.round(x * 40 + 50));
-	res.add((int)Math.round(MAXHEIGHT * 40 - y * 40));
+	res.add((int) Math.round(x * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN));
+	res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER
+			- y * Parameters.MAP_PIXEL_MULTIPLIER));
 	return res;
    }
+   
+   public ArrayList<Integer> getMapCoordination(float x, float y) {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		res.add((int) Math.round(x * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN));
+		res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER
+				- y * Parameters.MAP_PIXEL_MULTIPLIER));
+		return res;
+	   }
    
    public String allPointsToString() {
 	StringBuilder sBuilder = new StringBuilder();
