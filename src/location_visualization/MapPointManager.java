@@ -41,7 +41,7 @@ public class MapPointManager {
 	LOGGER.info("Add new point:" + allPointsToString());
 	ArrayList<Integer> res = new ArrayList<Integer>();
 	res.add((int) Math.round(x * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN));
-	res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER
+	res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN
 			- y * Parameters.MAP_PIXEL_MULTIPLIER));
 	return res;
    }
@@ -49,7 +49,7 @@ public class MapPointManager {
    public ArrayList<Integer> getMapCoordination(float x, float y) {
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		res.add((int) Math.round(x * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN));
-		res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER
+		res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN
 				- y * Parameters.MAP_PIXEL_MULTIPLIER));
 		return res;
 	   }

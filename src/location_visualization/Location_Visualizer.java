@@ -56,7 +56,7 @@ public class Location_Visualizer{
 	}
 	
 	private static void initMapLayout() {
-	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER) + Parameters.MAP_MARGIN));
+	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2)));
 	    comp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	    _inputPanel.add(comp);
 	}
@@ -79,19 +79,25 @@ public class Location_Visualizer{
 	private static void initMapAdjustPanel() {
 		// Panel to adjust the map
 		JPanel map_adjust_panel = new JPanel();
-		JLabel pivot_label = new JLabel("Input the coordination of pivot: ");
+		map_adjust_panel.setLayout(new BoxLayout(map_adjust_panel, BoxLayout.Y_AXIS));
+		map_adjust_panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		JPanel panel1 = new JPanel();
+		JLabel pivot_label = new JLabel("Coordination of pivot: ");
 		TextField pivot_x_input = new TextField("0", 2);
 		TextField pivot_y_input = new TextField("0", 2);
-		map_adjust_panel.add(pivot_label);
-		map_adjust_panel.add(pivot_x_input);
-		map_adjust_panel.add(pivot_y_input);
+		panel1.add(pivot_label);
+		panel1.add(pivot_x_input);
+		panel1.add(pivot_y_input);
+		map_adjust_panel.add(panel1);
 		
-		JLabel turning_degree_label = new JLabel("Input the turning degree (clockwise): " );
+		JPanel panel2 = new JPanel();
+		JLabel turning_degree_label = new JLabel("Turning degree (clockwise): " );
 		TextField turning_degree = new TextField("0", 2);
-		map_adjust_panel.add(turning_degree_label);
-		map_adjust_panel.add(turning_degree);
+		panel2.add(turning_degree_label);
+		panel2.add(turning_degree);
 		
-		JButton btn_submit_pivot = new JButton("Submit Pivot and Turning Degree");
+		JButton btn_submit_pivot = new JButton("Submit");
 		btn_submit_pivot.setFont(new Font("Arial", Font.BOLD, 13));
 		btn_submit_pivot.setFocusPainted(false);
 		btn_submit_pivot.addMouseListener(new MouseAdapter() {
@@ -103,11 +109,14 @@ public class Location_Visualizer{
 				comp.setPivot(coor);
 				
 				comp.setTurningDegree(Float.parseFloat(turning_degree.getText()));
+				
+				comp.turn();
 			}
 		});
 		
 
-		map_adjust_panel.add(btn_submit_pivot);
+		panel2.add(btn_submit_pivot);
+		map_adjust_panel.add(panel2);
 		_inputPanel.add(map_adjust_panel);
 	}
 	
@@ -144,7 +153,7 @@ public class Location_Visualizer{
 	private static void initCoorPanel() {
 		JPanel coorPanel = new JPanel();
 //		Key in the coordination manually
-	    JLabel coorLabel = new JLabel("Please input the coordination of new points: ");
+	    JLabel coorLabel = new JLabel("Coordination of new point: ");
 		TextField xInput = new TextField("0", 2);
 		TextField yInput = new TextField("0", 2);
 		coorPanel.add(coorLabel);
@@ -152,7 +161,7 @@ public class Location_Visualizer{
 		coorPanel.add(yInput);
 		
 //		submit the coordination manually
-		JButton btn_submit_new_point = new JButton("Submit New Points");
+		JButton btn_submit_new_point = new JButton("Submit");
 		btn_submit_new_point.setFont(new Font("Arial", Font.BOLD, 13));
 		btn_submit_new_point.setFocusPainted(false);
 		btn_submit_new_point.addMouseListener(new MouseAdapter() {
@@ -163,7 +172,6 @@ public class Location_Visualizer{
 				MapPointManager mapPointManager = MapPointManager.getInstance();
 				ArrayList<Integer> coor = mapPointManager.addPoint(x, y);
 				comp.addPoint(coor);
-				
 			}
 		});
 		coorPanel.add(btn_submit_new_point);
