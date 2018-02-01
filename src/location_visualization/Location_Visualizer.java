@@ -4,10 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import gnu.io.CommPortIdentifier;
+//import gnu.io.CommPortIdentifier;
 import param.Parameters;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,7 +65,7 @@ public class Location_Visualizer{
 		// vertical layout
 		_inputPanel.setLayout(new BoxLayout(_inputPanel, BoxLayout.Y_AXIS));
 	    
-		initPortPanel();
+//		initPortPanel();
 		
 		initCoorPanel();
 		
@@ -104,13 +103,13 @@ public class Location_Visualizer{
 			public void mousePressed(MouseEvent e) {
 				LOGGER.info("Submit button clicked");
 				MapPointManager mapPointManager = MapPointManager.getInstance();
-				ArrayList<Integer> coor = mapPointManager.getMapCoordination(Float.parseFloat(pivot_x_input.getText()), 
+				
+				mapPointManager.setPivot(Float.parseFloat(pivot_x_input.getText()), 
 						Float.parseFloat(pivot_y_input.getText()));
-				comp.setPivot(coor);
 				
-				comp.setTurningDegree(Float.parseFloat(turning_degree.getText()));
+				mapPointManager.setTurningDegree(Float.parseFloat(turning_degree.getText()));
 				
-				comp.turn();
+				mapPointManager.turn();
 			}
 		});
 		
@@ -119,36 +118,36 @@ public class Location_Visualizer{
 		map_adjust_panel.add(panel2);
 		_inputPanel.add(map_adjust_panel);
 	}
-	
-	private static void initPortPanel() {
-//		select the available port
-		JPanel portPanel = new JPanel();
-		JComboBox<String> comboBox= new JComboBox<String>();  
-	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
-	        comboBox.addItem(obj.getName());
-	      } 
-	    portPanel.add(comboBox);
-	    
-	    // buttom to confirm the port selected
-	    JButton btn_confirm_port = new JButton("Confirm");
-	    btn_confirm_port.setFont(new Font("Arial", Font.BOLD, 13));
-	    btn_confirm_port.setFocusPainted(false);
-	    btn_confirm_port.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				try
-			        {
-			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
-			        }
-			        catch ( Exception ex )
-			        {
-			            // TODO Auto-generated catch block
-			            ex.printStackTrace();
-			        }
-			}
-		});
-	    portPanel.add(btn_confirm_port);
-	    _inputPanel.add(portPanel);
-	}
+//	
+//	private static void initPortPanel() {
+////		select the available port
+//		JPanel portPanel = new JPanel();
+//		JComboBox<String> comboBox= new JComboBox<String>();  
+//	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+//	        comboBox.addItem(obj.getName());
+//	      } 
+//	    portPanel.add(comboBox);
+//	    
+//	    // buttom to confirm the port selected
+//	    JButton btn_confirm_port = new JButton("Confirm");
+//	    btn_confirm_port.setFont(new Font("Arial", Font.BOLD, 13));
+//	    btn_confirm_port.setFocusPainted(false);
+//	    btn_confirm_port.addMouseListener(new MouseAdapter() {
+//			public void mousePressed(MouseEvent e) {
+//				try
+//			        {
+//			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
+//			        }
+//			        catch ( Exception ex )
+//			        {
+//			            // TODO Auto-generated catch block
+//			            ex.printStackTrace();
+//			        }
+//			}
+//		});
+//	    portPanel.add(btn_confirm_port);
+//	    _inputPanel.add(portPanel);
+//	}
 	
 	private static void initCoorPanel() {
 		JPanel coorPanel = new JPanel();
@@ -170,8 +169,8 @@ public class Location_Visualizer{
 				float x = Float.parseFloat(xInput.getText());
 				float y = Float.parseFloat(yInput.getText());
 				MapPointManager mapPointManager = MapPointManager.getInstance();
-				ArrayList<Integer> coor = mapPointManager.addPoint(x, y);
-				comp.addPoint(coor);
+				
+				comp.setPoints(mapPointManager.addPoint(x, y));
 			}
 		});
 		coorPanel.add(btn_submit_new_point);
