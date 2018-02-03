@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
+import param.Parameters;
+
 public class LinesComponent extends JComponent{
 
 	/**
@@ -14,7 +16,8 @@ public class LinesComponent extends JComponent{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<ArrayList<Integer>> points = new ArrayList<ArrayList<Integer>>();
-
+	private String bottom_left_text = "0,0";
+	private String top_right_text = "10,10";
 
 	private static class Line{
 	    final int x1; 
@@ -70,15 +73,29 @@ public class LinesComponent extends JComponent{
 	        g.setColor(Color.RED);
 	        g.drawLine(line.x1, line.y1, line.x2, line.y2);
 	    }       
+	    
+	    for (ArrayList<Integer> point: points) {
+	    		g.setColor(Color.RED);
+	    		g.fillOval(point.get(0) - 5 , point.get(1) - 5, 10, 10);
+//	    		System.out.println(point.toString());
+	    } 
+	    
+	    g.drawString(bottom_left_text, (int)Parameters.MAP_MARGIN/2, 
+	    		(int) (Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN*1.5 + 5));
+	    g.drawString(top_right_text, (int)(Parameters.MAP_MARGIN*1.5 - top_right_text.length()*5 + Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER),
+	    		(int) (Parameters.MAP_MARGIN/2));
 	}
 	
-	public void setPoints(ArrayList<ArrayList<Integer>> p) {
+	public void setPoints(ArrayList<ArrayList<Integer>> p, String top, String bottom) {
 		this.points = p;
 		
 		clearLines();
 		for (int i = 1; i < points.size(); i++){
 			addLine(points.get(i-1).get(0), points.get(i-1).get(1), points.get(i).get(0), points.get(i).get(1));
 		}
+		
+		this.top_right_text = top;
+		this.bottom_left_text = bottom;
 		repaint();
 		
 	}

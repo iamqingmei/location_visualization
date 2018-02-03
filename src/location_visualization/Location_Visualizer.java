@@ -101,7 +101,7 @@ public class Location_Visualizer{
 		btn_submit_pivot.setFocusPainted(false);
 		btn_submit_pivot.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				LOGGER.info("Submit button clicked");
+				LOGGER.info("Pivot Submit button clicked");
 				MapPointManager mapPointManager = MapPointManager.getInstance();
 				
 				mapPointManager.setPivot(Float.parseFloat(pivot_x_input.getText()), 
@@ -109,7 +109,7 @@ public class Location_Visualizer{
 				
 				mapPointManager.setTurningDegree(Float.parseFloat(turning_degree.getText()));
 				
-				mapPointManager.turn();
+				comp.setPoints(mapPointManager.turn(), mapPointManager.topPoint(), mapPointManager.bottomPoint());
 			}
 		});
 		
@@ -118,7 +118,7 @@ public class Location_Visualizer{
 		map_adjust_panel.add(panel2);
 		_inputPanel.add(map_adjust_panel);
 	}
-//	
+	
 //	private static void initPortPanel() {
 ////		select the available port
 //		JPanel portPanel = new JPanel();
@@ -170,7 +170,7 @@ public class Location_Visualizer{
 				float y = Float.parseFloat(yInput.getText());
 				MapPointManager mapPointManager = MapPointManager.getInstance();
 				
-				comp.setPoints(mapPointManager.addPoint(x, y));
+				comp.setPoints(mapPointManager.addPoint(x, y), mapPointManager.topPoint(), mapPointManager.bottomPoint());
 			}
 		});
 		coorPanel.add(btn_submit_new_point);
