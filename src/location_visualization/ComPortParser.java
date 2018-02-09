@@ -25,17 +25,28 @@ public class ComPortParser {
    		
    		ArrayList<Float> res = new ArrayList<>();
    		int idx = 0;
-		for (int last= intBuffer.size()-1; last >= 9; last--) {
-			if ((intBuffer.get(last) == 10) && (intBuffer.get(last -1) == 13)){
-				String x_1_str = Integer.toBinaryString(intBuffer.get(last-8));
-				String x_2_str = Integer.toBinaryString(intBuffer.get(last-7));
-				String y_1_str = Integer.toBinaryString(intBuffer.get(last-6));
-				String y_2_str = Integer.toBinaryString(intBuffer.get(last-5));
+   		for (int start = 0; start < intBuffer.size() - 8; start++) {
+   			if ((intBuffer.get(start) == 1) && (intBuffer.get(start +1) == 5)){
+   				String x_1_str = Integer.toBinaryString(intBuffer.get(start+2));
+				String x_2_str = Integer.toBinaryString(intBuffer.get(start+3));
+				String y_1_str = Integer.toBinaryString(intBuffer.get(start+4));
+				String y_2_str = Integer.toBinaryString(intBuffer.get(start+5));
 				res.add((float) combineTwoBinaryStr(x_1_str, x_2_str));
 				res.add((float) combineTwoBinaryStr(y_1_str, y_2_str));
-				idx = last + 1;
-			}
-		}
+				idx = start + 6;
+   			}
+   		}
+//		for (int last= intBuffer.size()-1; last >= 7; last--) {
+//			if ((intBuffer.get(last) == 10) && (intBuffer.get(last -1) == 13)){
+//				String x_1_str = Integer.toBinaryString(intBuffer.get(last-8));
+//				String x_2_str = Integer.toBinaryString(intBuffer.get(last-7));
+//				String y_1_str = Integer.toBinaryString(intBuffer.get(last-6));
+//				String y_2_str = Integer.toBinaryString(intBuffer.get(last-5));
+//				res.add((float) combineTwoBinaryStr(x_1_str, x_2_str));
+//				res.add((float) combineTwoBinaryStr(y_1_str, y_2_str));
+//				idx = last + 1;
+//			}
+//		}
 		for (int i = 0; i < idx; i++) {
 			intBuffer.remove(0);
 		}

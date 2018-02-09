@@ -70,7 +70,7 @@ public class TwoWaySerialComm
                 while (( len = this.in.read(buffer)) > -1 )
                 {
                 	if (len > 0) {
-//                		System.out.println("------------");
+                		System.out.println("------------");
                 		for (int i = 0; i<len; i++) {
                     		System.out.println(i + ": " + ((Byte)buffer[i]).intValue());
                     		comPortParser.appendInt(((Byte)buffer[i]).intValue());
