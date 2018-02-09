@@ -2,11 +2,14 @@ package location_visualization;
 
 import java.awt.*;
 import java.awt.event.*;
+
+
 import javax.swing.*;
 
-//import gnu.io.CommPortIdentifier;
+import gnu.io.CommPortIdentifier;
 import param.Parameters;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,7 +68,7 @@ public class Location_Visualizer{
 		// vertical layout
 		_inputPanel.setLayout(new BoxLayout(_inputPanel, BoxLayout.Y_AXIS));
 	    
-//		initPortPanel();
+		initPortPanel();
 		
 		initCoorPanel();
 		
@@ -119,35 +122,40 @@ public class Location_Visualizer{
 		_inputPanel.add(map_adjust_panel);
 	}
 	
-//	private static void initPortPanel() {
-////		select the available port
-//		JPanel portPanel = new JPanel();
-//		JComboBox<String> comboBox= new JComboBox<String>();  
-//	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
-//	        comboBox.addItem(obj.getName());
-//	      } 
-//	    portPanel.add(comboBox);
-//	    
-//	    // buttom to confirm the port selected
-//	    JButton btn_confirm_port = new JButton("Confirm");
-//	    btn_confirm_port.setFont(new Font("Arial", Font.BOLD, 13));
-//	    btn_confirm_port.setFocusPainted(false);
-//	    btn_confirm_port.addMouseListener(new MouseAdapter() {
-//			public void mousePressed(MouseEvent e) {
-//				try
-//			        {
-//			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
-//			        }
-//			        catch ( Exception ex )
-//			        {
-//			            // TODO Auto-generated catch block
-//			            ex.printStackTrace();
-//			        }
-//			}
-//		});
-//	    portPanel.add(btn_confirm_port);
-//	    _inputPanel.add(portPanel);
-//	}
+	private static void initPortPanel() {
+		
+		
+//		select the available port
+		JPanel portPanel = new JPanel();
+		JComboBox<String> comboBox= new JComboBox<String>();  
+	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+	        comboBox.addItem(obj.getName());
+	      } 
+	    portPanel.add(comboBox);
+	    
+	    // buttom to confirm the port selected
+	    JButton btn_confirm_port = new JButton("Confirm");
+	    btn_confirm_port.setFont(new Font("Arial", Font.BOLD, 13));
+	    btn_confirm_port.setFocusPainted(false);
+	    btn_confirm_port.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				try
+			        {
+						LOGGER.info((String)comboBox.getSelectedItem() + " is selected");
+			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
+//			            new KeepUpdatingMap().execute();
+			            (new Thread(new KeepMapUpdating())).start();
+			        }
+			        catch ( Exception ex )
+			        {
+			            // TODO Auto-generated catch block
+			            ex.printStackTrace();
+			        }
+			}
+		});
+	    portPanel.add(btn_confirm_port);
+	    _inputPanel.add(portPanel);
+	}
 	
 	private static void initCoorPanel() {
 		JPanel coorPanel = new JPanel();
@@ -178,8 +186,43 @@ public class Location_Visualizer{
 	}
 
 	
+    public static class KeepMapUpdating implements Runnable 
+    {
+        ComPortParser comPortParser = ComPortParser.getInstance();
+        private volatile boolean shutdown;
+        
+        public void run ()
+        {
+            try
+            {
+            	while(!shutdown) {
+            		Thread.sleep(1000);
+            		ArrayList<Float> res = comPortParser.ifCoordination();
+    				if( res.size() % 2 != 0){
+    					LOGGER.warning("Coordination has sth wrong!");
+    					comPortParser.printIntBuffer();
+    					this.shutdown();
+    				}
+    				if (res.size() > 0) {
+    					
+    					MapPointManager mapPointManager = MapPointManager.getInstance();
+    					
+    					for (int i = 0; i < res.size() / 2; i++) {
+    						comp.setPoints(mapPointManager.addPoint(res.get(2*i), res.get(2*i + 1)), mapPointManager.topPoint(), mapPointManager.bottomPoint());
+    					}
+            	}
+            }
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }            
+        }
+        public void shutdown() {
+        	shutdown = true;
+        }
+}
 
-
-
+	
 	    
 }

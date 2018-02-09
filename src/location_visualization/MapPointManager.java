@@ -31,6 +31,7 @@ public class MapPointManager {
    private float scale = 1;
    
    private float start_coor = 0;
+   private float end_coor = Parameters.MAP_MAXHEIGHT_COOR;
    
    float min_x = 0;
    float max_x = Parameters.MAP_MAXWIDTH_COOR;
@@ -158,44 +159,32 @@ public class MapPointManager {
 		this.min_y = Utils.getMin(all_y);
 		this.max_y = Utils.getMax(all_y);
 		
-		float scale_x = 1;
-		float scale_y = 1;
-		
 		// check range
-		if ((max_x - min_x) > Parameters.MAP_MAXWIDTH_COOR) {
-			scale_x = ((max_x - min_x) / Parameters.MAP_MAXWIDTH_COOR);
-		}
-		
-		if ((max_y - min_y) > Parameters.MAP_MAXHEIGHT_COOR) {
-			scale_y = ((max_y - min_y) / Parameters.MAP_MAXWIDTH_COOR);
-		}
-		
-		if (scale_x > scale_y) {
-			this.scale = scale_x;
+		if (max_x > max_y) {
+			this.end_coor = max_x;
 		}
 		else {
-			this.scale = scale_y;
+			this.end_coor = max_y;
 		}
-			
-		// check mini and max value
+		
 		if (min_x < min_y) {
 			this.start_coor = min_x;
 		}
 		else {
 			this.start_coor = min_y;
 		}
-
-
-
+		
+		
+		this.scale = ((this.end_coor - this.start_coor) / Parameters.MAP_MAXHEIGHT_COOR);
+		
 		LOGGER.info(mapParametersToString());
 	}
 	
 	public String mapParametersToString() {
-		return ("scale: " + this.scale + "start_coor: " + 
-				this.start_coor + "min_x: " + this.min_x + 
-				"max_x: " + this.max_x + "min_y: " + this.min_y + "max_y: " + 
+		return ("scale: " + this.scale + " start_coor: " + 
+				this.start_coor + " min_x: " + this.min_x + 
+				" max_x: " + this.max_x + " min_y: " + this.min_y + " max_y: " + 
 				this.max_y);
 	}
-	
 
 }
