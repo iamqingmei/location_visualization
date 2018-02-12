@@ -5,8 +5,9 @@ import java.awt.event.*;
 
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
-import gnu.io.CommPortIdentifier;
+//import gnu.io.CommPortIdentifier;
 import param.Parameters;
 
 import java.util.ArrayList;
@@ -46,9 +47,11 @@ public class Location_Visualizer{
 		// Add PanelLayouts to content pane
 		Container contentPane = _appFrame.getContentPane();
 		// horizontal layout
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
-		contentPane.add(_inputPanel);
-		contentPane.add(_MapPanel);
+//		contentPane..setComponentOrientation(
+//                java.awt.ComponentOrientation.RIGHT_TO_LEFT);
+//    }
+		contentPane.add(_inputPanel, BorderLayout.LINE_START);
+		contentPane.add(_MapPanel, BorderLayout.LINE_END);
 		
 		// Display the application
 		_appFrame.pack();
@@ -59,7 +62,7 @@ public class Location_Visualizer{
 	
 	private static void initMapLayout() {
 	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2)));
-	    comp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	    comp.setBorder(new TitledBorder("Location Visualization"));
 	    _inputPanel.add(comp);
 	}
 
@@ -82,7 +85,7 @@ public class Location_Visualizer{
 		// Panel to adjust the map
 		JPanel map_adjust_panel = new JPanel();
 		map_adjust_panel.setLayout(new BoxLayout(map_adjust_panel, BoxLayout.Y_AXIS));
-		map_adjust_panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		map_adjust_panel.setBorder(new TitledBorder("Map Adjustment"));
 		
 		JPanel panel1 = new JPanel();
 		JLabel pivot_label = new JLabel("Coordination of pivot: ");
@@ -127,10 +130,15 @@ public class Location_Visualizer{
 		
 //		select the available port
 		JPanel portPanel = new JPanel();
+		
+	    portPanel.setBorder(new TitledBorder("COM Port Selection"));
+	    
 		JComboBox<String> comboBox= new JComboBox<String>();  
-	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
-	        comboBox.addItem(obj.getName());
-	      } 
+//	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+//	        comboBox.addItem(obj.getName());
+//	      } 
+		comboBox.addItem("COMTesting1");
+		comboBox.addItem("COMTesting2");
 	    portPanel.add(comboBox);
 	    
 	    // buttom to confirm the port selected
@@ -142,7 +150,7 @@ public class Location_Visualizer{
 				try
 			        {
 						LOGGER.info((String)comboBox.getSelectedItem() + " is selected");
-			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
+//			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
 //			            new KeepUpdatingMap().execute();
 			            (new Thread(new KeepMapUpdating())).start();
 			        }
