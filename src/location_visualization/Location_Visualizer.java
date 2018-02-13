@@ -14,15 +14,22 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.border.EtchedBorder;
+
 public class Location_Visualizer{
 	//logger
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
+	private static GraphPloter graphPloter;
 	// JFrame for the application
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
 	private static JPanel _MapPanel = null;
 	private static JPanel _inputPanel = null;
+	private static JPanel _GraphPanel = null;
+	private static JPanel _SimulationPanel = null;
+
+
 	
 	public static void main(String[] args) {
 		LOGGER.setLevel(Level.INFO);
@@ -34,24 +41,41 @@ public class Location_Visualizer{
 		_appFrame = new JFrame();
 		_appFrame.setTitle("Location Visualizer");
 //		_appFrame.setSize(new Dimension(900, 870));
-		_appFrame.setResizable(false);
+		_appFrame.setResizable(true);
 		
 		_MapPanel = new JPanel();
 		_inputPanel = new JPanel();
+		_GraphPanel = new JPanel();
+		_SimulationPanel = new JPanel();
 		
 		// Initialize the main MapLayout
 		initMapLayout();
 		// Initialize the main InputLayout
 		initInputLayout();
 		
+		initSimulationLayout();
+		
+		initGraphPanel();
 		// Add PanelLayouts to content pane
 		Container contentPane = _appFrame.getContentPane();
-		// horizontal layout
-//		contentPane..setComponentOrientation(
-//                java.awt.ComponentOrientation.RIGHT_TO_LEFT);
-//    }
-		contentPane.add(_inputPanel, BorderLayout.LINE_START);
-		contentPane.add(_MapPanel, BorderLayout.LINE_END);
+		JPanel topPanel = new JPanel();
+		JPanel bottomPanel = new JPanel();
+		
+		topPanel.add(_GraphPanel);
+		topPanel.add(_SimulationPanel);
+		
+		bottomPanel.add(_inputPanel);
+		bottomPanel.add(_MapPanel);
+		
+		contentPane.add(topPanel, BorderLayout.NORTH);
+		contentPane.add(bottomPanel, BorderLayout.SOUTH);
+
+		
+		
+		
+
+		
+	
 		
 		// Display the application
 		_appFrame.pack();
@@ -60,10 +84,54 @@ public class Location_Visualizer{
 		_appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	private static void initGraphPanel() {
+		initGraphVariableSelection();
+		graphPloter = new GraphPloter();
+		_GraphPanel.setBorder(new TitledBorder(null, "Plot Variable ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		_GraphPanel.setLayout(new BoxLayout(_GraphPanel, BoxLayout.Y_AXIS));
+		_GraphPanel.add(graphPloter.getChartPanel());
+	}
+	
+	private static void initGraphVariableSelection() {
+		JPanel panel = new JPanel();
+		JLabel lblSelectTheVariable = new JLabel("Select the Variable to Be Displayed: ");
+		panel.add(lblSelectTheVariable);
+		
+		JComboBox<String> comboBox = new JComboBox<String>();
+		comboBox.addItem("Variable1");
+		comboBox.addItem("Variable2");
+		comboBox.addItem("Variable3");
+		panel.add(comboBox);
+		
+		_GraphPanel.add(panel);
+	}
+	
+	
+	private static void initSimulationLayout() {
+		_SimulationPanel = new JPanel();
+		
+		
+		JPanel sim_panel1 = new JPanel();
+		sim_panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Simulation 1", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		sim_panel1.setLayout(new BoxLayout(sim_panel1, BoxLayout.Y_AXIS));
+		_SimulationPanel.add(sim_panel1);
+		
+		JPanel sim_panel2 = new JPanel();
+		_SimulationPanel.add(sim_panel2);
+		sim_panel2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Simulation 2", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		sim_panel2.setLayout(new BoxLayout(sim_panel2, BoxLayout.Y_AXIS));
+		
+		addAttribute("AttributeA", sim_panel2);
+		addAttribute("AttributeB", sim_panel2);
+		addAttribute("AttributeA", sim_panel1);
+		addAttribute("AttributeB", sim_panel1);
+	}
+	
 	private static void initMapLayout() {
+	    comp.setBackground(Color.WHITE);
 	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2)));
 	    comp.setBorder(new TitledBorder("Location Visualization"));
-	    _inputPanel.add(comp);
+	    _MapPanel.add(comp);
 	}
 
 	
@@ -76,10 +144,33 @@ public class Location_Visualizer{
 		initCoorPanel();
 		
 		initMapAdjustPanel();
+		
+		initVariablePanel();
 
 		return;
 		
 	}
+	
+	
+	private static void addAttribute(String attiName, JPanel panel) {
+		
+		JPanel sim_attri_panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) sim_attri_panel.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		panel.add(sim_attri_panel);
+		
+		JLabel lblNewLabel = new JLabel(attiName);
+		sim_attri_panel.add(lblNewLabel);
+		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		
+		JTextField txtAttribute = new JTextField();
+		txtAttribute.setText("Value");
+		lblNewLabel.setLabelFor(txtAttribute);
+		sim_attri_panel.add(txtAttribute);
+		txtAttribute.setColumns(10);
+	}
+	
 	
 	private static void initMapAdjustPanel() {
 		// Panel to adjust the map
@@ -88,6 +179,9 @@ public class Location_Visualizer{
 		map_adjust_panel.setBorder(new TitledBorder("Map Adjustment"));
 		
 		JPanel panel1 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel1.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
 		JLabel pivot_label = new JLabel("Coordination of pivot: ");
 		TextField pivot_x_input = new TextField("0", 2);
 		TextField pivot_y_input = new TextField("0", 2);
@@ -97,6 +191,9 @@ public class Location_Visualizer{
 		map_adjust_panel.add(panel1);
 		
 		JPanel panel2 = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panel2.getLayout();
+		flowLayout_1.setVgap(0);
+		flowLayout_1.setHgap(0);
 		JLabel turning_degree_label = new JLabel("Turning degree (clockwise): " );
 		TextField turning_degree = new TextField("0", 2);
 		panel2.add(turning_degree_label);
@@ -130,16 +227,33 @@ public class Location_Visualizer{
 		
 //		select the available port
 		JPanel portPanel = new JPanel();
-		
 	    portPanel.setBorder(new TitledBorder("COM Port Selection"));
+		portPanel.setLayout(new BoxLayout(portPanel, BoxLayout.Y_AXIS));
+		JPanel namePanel = new JPanel();
+		JPanel baudPanel = new JPanel();
+		
+		
+
 	    
+		namePanel.add(new JLabel("Port Name: "));
 		JComboBox<String> comboBox= new JComboBox<String>();  
 //	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
 //	        comboBox.addItem(obj.getName());
 //	      } 
 		comboBox.addItem("COMTesting1");
 		comboBox.addItem("COMTesting2");
-	    portPanel.add(comboBox);
+		namePanel.add(comboBox);
+	    
+		baudPanel.add(new JLabel("Baud Rate: "), BorderLayout.LINE_START);
+	    JComboBox<String> comboBox_2 = new JComboBox<String>();
+	    comboBox_2.addItem("1200");
+	    comboBox_2.addItem("2400");
+	    comboBox_2.addItem("4800");
+	    comboBox_2.addItem("19200");
+	    comboBox_2.addItem("38400");
+	    comboBox_2.addItem("57600");
+	    comboBox_2.addItem("115200");
+	    baudPanel.add(comboBox_2);
 	    
 	    // buttom to confirm the port selected
 	    JButton btn_confirm_port = new JButton("Confirm");
@@ -161,13 +275,48 @@ public class Location_Visualizer{
 			        }
 			}
 		});
+	    
+	    portPanel.add(namePanel);
+	    portPanel.add(baudPanel);
 	    portPanel.add(btn_confirm_port);
 	    _inputPanel.add(portPanel);
 	}
 	
+	private static void initVariablePanel() {
+		JPanel variablePanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) variablePanel.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		variablePanel.setBorder(BorderFactory.createTitledBorder("Variables"));
+		JPanel variableGroup1 = new JPanel();
+		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
+		variablePanel.add(variableGroup1);
+		addAttribute("variable A", variableGroup1);
+		addAttribute("variable B", variableGroup1);
+		addAttribute("variable C", variableGroup1);
+		addAttribute("variable D", variableGroup1);
+		addAttribute("variable E", variableGroup1);
+		JPanel variableGroup2 = new JPanel();
+		variableGroup2.setLayout(new BoxLayout(variableGroup2, BoxLayout.Y_AXIS));
+		variablePanel.add(variableGroup2);
+		addAttribute("variable F", variableGroup2);
+		addAttribute("variable G", variableGroup2);
+		addAttribute("variable H", variableGroup2);
+		addAttribute("variable I", variableGroup2);
+		addAttribute("variable J", variableGroup2);
+		
+		_inputPanel.add(variablePanel);
+		
+		
+	}
+	
 	private static void initCoorPanel() {
 		JPanel coorPanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) coorPanel.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
 //		Key in the coordination manually
+		coorPanel.setBorder(BorderFactory.createTitledBorder("Add Points Manually"));
 	    JLabel coorLabel = new JLabel("Coordination of new point: ");
 		TextField xInput = new TextField("0", 2);
 		TextField yInput = new TextField("0", 2);
