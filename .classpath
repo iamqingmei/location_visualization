@@ -8,5 +8,15 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="location_visualization/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar" sourcepath="lib/jfreechart-1.0.19/source">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/location_visualization/lib/jfreechart-1.0.19/javadoc/package-list!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.8/jcommon-1.0.8.jar" sourcepath="lib/jcommon-1.0.8/source">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/location_visualization/lib/jcommon-1.0.8/javadoc/package-list!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
