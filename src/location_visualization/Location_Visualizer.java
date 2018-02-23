@@ -107,20 +107,20 @@ public class Location_Visualizer{
 		
 		JPanel panel1 = new JPanel();
 		graph_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "mic", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		addAttribute("mic", panel1);
+		addAttribute("mic", panel1, false);
 		graph_1.add(panel1);
 		
 		JPanel panel2 = new JPanel();
 		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Co2", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		addAttribute("Co2", panel2);
-		addAttribute("TVOC", panel2);
+		addAttribute("Co2", panel2, false);
+		addAttribute("TVOC", panel2, false);
 		graph_2.add(panel2);
 		
 		JPanel panel3 = new JPanel();
 		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "ambient", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		addAttribute("Temp", panel3);
-		addAttribute("Humidity", panel3);
-		addAttribute("Pressure", panel3);
+		addAttribute("Temp", panel3, false);
+		addAttribute("Humidity", panel3, false);
+		addAttribute("Pressure", panel3, false);
 		graph_3.add(panel3);
 		
 		GraphPloter graphPloter1 = new GraphPloter();
@@ -284,6 +284,30 @@ public class Location_Visualizer{
 		return txtAttribute;
 	}
 	
+private static JTextField addAttribute(String attiName, JPanel panel, boolean setEditable) {
+		
+		JPanel sim_attri_panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) sim_attri_panel.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		panel.add(sim_attri_panel);
+		
+		JLabel lblNewLabel = new JLabel(attiName);
+		sim_attri_panel.add(lblNewLabel);
+		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		
+		JTextField txtAttribute = new JTextField("Nil", 4);
+		if (setEditable == false) {
+			txtAttribute.setBackground(new Color(222, 222, 222));
+		}
+		txtAttribute.setEditable(setEditable);
+		
+		lblNewLabel.setLabelFor(txtAttribute);
+		sim_attri_panel.add(txtAttribute);
+		
+		return txtAttribute;
+	}
+	
 	
 	private static void initMapAdjustPanel() {
 		// Panel to adjust the map
@@ -424,6 +448,7 @@ public class Location_Visualizer{
 	    textArea.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 	    textArea.setMargin(new Insets(0, 15, 0, 15));
 	    textArea.setEditable(false);
+	    textArea.setBackground(new Color(222, 222, 222));
 	   
 	    comPortParser.setShowArea(textArea);
 	    autoLoadPanel.add(textArea);
