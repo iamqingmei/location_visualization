@@ -389,6 +389,8 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	    comboBox_2.addItem("38400");
 	    comboBox_2.addItem("57600");
 	    comboBox_2.addItem("115200");
+	    comboBox_2.addItem("256000");
+	    
 	    baudPanel.add(comboBox_2);
 	    
 	    portPanel.add(namePanel);
