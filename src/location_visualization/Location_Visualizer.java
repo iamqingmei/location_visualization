@@ -23,7 +23,7 @@ public class Location_Visualizer{
 	//logger
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
-	private static GraphPloter graphPloter;
+	
 	// JFrame for the application
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
@@ -93,26 +93,58 @@ public class Location_Visualizer{
 	}
 	
 	private static void initGraphPanel() {
-		initGraphVariableSelection();
-		graphPloter = new GraphPloter();
-		_GraphPanel.setBorder(new TitledBorder(null, "Plot Variable ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		_GraphPanel.setLayout(new BoxLayout(_GraphPanel, BoxLayout.Y_AXIS));
-		_GraphPanel.add(graphPloter.getChartPanel());
+//		initGraphVariableSelection();
+		JPanel graph_1 = new JPanel();
+		JPanel graph_2 = new JPanel();
+		JPanel graph_3 = new JPanel();
+		graph_1.setLayout(new BoxLayout(graph_1, BoxLayout.Y_AXIS));
+		graph_2.setLayout(new BoxLayout(graph_2, BoxLayout.Y_AXIS));
+		graph_3.setLayout(new BoxLayout(graph_3, BoxLayout.Y_AXIS));
+		
+		JPanel panel1 = new JPanel();
+		graph_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "mic", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		addAttribute("mic", panel1);
+		graph_1.add(panel1);
+		
+		JPanel panel2 = new JPanel();
+		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Co2", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		addAttribute("Co2", panel2);
+		addAttribute("TVOC", panel2);
+		graph_2.add(panel2);
+		
+		JPanel panel3 = new JPanel();
+		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "ambient", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		addAttribute("Temperature", panel3);
+		addAttribute("Humidity", panel3);
+		addAttribute("Pressure", panel3);
+		graph_3.add(panel3);
+		
+		GraphPloter graphPloter1 = new GraphPloter();
+		GraphPloter graphPloter2 = new GraphPloter();
+		GraphPloter graphPloter3 = new GraphPloter();
+		graph_1.add(graphPloter1.getChartPanel());
+		graph_2.add(graphPloter2.getChartPanel());
+		graph_3.add(graphPloter3.getChartPanel());
+		
+		_GraphPanel.add(graph_1);
+		_GraphPanel.add(graph_2);
+		_GraphPanel.add(graph_3);
+		
 	}
 	
-	private static void initGraphVariableSelection() {
-		JPanel panel = new JPanel();
-		JLabel lblSelectTheVariable = new JLabel("Select the Variable to Be Displayed: ");
-		panel.add(lblSelectTheVariable);
-		
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.addItem("Variable1");
-		comboBox.addItem("Variable2");
-		comboBox.addItem("Variable3");
-		panel.add(comboBox);
-		
-		_GraphPanel.add(panel);
-	}
+//	private static void initGraphVariableSelection() {
+//		JPanel panel = new JPanel();
+//		JLabel lblSelectTheVariable = new JLabel("Select the Variable to Be Displayed: ");
+//		panel.add(lblSelectTheVariable);
+//		
+//		JComboBox<String> comboBox = new JComboBox<String>();
+//		comboBox.addItem("Variable1");
+//		comboBox.addItem("Variable2");
+//		comboBox.addItem("Variable3");
+//		panel.add(comboBox);
+//		
+//		_GraphPanel.add(panel);
+//	}
 	
 	
 	private static void initSimulationLayout() {
@@ -227,10 +259,9 @@ public class Location_Visualizer{
 		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		
 		JTextField txtAttribute = new JTextField();
-		txtAttribute.setText("Value");
+		txtAttribute.setText("Nil");
 		lblNewLabel.setLabelFor(txtAttribute);
 		sim_attri_panel.add(txtAttribute);
-		txtAttribute.setColumns(10);
 		
 		return txtAttribute;
 	}
