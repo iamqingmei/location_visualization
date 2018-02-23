@@ -18,5 +18,10 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/location_visualization/lib/jcommon-1.0.8/javadoc/package-list!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jheatchart-0.6/jheatchart-0.6.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="location_visualization/lib/jheatchart-0.6"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -2,18 +2,17 @@ package location_visualization;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.nio.channels.Channels;
+
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
+import org.tc33.jheatchart.HeatChart;
 
 //import gnu.io.CommPortIdentifier;
 import param.Parameters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +27,7 @@ public class Location_Visualizer{
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
 	private static JPanel _MapPanel = null;
+	private static JPanel _IRPanel = null;
 	private static JPanel _inputPanel = null;
 	private static JPanel _GraphPanel = null;
 	private static JPanel _SimulationPanel = null;
@@ -50,11 +50,13 @@ public class Location_Visualizer{
 		_inputPanel = new JPanel();
 		_GraphPanel = new JPanel();
 		_SimulationPanel = new JPanel();
-		
+		_IRPanel = new JPanel();
 		// Initialize the main MapLayout
 		initMapLayout();
 		// Initialize the main InputLayout
 		initInputLayout();
+		
+		initIRPanel();
 		
 		initSimulationLayout();
 		
@@ -72,6 +74,7 @@ public class Location_Visualizer{
 		
 		bottomPanel.add(_inputPanel);
 		bottomPanel.add(_MapPanel);
+		bottomPanel.add(_IRPanel);
 		
 		leftPanel.add(topPanel);
 		leftPanel.add(bottomPanel);
@@ -187,6 +190,19 @@ public class Location_Visualizer{
 		_SimulationPanel.add(channel34);
 		_SimulationPanel.add(btns);
 
+		
+	}
+	
+	private static void initIRPanel() {
+		_IRPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "IR Sensor", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		_IRPanel.setLayout(new BoxLayout(_IRPanel, BoxLayout.Y_AXIS));
+		
+		JCheckBox irCheckBox = new JCheckBox("IR Sensor");
+		_IRPanel.add(irCheckBox);
+		
+		
+		_IRPanel.add(new IRHeatMap());
+		
 		
 	}
 	
