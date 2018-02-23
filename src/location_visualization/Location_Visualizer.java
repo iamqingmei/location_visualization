@@ -2,15 +2,18 @@ package location_visualization;
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.nio.channels.Channels;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 //import gnu.io.CommPortIdentifier;
 import param.Parameters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,17 +61,22 @@ public class Location_Visualizer{
 		initGraphPanel();
 		// Add PanelLayouts to content pane
 		Container contentPane = _appFrame.getContentPane();
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		
 		JPanel topPanel = new JPanel();
 		JPanel bottomPanel = new JPanel();
 		
 		topPanel.add(_GraphPanel);
-		topPanel.add(_SimulationPanel);
+		
 		
 		bottomPanel.add(_inputPanel);
 		bottomPanel.add(_MapPanel);
 		
-		contentPane.add(topPanel, BorderLayout.NORTH);
-		contentPane.add(bottomPanel, BorderLayout.SOUTH);
+		leftPanel.add(topPanel);
+		leftPanel.add(bottomPanel);
+		contentPane.add(leftPanel, BorderLayout.WEST);
+		contentPane.add(_SimulationPanel, BorderLayout.EAST);
 
 		
 		
@@ -109,22 +117,76 @@ public class Location_Visualizer{
 	
 	private static void initSimulationLayout() {
 		_SimulationPanel = new JPanel();
+		_SimulationPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Simulation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		_SimulationPanel.setLayout(new BoxLayout(_SimulationPanel, BoxLayout.Y_AXIS));
+		
+		JPanel channel12 = new JPanel();
+		JPanel channel34 = new JPanel();
+		SimulationPanel simPanel1 = new SimulationPanel("Channel 1", channel12);
+		SimulationPanel simPanel2 = new SimulationPanel("Channel 2", channel12);
+		SimulationPanel simPanel3 = new SimulationPanel("Channel 3", channel34);
+		SimulationPanel simPanel4 = new SimulationPanel("Channel 4", channel34);
 		
 		
-		JPanel sim_panel1 = new JPanel();
-		sim_panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Simulation 1", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		sim_panel1.setLayout(new BoxLayout(sim_panel1, BoxLayout.Y_AXIS));
-		_SimulationPanel.add(sim_panel1);
+		JButton btn_sim_start = new JButton("Start");
+		btn_sim_start.setFont(new Font("Arial", Font.BOLD, 13));
+		btn_sim_start.setFocusPainted(false);
+		btn_sim_start.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				LOGGER.info("Simulation Start button clicked");
+			}
+		});
+		JButton btn_sim_stop = new JButton("Stop");
+		btn_sim_stop.setFont(new Font("Arial", Font.BOLD, 13));
+		btn_sim_stop.setFocusPainted(false);
+		btn_sim_stop.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				LOGGER.info("Simulation Stop button clicked");
+			}
+		});
 		
-		JPanel sim_panel2 = new JPanel();
-		_SimulationPanel.add(sim_panel2);
-		sim_panel2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Simulation 2", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		sim_panel2.setLayout(new BoxLayout(sim_panel2, BoxLayout.Y_AXIS));
 		
-		addAttribute("AttributeA", sim_panel2);
-		addAttribute("AttributeB", sim_panel2);
-		addAttribute("AttributeA", sim_panel1);
-		addAttribute("AttributeB", sim_panel1);
+		
+		JPanel btns = new JPanel();
+		btns.add(btn_sim_start);
+		btns.add(btn_sim_stop);
+		
+		_SimulationPanel.add(channel12);
+		_SimulationPanel.add(channel34);
+		_SimulationPanel.add(btns);
+
+		
+	}
+	
+	private static class SimulationPanel {
+		private JPanel simPanel;
+		public JCheckBox enableCheckBox;
+		public JTextField durationText;
+		public JTextField periodText;
+		public JTextField onTime1Text;
+		public JTextField onTime2Text;
+		public JTextField offTime1Text;
+		public JTextField offTime2Text;
+		public JTextField amplitudeText;
+		
+		public SimulationPanel(String name, JPanel parent) {
+			this.simPanel = new JPanel();
+			this.enableCheckBox = new JCheckBox("enable/disable");
+			
+			parent.add(this.simPanel);
+			this.simPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), name, TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+			this.simPanel.setLayout(new BoxLayout(this.simPanel, BoxLayout.Y_AXIS));
+			
+			System.out.println("here");
+//			duration period on time 1 on time 2 off time 1 off time 2 amplitude 
+			this.durationText = addAttribute("duration", this.simPanel);
+			this.periodText = addAttribute("period", this.simPanel);
+			this.onTime1Text = addAttribute("on time 1", this.simPanel);
+			this.onTime2Text = addAttribute("on time 2", this.simPanel);
+			this.offTime1Text = addAttribute("off time 1", this.simPanel);
+			this.offTime2Text = addAttribute("off time 2", this.simPanel);
+			this.amplitudeText = addAttribute("amplitude", this.simPanel);
+		}
 	}
 	
 	private static void initMapLayout() {
@@ -152,7 +214,7 @@ public class Location_Visualizer{
 	}
 	
 	
-	private static void addAttribute(String attiName, JPanel panel) {
+	private static JTextField addAttribute(String attiName, JPanel panel) {
 		
 		JPanel sim_attri_panel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) sim_attri_panel.getLayout();
@@ -169,6 +231,8 @@ public class Location_Visualizer{
 		lblNewLabel.setLabelFor(txtAttribute);
 		sim_attri_panel.add(txtAttribute);
 		txtAttribute.setColumns(10);
+		
+		return txtAttribute;
 	}
 	
 	
