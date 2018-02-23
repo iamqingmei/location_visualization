@@ -23,7 +23,7 @@ public class Location_Visualizer{
 	//logger
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
-	
+	private static ComPortParser comPortParser = ComPortParser.getInstance();
 	// JFrame for the application
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
@@ -319,7 +319,6 @@ public class Location_Visualizer{
 	
 	private static void initPortPanel() {
 		
-		
 //		select the available port
 		JPanel portPanel = new JPanel();
 	    portPanel.setBorder(new TitledBorder("COM Port Selection"));
@@ -350,8 +349,11 @@ public class Location_Visualizer{
 	    comboBox_2.addItem("115200");
 	    baudPanel.add(comboBox_2);
 	    
+	    portPanel.add(namePanel);
+	    
 	    // buttom to confirm the port selected
 	    JButton btn_confirm_port = new JButton("Confirm");
+	    namePanel.add(btn_confirm_port);
 	    btn_confirm_port.setFont(new Font("Arial", Font.BOLD, 13));
 	    btn_confirm_port.setFocusPainted(false);
 	    btn_confirm_port.addMouseListener(new MouseAdapter() {
@@ -371,10 +373,40 @@ public class Location_Visualizer{
 			}
 		});
 	    
-	    portPanel.add(namePanel);
+	    JButton btn_stop_port = new JButton("Stop");
+	    baudPanel.add(btn_stop_port);
+	    btn_stop_port.setFont(new Font("Arial", Font.BOLD, 13));
+	    btn_stop_port.setFocusPainted(false);
+	    btn_stop_port.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				try
+			        {
+						// TODO
+			        }
+			        catch ( Exception ex )
+			        {
+			            // TODO Auto-generated catch block
+			            ex.printStackTrace();
+			        }
+			}
+		});
+	    
 	    portPanel.add(baudPanel);
-	    portPanel.add(btn_confirm_port);
 	    _inputPanel.add(portPanel);
+	    
+	    JPanel autoLoadPanel = new JPanel();
+	    autoLoadPanel.setLayout(new BoxLayout(autoLoadPanel, BoxLayout.Y_AXIS));
+	    portPanel.add(autoLoadPanel);
+	    
+	    JCheckBox chckbxAutoLoad = new JCheckBox("Auto Load");
+	    chckbxAutoLoad.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    autoLoadPanel.add(chckbxAutoLoad);
+	    
+	    JTextArea textArea = new JTextArea();
+	    textArea.setRows(4);
+	    textArea.setColumns(20);
+	    comPortParser.setShowArea(textArea);
+	    autoLoadPanel.add(textArea);
 	}
 	
 	private static void initVariablePanel() {
@@ -440,7 +472,6 @@ public class Location_Visualizer{
 	
     public static class KeepMapUpdating implements Runnable 
     {
-        ComPortParser comPortParser = ComPortParser.getInstance();
         private volatile boolean shutdown;
         
         public void run ()

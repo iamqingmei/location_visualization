@@ -74,6 +74,7 @@
 //                		for (int i = 0; i<len; i++) {
 //                    		System.out.println(i + ": " + ((Byte)buffer[i]).intValue());
 //                    		comPortParser.appendInt(((Byte)buffer[i]).intValue());
+//                    		
 //                    	}
 ////                		System.out.println("Coordination: " + comPortParser.ifCoordination().toString());
 ////                		comPortParser.printIntBuffer();

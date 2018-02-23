@@ -2,10 +2,13 @@ package location_visualization;
 
 import java.util.ArrayList;
 
+import javax.swing.JTextArea;
+
 
 public class ComPortParser {
 	private ArrayList<Integer> intBuffer = new ArrayList<>();
 	private static ComPortParser instance = null;
+	private JTextArea showArea = null;
 	
 	protected ComPortParser() {
 	   	// Exists only to defeat instantiation.
@@ -17,8 +20,13 @@ public class ComPortParser {
       	return instance;
    	}
    	
+   	public void setShowArea(JTextArea area ) {
+		this.showArea = area;
+	}
+   	
    	public void appendInt(Integer a) {
    		intBuffer.add(a);
+   		showArea.setText(intBuffer.toString());
 	}
    	
    	public ArrayList<Float> ifCoordination() {
