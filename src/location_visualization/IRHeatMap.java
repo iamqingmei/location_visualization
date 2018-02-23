@@ -20,7 +20,10 @@ public class IRHeatMap extends JPanel{
 //		map.setTitle("This is my heat chart title");
 //		map.setXAxisLabel("X Axis");
 //		map.setYAxisLabel("Y Axis");
-		this.setPreferredSize(new java.awt.Dimension(350, 350));
+		this.setPreferredSize(new java.awt.Dimension(200, 200));
+		map.setShowXAxisValues(false);
+		map.setShowYAxisValues(false);
+
 	}
 	
 	public void setData(double[][] d) {

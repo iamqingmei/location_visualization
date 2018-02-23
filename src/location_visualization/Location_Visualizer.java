@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 
 public class Location_Visualizer{
 	//logger
@@ -117,7 +118,7 @@ public class Location_Visualizer{
 		
 		JPanel panel3 = new JPanel();
 		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "ambient", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		addAttribute("Temperature", panel3);
+		addAttribute("Temp", panel3);
 		addAttribute("Humidity", panel3);
 		addAttribute("Pressure", panel3);
 		graph_3.add(panel3);
@@ -274,8 +275,9 @@ public class Location_Visualizer{
 		sim_attri_panel.add(lblNewLabel);
 		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		
-		JTextField txtAttribute = new JTextField();
-		txtAttribute.setText("Nil");
+		JTextField txtAttribute = new JTextField("Nil", 4);
+		
+		
 		lblNewLabel.setLabelFor(txtAttribute);
 		sim_attri_panel.add(txtAttribute);
 		
@@ -418,9 +420,11 @@ public class Location_Visualizer{
 	    chckbxAutoLoad.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    autoLoadPanel.add(chckbxAutoLoad);
 	    
-	    JTextArea textArea = new JTextArea();
-	    textArea.setRows(4);
-	    textArea.setColumns(20);
+	    JTextArea textArea = new JTextArea(4,10);
+	    textArea.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+	    textArea.setMargin(new Insets(0, 15, 0, 15));
+	    textArea.setEditable(false);
+	   
 	    comPortParser.setShowArea(textArea);
 	    autoLoadPanel.add(textArea);
 	}
