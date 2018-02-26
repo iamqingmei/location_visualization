@@ -2,7 +2,7 @@ package location_visualization;
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.lang.reflect.Array;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -32,6 +32,10 @@ public class Location_Visualizer{
 	private static JPanel _inputPanel = null;
 	private static JPanel _GraphPanel = null;
 	private static JPanel _SimulationPanel = null;
+	private static JCheckBox irCheckBox = null;
+	private static JCheckBox co2CheckBox = null;
+	private static JCheckBox micCheckBox = null;
+	private static JCheckBox ambientCheckBox = null;
 
 
 	
@@ -107,20 +111,26 @@ public class Location_Visualizer{
 		
 		JPanel panel1 = new JPanel();
 		graph_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "mic", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		micCheckBox = new JCheckBox("Mic");
+		graph_1.add(micCheckBox);
 		addAttribute("mic", panel1, false);
 		graph_1.add(panel1);
 		
 		JPanel panel2 = new JPanel();
 		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Co2", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		co2CheckBox = new JCheckBox("CO2");
+		graph_2.add(co2CheckBox);
 		addAttribute("Co2", panel2, false);
 		addAttribute("TVOC", panel2, false);
 		graph_2.add(panel2);
 		
 		JPanel panel3 = new JPanel();
 		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "ambient", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		ambientCheckBox = new JCheckBox("Ambient");
+		graph_3.add(ambientCheckBox);
 		addAttribute("Temp", panel3, false);
-		addAttribute("Humidity", panel3, false);
-		addAttribute("Pressure", panel3, false);
+		addAttribute("Humi", panel3, false);
+		addAttribute("Pres", panel3, false);
 		graph_3.add(panel3);
 		
 		GraphPloter graphPloter1 = new GraphPloter();
@@ -170,6 +180,29 @@ public class Location_Visualizer{
 		btn_sim_start.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				LOGGER.info("Simulation Start button clicked");
+				ArrayList<String> sArrayList = new ArrayList<String>();
+				ArrayList<SimulationPanel> spArrayList = new ArrayList<>();
+				ArrayList<Boolean> blArrayList = new ArrayList<>();
+				spArrayList.add(simPanel1);
+				spArrayList.add(simPanel2);
+				spArrayList.add(simPanel3);
+				spArrayList.add(simPanel4);
+				for (SimulationPanel simulationPanel: spArrayList) {
+					sArrayList.add(simulationPanel.durationText.getText());
+					sArrayList.add(simulationPanel.periodText.getText());
+					sArrayList.add(simulationPanel.onTime1Text.getText());
+					sArrayList.add(simulationPanel.onTime2Text.getText());
+					sArrayList.add(simulationPanel.offTime1Text.getText());
+					sArrayList.add(simulationPanel.offTime2Text.getText());
+					sArrayList.add(simulationPanel.amplitudeText.getText());
+					blArrayList.add(simulationPanel.enableCheckBox.isSelected());
+				}
+				blArrayList.add(true);
+				blArrayList.add(irCheckBox.isSelected());
+				blArrayList.add(co2CheckBox.isSelected());
+				blArrayList.add(micCheckBox.isSelected());
+				blArrayList.add(ambientCheckBox.isSelected());
+				System.out.println(CommandGenerator.generateCommand(sArrayList, blArrayList));
 			}
 		});
 		JButton btn_sim_stop = new JButton("Stop");
@@ -198,7 +231,7 @@ public class Location_Visualizer{
 		_IRPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "IR Sensor", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		_IRPanel.setLayout(new BoxLayout(_IRPanel, BoxLayout.Y_AXIS));
 		
-		JCheckBox irCheckBox = new JCheckBox("IR Sensor");
+		irCheckBox = new JCheckBox("IR Sensor");
 		_IRPanel.add(irCheckBox);
 		
 		
@@ -220,21 +253,21 @@ public class Location_Visualizer{
 		
 		public SimulationPanel(String name, JPanel parent) {
 			this.simPanel = new JPanel();
-			this.enableCheckBox = new JCheckBox("enable/disable");
+			this.enableCheckBox = new JCheckBox("Enable");
 			
 			parent.add(this.simPanel);
 			this.simPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), name, TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 			this.simPanel.setLayout(new BoxLayout(this.simPanel, BoxLayout.Y_AXIS));
 			
-			System.out.println("here");
 //			duration period on time 1 on time 2 off time 1 off time 2 amplitude 
-			this.durationText = addAttribute("duration", this.simPanel);
-			this.periodText = addAttribute("period", this.simPanel);
-			this.onTime1Text = addAttribute("on time 1", this.simPanel);
-			this.onTime2Text = addAttribute("on time 2", this.simPanel);
-			this.offTime1Text = addAttribute("off time 1", this.simPanel);
-			this.offTime2Text = addAttribute("off time 2", this.simPanel);
-			this.amplitudeText = addAttribute("amplitude", this.simPanel);
+			this.simPanel.add(this.enableCheckBox);
+			this.durationText = addAttribute("Duration", this.simPanel);
+			this.periodText = addAttribute("Period", this.simPanel);
+			this.onTime1Text = addAttribute("On time 1", this.simPanel);
+			this.onTime2Text = addAttribute("On time 2", this.simPanel);
+			this.offTime1Text = addAttribute("Off time 1", this.simPanel);
+			this.offTime2Text = addAttribute("Off time 2", this.simPanel);
+			this.amplitudeText = addAttribute("Amplitude", this.simPanel);
 		}
 	}
 	
@@ -275,7 +308,7 @@ public class Location_Visualizer{
 		sim_attri_panel.add(lblNewLabel);
 		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		
-		JTextField txtAttribute = new JTextField("Nil", 4);
+		JTextField txtAttribute = new JTextField("0", 4);
 		
 		
 		lblNewLabel.setLabelFor(txtAttribute);

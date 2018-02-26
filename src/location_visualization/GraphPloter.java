@@ -36,10 +36,20 @@ public class GraphPloter{
 	    
 	    data = new XYSeriesCollection();
 	    data.addSeries(series);
+//	    chart = ChartFactory.createXYLineChart(
+//	    		"",
+//	        "X", 
+//	        "Y", 
+//	        data,
+//	        PlotOrientation.VERTICAL,
+//	        false,
+//	        true,
+//	        false
+//	    );
 	    chart = ChartFactory.createXYLineChart(
 	    		"",
-	        "X", 
-	        "Y", 
+	        "", 
+	        "", 
 	        data,
 	        PlotOrientation.VERTICAL,
 	        false,
@@ -48,7 +58,7 @@ public class GraphPloter{
 	    );
 
 	    chartPanel = new ChartPanel(chart);
-	    chartPanel.setPreferredSize(new java.awt.Dimension(350, 200));
+	    chartPanel.setPreferredSize(new java.awt.Dimension(300,175));
 		FlowLayout flowLayout = (FlowLayout) chartPanel.getLayout();
 		flowLayout.setVgap(0);
 		flowLayout.setHgap(0);
