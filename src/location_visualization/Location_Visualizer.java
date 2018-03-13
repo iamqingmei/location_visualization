@@ -84,14 +84,7 @@ public class Location_Visualizer{
 		leftPanel.add(topPanel);
 		leftPanel.add(bottomPanel);
 		contentPane.add(leftPanel, BorderLayout.WEST);
-		contentPane.add(_SimulationPanel, BorderLayout.EAST);
-
-		
-		
-		
-
-		
-	
+		contentPane.add(_SimulationPanel, BorderLayout.EAST);	
 		
 		// Display the application
 		_appFrame.pack();
@@ -423,6 +416,9 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	    comboBox_2.addItem("57600");
 	    comboBox_2.addItem("115200");
 	    comboBox_2.addItem("256000");
+	    comboBox_2.addItem("460800");
+	    comboBox_2.addItem("921600");
+	   
 	    
 	    baudPanel.add(comboBox_2);
 	    
