@@ -2,6 +2,7 @@ package location_visualization;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.lang.reflect.Array;
 
 import javax.swing.*;
@@ -9,7 +10,7 @@ import javax.swing.border.TitledBorder;
 
 import org.tc33.jheatchart.HeatChart;
 
-//import gnu.io.CommPortIdentifier;
+import gnu.io.CommPortIdentifier;
 import param.Parameters;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class Location_Visualizer{
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
 	private static ComPortParser comPortParser = ComPortParser.getInstance();
+	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
 	// JFrame for the application
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
@@ -195,7 +197,15 @@ public class Location_Visualizer{
 				blArrayList.add(co2CheckBox.isSelected());
 				blArrayList.add(micCheckBox.isSelected());
 				blArrayList.add(ambientCheckBox.isSelected());
-				System.out.println(CommandGenerator.generateCommand(sArrayList, blArrayList));
+				String command = CommandGenerator.generateCommand(sArrayList, blArrayList);
+//				System.out.println(command);
+				try {
+					communicationManager.write_to_com_port(command);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		JButton btn_sim_stop = new JButton("Stop");
@@ -399,11 +409,11 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	    
 		namePanel.add(new JLabel("Port Name: "));
 		JComboBox<String> comboBox= new JComboBox<String>();  
-//	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
-//	        comboBox.addItem(obj.getName());
-//	      } 
-		comboBox.addItem("COMTesting1");
-		comboBox.addItem("COMTesting2");
+	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+	        comboBox.addItem(obj.getName());
+	      } 
+//		comboBox.addItem("COMTesting1");
+//		comboBox.addItem("COMTesting2");
 		namePanel.add(comboBox);
 	    
 		baudPanel.add(new JLabel("Baud Rate: "), BorderLayout.LINE_START);
@@ -434,8 +444,9 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 				try
 			        {
 						LOGGER.info((String)comboBox.getSelectedItem() + " is selected");
-//			            (new TwoWaySerialComm()).connect((String)comboBox.getSelectedItem());
-//			            new KeepUpdatingMap().execute();
+						
+						
+			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
 			            (new Thread(new KeepMapUpdating())).start();
 			        }
 			        catch ( Exception ex )
@@ -472,14 +483,15 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	    portPanel.add(autoLoadPanel);
 	    
 	    JCheckBox chckbxAutoLoad = new JCheckBox("Auto Load");
+	    
 	    chckbxAutoLoad.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    autoLoadPanel.add(chckbxAutoLoad);
 	    
 	    JTextArea textArea = new JTextArea(4,10);
 	    textArea.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 	    textArea.setMargin(new Insets(0, 15, 0, 15));
-	    textArea.setEditable(false);
-	    textArea.setBackground(new Color(222, 222, 222));
+	    textArea.setEditable(true);
+//	    textArea.setBackground(new Color(222, 222, 222));
 	   
 	    comPortParser.setShowArea(textArea);
 	    autoLoadPanel.add(textArea);

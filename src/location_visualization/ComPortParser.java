@@ -26,7 +26,17 @@ public class ComPortParser {
    	
    	public void appendInt(Integer a) {
    		intBuffer.add(a);
-   		showArea.setText(intBuffer.toString());
+   		String str = "";
+   		int c = 0;
+		for (int i: intBuffer) {
+			str += (char) i;
+			c ++;
+			if (c==50) {
+				str += "\n";
+				c = 0;
+			}
+		}
+   		showArea.setText(str);
 	}
    	
    	public ArrayList<Float> ifCoordination() {
@@ -78,6 +88,19 @@ public class ComPortParser {
    	
    	public void printIntBuffer() {
 		System.out.println(intBuffer.toString());
+		String str = "";
+		int c = 0;
+		
+		for (int i: intBuffer) {
+			str += (char) i;
+			c ++;
+			if (c==50) {
+				str += "\n";
+				c = 0;
+			}
+		}
+		
+		System.out.println(str);
 	}
 
 }

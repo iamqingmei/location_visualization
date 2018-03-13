@@ -59,6 +59,10 @@ public class CommandGenerator {
             }
         }
         
+        String RequestData = "00";
+        // TODO for anto load, any number except 00 or 255(FF)
+        COMTransmitBuf += RequestData;
+        
         
 //        // Request data
 //        COMTransmitBuf += TransmitBuffer.RequestData.ToString("X2");
