@@ -88,16 +88,10 @@ public class TwoWaySerialComm
 	                		ArrayList<Integer> integers = new ArrayList<>();
 	                		for (int i = 0; i<len; i++) {
 	//                    		str += i + ": " + ((Byte)buffer[i]).intValue();
-	                    		
 	//                    		comPortParser.appendInt(((Byte)buffer[i]).intValue());
 	                			integers.add(((Byte)buffer[i]).intValue());
-	                    		
 	                    	}
 	                		comPortParser.appendIntArray(integers);
-	//                		System.out.println(str);
-	//                		System.out.println("Coordination: " + comPortParser.ifCoordination().toString());
-	//                		comPortParser.printIntBuffer();
-	                		
 	                	}
                 }
 //                

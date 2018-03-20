@@ -83,6 +83,10 @@ public class ComPortParser {
    		showIntBufferInTextField();
    		UpdateMap();
 	}
+   	
+   	public int getNumberOfReceivedata() {
+		return numberOfReceivedata;
+	}
    	public void setMapComp(LinesComponent lc) {
    		this.comp = lc;
    	}
@@ -268,20 +272,23 @@ public class ComPortParser {
 	}
    	
    	private double combineDoubleFromBytes(ArrayList<Byte> thebyteArray) {
-        byte[] FloatTemp = {0,0,0,0};
+        byte[] arrayTemp = {0,0,0,0};
         byte bytetemp = combineBytes(thebyteArray.get(0), thebyteArray.get(1));
-        FloatTemp[0] = bytetemp;
+        arrayTemp[0] = bytetemp;
         bytetemp = combineBytes(thebyteArray.get(2), thebyteArray.get(3));
-        FloatTemp[1] = bytetemp;
+        arrayTemp[1] = bytetemp;
         bytetemp = combineBytes(thebyteArray.get(4), thebyteArray.get(5));
-        FloatTemp[2] = bytetemp;
+        arrayTemp[2] = bytetemp;
         bytetemp = combineBytes(thebyteArray.get(6), thebyteArray.get(7));
-        FloatTemp[3] = bytetemp;
-    
-    		ByteBuffer buf = ByteBuffer.wrap(FloatTemp, 0, 4);
-    		float outp = buf.getFloat();
-    		return outp;
+        arrayTemp[3] = bytetemp;
+    		return toSingle(arrayTemp);
     	}
+   	
+   	private float toSingle(byte[] ba) {
+		ByteBuffer buf = ByteBuffer.wrap(ba, 0, 4);
+		float outp = buf.getFloat();
+		return outp;
+   	}
         
 	
 
