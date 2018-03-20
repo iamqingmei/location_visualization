@@ -16,6 +16,10 @@ public class TwoWaySerialComm
 {
 	private int baud_rate;
 	private OutputStream out;
+    private SerialReader serial;
+    private SerialPort serialPort;
+    private CommPort commPort;
+    
     public TwoWaySerialComm()
     {
         super();
@@ -32,11 +36,11 @@ public class TwoWaySerialComm
         }
         else
         {
-            CommPort commPort = portIdentifier.open(this.getClass().getName(),2000);
+            this.commPort = portIdentifier.open(this.getClass().getName(),2000);
             
             if ( commPort instanceof SerialPort )
             {
-                SerialPort serialPort = (SerialPort) commPort;
+                this.serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(this.baud_rate,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
                 
                 InputStream in = serialPort.getInputStream();
@@ -53,6 +57,32 @@ public class TwoWaySerialComm
         }     
         
     }
+    
+	/**
+	 * Disconnect the serial communication.
+	 */
+	public void disconnect() {
+		if (this.isConnected()) {
+			try {
+				this.out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			this.commPort.close();
+			System.out.println("Disconnected from Port " + commPort.getName());
+			this.commPort = null;
+		} else {
+			System.out.println("There is nothing to disconnect");
+		}
+	}
+	
+	/**
+	 * Check if the device is connected.
+	 * @return
+	 */
+	public boolean isConnected(){
+		return (this.commPort!=null);
+	}
     
     public void write_to_com_port(String s) throws IOException {
 //    	OutputStream out;

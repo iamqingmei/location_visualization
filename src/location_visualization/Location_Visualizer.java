@@ -476,11 +476,11 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 			public void mousePressed(MouseEvent e) {
 				try
 			        {
-						//TODO
+						communicationManager.disconnect();
+						LOGGER.info("Disconnected");
 			        }
 			        catch ( Exception ex )
 			        {
-			            // TODO Auto-generated catch block
 			            ex.printStackTrace();
 			        }
 			}
