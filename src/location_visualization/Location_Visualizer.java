@@ -3,12 +3,9 @@ package location_visualization;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.lang.reflect.Array;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-
-import org.tc33.jheatchart.HeatChart;
 
 import gnu.io.CommPortIdentifier;
 import param.Parameters;
@@ -43,8 +40,9 @@ public class Location_Visualizer{
 	
 	public static void main(String[] args) {
 		LOGGER.setLevel(Level.INFO);
+	
 	    init_display();
-	    
+	   
 	}
 	
 	private static void init_display() {
@@ -59,15 +57,19 @@ public class Location_Visualizer{
 		_SimulationPanel = new JPanel();
 		_IRPanel = new JPanel();
 		// Initialize the main MapLayout
+		
 		initMapLayout();
 		// Initialize the main InputLayout
+	
 		initInputLayout();
-		
+	
 		initIRPanel();
 		
 		initSimulationLayout();
 		
 		initGraphPanel();
+		
+		
 		// Add PanelLayouts to content pane
 		Container contentPane = _appFrame.getContentPane();
 		JPanel leftPanel = new JPanel();
@@ -93,6 +95,7 @@ public class Location_Visualizer{
 		_appFrame.setLocationRelativeTo(null);
 		_appFrame.setVisible(true);
 		_appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 	
 	private static void initGraphPanel() {
@@ -413,12 +416,13 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 		
 		
 
-	    
+		
 		namePanel.add(new JLabel("Port Name: "));
 		JComboBox<String> comboBox= new JComboBox<String>();  
 	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
 	        comboBox.addItem(obj.getName());
 	      } 
+	   
 //		comboBox.addItem("COMTesting1");
 //		comboBox.addItem("COMTesting2");
 		namePanel.add(comboBox);
@@ -472,7 +476,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 			public void mousePressed(MouseEvent e) {
 				try
 			        {
-						// TODO
+						//TODO
 			        }
 			        catch ( Exception ex )
 			        {

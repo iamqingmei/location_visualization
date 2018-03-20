@@ -80,6 +80,18 @@ public class ComPortParser {
    		showIntBufferInTextField();
    		UpdateMap();
 	}
+   	public void appendIntArray(ArrayList<Integer> a) {
+		intBuffer.addAll(a);
+		showIntBufferInTextField();
+		if (intBuffer.size() == 240) {
+			parse(intBuffer);
+			intBuffer.clear();
+		}
+		
+		numberOfReceivedata++;
+		
+		UpdateMap();
+   	}
    	
    	public void setIntBuffer(ArrayList<Integer> a) {
 //   		intBuffer.addAll(a);
@@ -186,17 +198,29 @@ public class ComPortParser {
 		
 		System.out.println(str);
 	}
-   	
+//   	D1777400
+//   	S4901019A00011E85D14100B96E42DD1777400000000000FF7
+//   	F40000000000000A039C41ACD42F23287C18491BCC20000000
+//   	00000000000000000000000000000000000000000000000000
+//   	000803F0000803F000000002C893C3A67DB2071C347A469D23
+//   	B00000000203A0608203A83211E3A518C1B3A1CX
    	public void parse(ArrayList<Integer> a) {
    		double RMSSoundNoise = 0;
    		char start_char = (char) ((int)a.get(0));
+   		if (a.size() != 240) {
+   			LOGGER.info("size is not 240");
+   			printIntBuffer();
+   			return;
+   		}
    		char end_char = (char) ((int)a.get(239));
 		if (start_char != 'S') {
 			LOGGER.info("Not start with S");
+			printIntBuffer();
 			return;
 		}
 		if (end_char != 'X') {
 			LOGGER.info("Not end with X");
+			printIntBuffer();
 			return;
 		}
 		
@@ -207,16 +231,17 @@ public class ComPortParser {
 			byteArray.add((byte) (int) i);
 		}
 		
-		int curCMDCount = combineNumbers((ArrayList<Integer>)a.subList(1, 3));
+//		int curCMDCount = Integer.valueOf(Character.toString((char) (byte) byteArray.get(0)) + Character.toString((char) (byte) byteArray.get(1)));
+		int curCMDCount = combineBytes(byteArray.get(0),byteArray.get(1));
 		LOGGER.info("CMDCount: " + curCMDCount);
 		if (curCMDCount == this.CMDCount) {
 			LOGGER.info("CMDCount didn't change: " + curCMDCount);
 			return;
 		}
 		this.CMDCount = curCMDCount;
-		
-		
-		int CMDcountSub = combineNumbers((ArrayList<Integer>)a.subList(3, 5));
+		int CMDcountSub = Integer.valueOf(Character.toString((char) (byte) byteArray.get(2)) + Character.toString((char) (byte) byteArray.get(3)));
+//		int CMDcountSub = combineBytes(byteArray.get(2),byteArray.get(3));
+		LOGGER.info("CMDcountSub: " + CMDcountSub);
 		byte bytetemp;
 		switch (CMDcountSub) {
 			case 1:
@@ -239,49 +264,49 @@ public class ComPortParser {
 	            TVOC_tf.setText(String.valueOf(TVOCval));
 	        
 	            
-	            double TempVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(12, 20));
+	            double TempVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(12, 20)));
 	            temperature_tf.setText(String.format("%f2", TempVal));
-	            double HumidityVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(20, 28));
+	            double HumidityVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(20, 28)));
 	            humi_tf.setText(String.format("%f2", HumidityVal));
-	            double VbatVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(28, 36));
+	            double VbatVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(28, 36)));
 	            vbat_tf.setText(String.format("%f2", VbatVal));
 	            
-	            double yawVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(36, 44));
-	            double pitchVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(44, 52));
-	            double rollVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(52, 60));
+	            double yawVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(36, 44)));
+	            double pitchVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(44, 52)));
+	            double rollVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(52, 60)));
 	            yaw_gp.addPoint(yawVal);
 	            pitch_gp.addPoint(pitchVal);
 	            roll_gp.addPoint(rollVal);
-	            double yaw_biasVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(60, 68));
+	            double yaw_biasVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(60, 68)));
 	            
-	            double AccXval = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(68, 76));
-	            double AccYval = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(76, 84));
-	            double AccZval = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(84, 92));
+	            double AccXval = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(68, 76)));
+	            double AccYval = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(76, 84)));
+	            double AccZval = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(84, 92)));
 	            
-	            double speed_x = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(100, 108));
-	            double speed_y = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(108, 116));
+	            double speed_x = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(100, 108)));
+	            double speed_y = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(108, 116)));
 	            
-	            double position_x = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(124, 132));
-	            double position_y = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(132, 140));
+	            double position_x = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(124, 132)));
+	            double position_y = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(132, 140)));
 	            MapPointManager mapPointManager = MapPointManager.getInstance();
 	            comp.setPoints(mapPointManager.addPoint((float)position_x,(float)position_y), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 	            
 	            double[] p_matrix = new double[3];
-	            p_matrix[0] = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(148, 156));
-	            p_matrix[1] = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(156, 164));
-	            p_matrix[2] = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(164, 172));
-	            double mag_angle = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(172, 180));
+	            p_matrix[0] = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(148, 156)));
+	            p_matrix[1] = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(156, 164)));
+	            p_matrix[2] = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(164, 172)));
+	            double mag_angle = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(172, 180)));
 	            
-	            double airPressureVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(184, 192));
+	            double airPressureVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(184, 192)));
 	            pressure_tf.setText((String.format("%f2", airPressureVal)));
-	            RMSSoundNoise = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(192,200));
+	            RMSSoundNoise = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(192,200)));
 	            RMSSoundNoiseTF.setText((String.format("%f5", RMSSoundNoise)));
-	            double ambTempVal = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(200, 208));
+	            double ambTempVal = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(200, 208)));
 	            amb_tf.setText((String.format("%f2", ambTempVal)));
 	            
 				break;
 			case 2:
-	            RMSSoundNoise = convertToFloatFromBytes((ArrayList<Byte>) byteArray.subList(4,12));
+	            RMSSoundNoise = convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(4,12)));
 	            RMSSoundNoiseTF.setText((String.format("%f5", RMSSoundNoise)));
 				break;
 			case 3:
@@ -294,6 +319,7 @@ public class ComPortParser {
 			default:
 				break;
 		}
+		
    	}
    	
    	private int combineNumbers(ArrayList<Integer> ints) {
