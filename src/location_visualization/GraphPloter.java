@@ -18,14 +18,8 @@ public class GraphPloter{
 	private JFreeChart chart;
 	private final ChartPanel chartPanel;
 	private XYSeries series= new XYSeries("Random Data");
-	
+	private int count = 0;
 	public GraphPloter() {
-	    series.add(0.0,0.0);
-	    series.add(1.0,2.0);
-	    series.add(2.0,4.0);
-	    series.add(3.0,6.0);
-	    series.add(4.0,8.0);
-
 	    data = new XYSeriesCollection();
 	    data.addSeries(series);
 //	    chart = ChartFactory.createXYLineChart(
@@ -62,6 +56,11 @@ public class GraphPloter{
 	
 	public void addPoint(double x, double y) {
 		series.add(x, y);
+		chartPanel.repaint();
+	}
+	public void addPoint(double y) {
+		series.add(count, y);
+		count ++;
 		chartPanel.repaint();
 	}
 

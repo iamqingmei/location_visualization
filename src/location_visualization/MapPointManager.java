@@ -121,11 +121,11 @@ public class MapPointManager {
 		return mp;
 	}
 	
-	public String bottomPoint() {
+	public String bottomPointString() {
 		return (start_coor + "," + start_coor);
 	}
 	
-	public String topPoint() {
+	public String topPointString() {
 		return ((start_coor + Parameters.MAP_MAXWIDTH_COOR*scale) + "," + (start_coor + Parameters.MAP_MAXHEIGHT_COOR*scale));
 	}
 	

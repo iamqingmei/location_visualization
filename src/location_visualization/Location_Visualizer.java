@@ -136,6 +136,10 @@ public class Location_Visualizer{
 		graph_2.add(graphPloter2.getChartPanel());
 		graph_3.add(graphPloter3.getChartPanel());
 		
+		comPortParser.setYawGP(graphPloter1);
+		comPortParser.setPitchGP(graphPloter2);
+		comPortParser.setRollGP(graphPloter3);
+		
 		_GraphPanel.add(graph_1);
 		_GraphPanel.add(graph_2);
 		_GraphPanel.add(graph_3);
@@ -388,7 +392,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 				
 				mapPointManager.setTurningDegree(Float.parseFloat(turning_degree.getText()));
 				
-				comp.setPoints(mapPointManager.turn(), mapPointManager.topPoint(), mapPointManager.bottomPoint());
+				comp.setPoints(mapPointManager.turn(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 			}
 		});
 		
@@ -509,7 +513,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 		JPanel variableGroup1 = new JPanel();
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
-		comPortParser.setvbatTF(addAttribute("Vbat", variableGroup1));
+		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1));
 		comPortParser.setambTF(addAttribute("Ambient", variableGroup1));
 		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1));
 		addAttribute("variable D", variableGroup1);
@@ -553,7 +557,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 				float y = Float.parseFloat(yInput.getText());
 				MapPointManager mapPointManager = MapPointManager.getInstance();
 				
-				comp.setPoints(mapPointManager.addPoint(x, y), mapPointManager.topPoint(), mapPointManager.bottomPoint());
+				comp.setPoints(mapPointManager.addPoint(x, y), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 			}
 		});
 		coorPanel.add(btn_submit_new_point);

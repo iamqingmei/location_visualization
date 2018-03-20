@@ -59,7 +59,7 @@ public class CommandGenerator {
             }
         }
         
-        String RequestData = "00";
+        String RequestData = "11";
         // TODO for anto load, any number except 00 or 255(FF)
         COMTransmitBuf += RequestData;
         
