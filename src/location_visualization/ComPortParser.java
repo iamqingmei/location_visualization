@@ -23,6 +23,7 @@ public class ComPortParser {
 	private JTextField amb_tf;
 	private JTextField vbat_tf;
 	private JTextField RMSSoundNoiseTF;
+	private LinesComponent comp;
 	
 	protected ComPortParser() {
 	   	// Exists only to defeat instantiation.
@@ -73,12 +74,31 @@ public class ComPortParser {
    	public void appendInt(Integer a) {
    		intBuffer.add(a);
    		showIntBufferInTextField();
+   		UpdateMap();
 	}
    	
    	public void appendIntArray(ArrayList<Integer> a) {
    		intBuffer.addAll(a);
    		numberOfReceivedata++;
    		showIntBufferInTextField();
+   		UpdateMap();
+	}
+   	public void setMapComp(LinesComponent lc) {
+   		this.comp = lc;
+   	}
+   	
+   	private void UpdateMap() {
+   		ArrayList<Float> res = ifCoordination();
+		if( res.size() % 2 != 0){
+			LOGGER.warning("Coordination has sth wrong!");
+			return;
+		}
+		if (res.size() > 0) {
+			MapPointManager mapPointManager = MapPointManager.getInstance();
+			for (int i = 0; i < res.size() / 2; i++) {
+				comp.setPoints(mapPointManager.addPoint(res.get(2*i), res.get(2*i + 1)), mapPointManager.topPoint(), mapPointManager.bottomPoint());
+			}
+		}
 	}
    	
    	public void showIntBufferInTextField() {

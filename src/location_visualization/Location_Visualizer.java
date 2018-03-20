@@ -280,6 +280,8 @@ public class Location_Visualizer{
 	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2)));
 	    comp.setBorder(new TitledBorder("Location Visualization"));
 	    _MapPanel.add(comp);
+	    
+	    comPortParser.setMapComp(comp);
 	}
 
 	
@@ -448,7 +450,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 						
 						
 			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
-			            (new Thread(new KeepMapUpdating())).start();
+//			            (new Thread(new KeepMapUpdating())).start();
 			        }
 			        catch ( Exception ex )
 			        {
@@ -559,41 +561,41 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	}
 
 	
-    public static class KeepMapUpdating implements Runnable 
-    {
-        private volatile boolean shutdown;
-        
-        public void run ()
-        {
-            try
-            {
-            	while(!shutdown) {
-            		Thread.sleep(1000);
-            		ArrayList<Float> res = comPortParser.ifCoordination();
-    				if( res.size() % 2 != 0){
-    					LOGGER.warning("Coordination has sth wrong!");
-    					comPortParser.printIntBuffer();
-    					this.shutdown();
-    				}
-    				if (res.size() > 0) {
-    					
-    					MapPointManager mapPointManager = MapPointManager.getInstance();
-    					
-    					for (int i = 0; i < res.size() / 2; i++) {
-    						comp.setPoints(mapPointManager.addPoint(res.get(2*i), res.get(2*i + 1)), mapPointManager.topPoint(), mapPointManager.bottomPoint());
-    					}
-            	}
-            }
-            }
-            catch ( Exception e )
-            {
-                e.printStackTrace();
-            }            
-        }
-        public void shutdown() {
-        	shutdown = true;
-        }
-}
+//    public static class KeepMapUpdating implements Runnable 
+//    {
+//        private volatile boolean shutdown;
+//        
+//        public void run ()
+//        {
+//            try
+//            {
+//            	while(!shutdown) {
+//            		Thread.sleep(1000);
+//            		ArrayList<Float> res = comPortParser.ifCoordination();
+//    				if( res.size() % 2 != 0){
+//    					LOGGER.warning("Coordination has sth wrong!");
+//    					comPortParser.printIntBuffer();
+//    					this.shutdown();
+//    				}
+//    				if (res.size() > 0) {
+//    					
+//    					MapPointManager mapPointManager = MapPointManager.getInstance();
+//    					
+//    					for (int i = 0; i < res.size() / 2; i++) {
+//    						comp.setPoints(mapPointManager.addPoint(res.get(2*i), res.get(2*i + 1)), mapPointManager.topPoint(), mapPointManager.bottomPoint());
+//    					}
+//            	}
+//            }
+//            }
+//            catch ( Exception e )
+//            {
+//                e.printStackTrace();
+//            }            
+//        }
+//        public void shutdown() {
+//        	shutdown = true;
+//        }
+//}
 
 	
 	    
