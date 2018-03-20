@@ -91,7 +91,7 @@ public class TwoWaySerialComm
 	//                    		comPortParser.appendInt(((Byte)buffer[i]).intValue());
 	                			integers.add(((Byte)buffer[i]).intValue());
 	                    	}
-	                		comPortParser.appendIntArray(integers);
+	                		comPortParser.setIntBuffer(integers);
 	                	}
                 }
 //                

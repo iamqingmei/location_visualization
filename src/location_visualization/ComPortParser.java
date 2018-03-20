@@ -81,8 +81,9 @@ public class ComPortParser {
    		UpdateMap();
 	}
    	
-   	public void appendIntArray(ArrayList<Integer> a) {
-   		intBuffer.addAll(a);
+   	public void setIntBuffer(ArrayList<Integer> a) {
+//   		intBuffer.addAll(a);
+   		intBuffer = a;
    		parse(a);
    		numberOfReceivedata++;
    		showIntBufferInTextField();
