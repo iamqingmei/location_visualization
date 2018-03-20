@@ -8,6 +8,7 @@ import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 
@@ -81,22 +82,23 @@ public class TwoWaySerialComm
             
                 while (( len = this.in.read(buffer)) > -1 )
                 {
-                	
-                	if (len > 0) {
-                		System.out.println("------------");
-                		String str = "";
-                		for (int i = 0; i<len; i++) {
-//                    		str += i + ": " + ((Byte)buffer[i]).intValue();
-                    		
-                    		comPortParser.appendInt(((Byte)buffer[i]).intValue());
-                    		
-                    	}
-//                		System.out.println(str);
-//                		System.out.println("Coordination: " + comPortParser.ifCoordination().toString());
-                		comPortParser.printIntBuffer();
-                		
-                	}
-                    	
+	                	if (len > 0) {
+	                		System.out.println("------------");
+	//                		String str = "";
+	                		ArrayList<Integer> integers = new ArrayList<>();
+	                		for (int i = 0; i<len; i++) {
+	//                    		str += i + ": " + ((Byte)buffer[i]).intValue();
+	                    		
+	//                    		comPortParser.appendInt(((Byte)buffer[i]).intValue());
+	                			integers.add(((Byte)buffer[i]).intValue());
+	                    		
+	                    	}
+	                		comPortParser.appendIntArray(integers);
+	//                		System.out.println(str);
+	//                		System.out.println("Coordination: " + comPortParser.ifCoordination().toString());
+	//                		comPortParser.printIntBuffer();
+	                		
+	                	}
                 }
 //                
 

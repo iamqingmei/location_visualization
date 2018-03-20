@@ -115,17 +115,18 @@ public class Location_Visualizer{
 		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Co2", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		co2CheckBox = new JCheckBox("CO2");
 		graph_2.add(co2CheckBox);
-		addAttribute("Co2", panel2, false);
-		addAttribute("TVOC", panel2, false);
+		comPortParser.setco2TF(addAttribute("Co2", panel2, false));
+		comPortParser.setTVOCTF(addAttribute("TVOC", panel2, false));
 		graph_2.add(panel2);
 		
 		JPanel panel3 = new JPanel();
 		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "ambient", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		ambientCheckBox = new JCheckBox("Ambient");
 		graph_3.add(ambientCheckBox);
-		addAttribute("Temp", panel3, false);
-		addAttribute("Humi", panel3, false);
-		addAttribute("Pres", panel3, false);
+		comPortParser.settempTF(addAttribute("Temp", panel3, false));
+		comPortParser.setHumiTF(addAttribute("Humi", panel3, false));
+		comPortParser.setpressureTF(addAttribute("Pres", panel3, false));
+		
 		graph_3.add(panel3);
 		
 		GraphPloter graphPloter1 = new GraphPloter();
@@ -506,9 +507,9 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 		JPanel variableGroup1 = new JPanel();
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
-		addAttribute("variable A", variableGroup1);
-		addAttribute("variable B", variableGroup1);
-		addAttribute("variable C", variableGroup1);
+		comPortParser.setvbatTF(addAttribute("Vbat", variableGroup1));
+		comPortParser.setambTF(addAttribute("Ambient", variableGroup1));
+		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1));
 		addAttribute("variable D", variableGroup1);
 		addAttribute("variable E", variableGroup1);
 		JPanel variableGroup2 = new JPanel();
