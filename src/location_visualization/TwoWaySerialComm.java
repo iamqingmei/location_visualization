@@ -16,6 +16,7 @@ public class TwoWaySerialComm
 {
 	private int baud_rate;
 	private OutputStream out;
+	private InputStream in;
     private SerialPort serialPort;
     private CommPort commPort;
     
@@ -42,7 +43,7 @@ public class TwoWaySerialComm
                 this.serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(this.baud_rate,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
                 
-                InputStream in = serialPort.getInputStream();
+                this.in = serialPort.getInputStream();
                 this.out = serialPort.getOutputStream();
                 
                 (new Thread(new SerialReader(in))).start();
@@ -64,6 +65,7 @@ public class TwoWaySerialComm
 		if (this.isConnected()) {
 			try {
 				this.out.close();
+				this.in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

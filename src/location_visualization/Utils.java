@@ -75,59 +75,56 @@ public class Utils {
 		  return Integer.parseInt(binary, 2);
 	  }
 	  
+	  public static int combineBytesToUnsignInt(byte a, byte b) {
+		return a << 4 | b;
+	}
+	  
 	  public static byte combineBytes(byte a, byte b) {
-		return (byte) ((byte)a << 4 | b);
+			return (byte) (a << 4 | b);
 	}
 	
-	  public static float convertToFloatFromBytes(ArrayList<Byte> thebyteArray) {
-	    byte[] arrayTemp = {0,0,0,0};
-	    byte bytetemp = combineBytes(thebyteArray.get(0), thebyteArray.get(1));
-	    arrayTemp[0] = bytetemp;
-	    bytetemp = combineBytes(thebyteArray.get(2), thebyteArray.get(3));
-	    arrayTemp[1] = bytetemp;
-	    bytetemp = combineBytes(thebyteArray.get(4), thebyteArray.get(5));
-	    arrayTemp[2] = bytetemp;
-	    bytetemp = combineBytes(thebyteArray.get(6), thebyteArray.get(7));
-	    arrayTemp[3] = bytetemp;
+	  public static float convertToFloatFromBytes(List<Byte> thebyteArray) {
+		    int[] arrayTemp = {0,0,0,0};
+		    int bytetemp = combineBytesToUnsignInt(thebyteArray.get(0), thebyteArray.get(1));
+		    arrayTemp[0] = bytetemp;
+		    bytetemp = combineBytesToUnsignInt(thebyteArray.get(2), thebyteArray.get(3));
+		    arrayTemp[1] = bytetemp;
+		    bytetemp = combineBytesToUnsignInt(thebyteArray.get(4), thebyteArray.get(5));
+		    arrayTemp[2] = bytetemp;
+		    bytetemp = combineBytesToUnsignInt(thebyteArray.get(6), thebyteArray.get(7));
+		    arrayTemp[3] = bytetemp;
 			return toSingle(arrayTemp);
 		}
-	  
-	  public static float convertToFloatFromBytes(List<Byte> thebyteArray) {
-		    byte[] arrayTemp = {0,0,0,0};
-		    byte bytetemp = combineBytes(thebyteArray.get(0), thebyteArray.get(1));
-		    arrayTemp[0] = bytetemp;
-		    bytetemp = combineBytes(thebyteArray.get(2), thebyteArray.get(3));
-		    arrayTemp[1] = bytetemp;
-		    bytetemp = combineBytes(thebyteArray.get(4), thebyteArray.get(5));
-		    arrayTemp[2] = bytetemp;
-		    bytetemp = combineBytes(thebyteArray.get(6), thebyteArray.get(7));
-		    arrayTemp[3] = bytetemp;
-				return toSingle(arrayTemp);
-			}
-	  
-	  public static float convertToFloatFromBytes(Byte[] thebyteArray) {
-		  // the length of thebyteArray must be 8
-		  if (thebyteArray.length != 8) {
-			  return 0.0f;
+//	  
+//	  public static float convertToFloatFromBytes(Byte[] thebyteArray) {
+//		  // the length of thebyteArray must be 8
+//		  if (thebyteArray.length != 8) {
+//			  return 0.0f;
+//		  }
+//		    byte[] arrayTemp = {0,0,0,0};//		    byte bytetemp = combineBytes(thebyteArray[0], thebyteArray[1]);
+//		    arrayTemp[0] = bytetemp;
+//		    bytetemp = combineBytes(thebyteArray[2], thebyteArray[3]);
+//		    arrayTemp[1] = bytetemp;
+//		    bytetemp = combineBytes(thebyteArray[4], thebyteArray[5]);
+//		    arrayTemp[2] = bytetemp;
+//		    bytetemp = combineBytes(thebyteArray[6], thebyteArray[7]);
+//		    arrayTemp[3] = bytetemp;
+//				return toSingle(arrayTemp);
+//			}
+//	  
+//	  
+//	  
+//	  public static float toSingle(byte[] ba) {
+//		ByteBuffer buf = ByteBuffer.wrap(ba);
+//		float outp = buf.getFloat();
+//		return outp;
+//	}
+	  public static float toSingle(int[] intA) {
+		  int theInt = ((intA[0] & 0x7F) << 24)|(intA[1]<<16)|(intA[2]<<8)|(intA[3]);
+		  float f = Float.intBitsToFloat(theInt);
+		  if ((intA[0] & 0x80) > 0) {
+			  f = f*-1;//		
 		  }
-		    byte[] arrayTemp = {0,0,0,0};
-		    byte bytetemp = combineBytes(thebyteArray[0], thebyteArray[1]);
-		    arrayTemp[0] = bytetemp;
-		    bytetemp = combineBytes(thebyteArray[2], thebyteArray[3]);
-		    arrayTemp[1] = bytetemp;
-		    bytetemp = combineBytes(thebyteArray[4], thebyteArray[5]);
-		    arrayTemp[2] = bytetemp;
-		    bytetemp = combineBytes(thebyteArray[6], thebyteArray[7]);
-		    arrayTemp[3] = bytetemp;
-				return toSingle(arrayTemp);
-			}
-	  
-	  
-	  
-	  public static float toSingle(byte[] ba) {
-		ByteBuffer buf = ByteBuffer.wrap(ba);
-		float outp = buf.getFloat();
-	//			float f = ByteBuffer.wrap(ba).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-		return outp;
+		return f;
 	}
 }

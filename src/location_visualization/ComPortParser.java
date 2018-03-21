@@ -110,36 +110,40 @@ public class ComPortParser {
 	}
    	
    	private void updateGUI() {
-   		if (byteBuffer.size() >= 240) {
-			ArrayList<Integer> idxS = new ArrayList<>();
-			for (int idx = 0; idx<byteBuffer.size(); idx++) {
-				// put the idx of 'S' in byteBuffer to idxS
-				if ((char)(byte)byteBuffer.get(idx) == 'S') {
-					idxS.add(0);
-				}
-			}
-			if (idxS.size() == 0) {
-				// no 'S' in byteBuffer
-				byteBuffer.clear();
-			}
-			else if (idxS.size() == 1) {
-				// only one 'S' in byteBuffer, remove all useless bytes before 'S'
-				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(0), byteBuffer.size()));
-				if (byteBuffer.size() >= 240) {
-					parse(new ArrayList<>(byteBuffer.subList(0, 240)));
-				}
-			}
-			else { // idxS.size >= 1 
-				// there are many 'S' in byteBuffer
-				for (int idx = 0; idx<idxS.size()-1;idx++) {
-					int dif = idxS.get(idx) - idxS.get(idx + 1);
-					if (dif >= 240) {
-						parse(new ArrayList<>(byteBuffer.subList(idxS.get(idx), idxS.get(idx) + 240)));
-					}
-				}
-				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(idxS.size()-1), byteBuffer.size()));
-			}
-		}
+//   		if (byteBuffer.size() >= 240) {
+//			ArrayList<Integer> idxS = new ArrayList<>();
+//			for (int idx = 0; idx<byteBuffer.size(); idx++) {
+//				// put the idx of 'S' in byteBuffer to idxS
+//				if ((char)(byte)byteBuffer.get(idx) == 'S') {
+//					idxS.add(0);
+//				}
+//			}
+//			if (idxS.size() == 0) {
+//				// no 'S' in byteBuffer
+//				byteBuffer.clear();
+//			}
+//			else if (idxS.size() == 1) {
+//				// only one 'S' in byteBuffer, remove all useless bytes before 'S'
+//				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(0), byteBuffer.size()));
+//				if (byteBuffer.size() >= 240) {
+//					parse(new ArrayList<>(byteBuffer.subList(0, 240)));
+//				}
+//			}
+//			else { // idxS.size >= 1 
+//				// there are many 'S' in byteBuffer
+//				for (int idx = 0; idx<idxS.size()-1;idx++) {
+//					int dif = idxS.get(idx) - idxS.get(idx + 1);
+//					if (dif >= 240) {
+//						parse(new ArrayList<>(byteBuffer.subList(idxS.get(idx), idxS.get(idx) + 240)));
+//					}
+//				}
+//				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(idxS.size()-1), byteBuffer.size()));
+//			}
+//		}
+   		if (byteBuffer.size() == 240) {
+   			parse(byteBuffer);
+   			byteBuffer.clear();
+   		}
 	}
    	
    	public void showByteBufferInTextField() {
@@ -239,12 +243,11 @@ public class ComPortParser {
 		}
 		
 		ArrayList<Byte> byteArray = new ArrayList<>();
-		for (byte t:a.subList(1, a.size()-1)) {
+		for (byte t:a.subList(1, 209)) {
 			String string = Character.toString((char) t);
 			byteArray.add((byte)Integer.parseInt(string, 16));
 		}
 		
-//		int curCMDCount = Integer.valueOf(Character.toString((char) (byte) byteArray.get(0)) + Character.toString((char) (byte) byteArray.get(1)));
 		int curCMDCount = Utils.combineBytes(byteArray.get(0),byteArray.get(1));
 		LOGGER.info("CMDCount: " + curCMDCount);
 		if (curCMDCount == this.CMDCount) {
@@ -252,40 +255,51 @@ public class ComPortParser {
 			return;
 		}
 		this.CMDCount = curCMDCount;
-//		int CMDcountSub = Integer.valueOf(Character.toString((char) (byte) byteArray.get(2)) + Character.toString((char) (byte) byteArray.get(3)));
 		int CMDcountSub = Utils.combineBytes(byteArray.get(2),byteArray.get(3));
 		LOGGER.info("CMDcountSub: " + CMDcountSub);
-		byte bytetemp;
+		int bytetemp;
 		switch (CMDcountSub) {
 			case 1:
 				LOGGER.info("case 1");
 	            //Double CO2val = 0.0;
-	            bytetemp = Utils.combineBytes(byteArray.get(4), byteArray.get(5));
+	            bytetemp = Utils.combineBytesToUnsignInt(byteArray.get(4), byteArray.get(5));
 	            int valtemp;
-	            valtemp = bytetemp << 8;
-	            bytetemp = Utils.combineBytes(byteArray.get(6), byteArray.get(7));
+	          
+	            valtemp =  bytetemp << 8;
+	            printByteBuffer();
+	            bytetemp = Utils.combineBytesToUnsignInt(byteArray.get(6), byteArray.get(7));
 	            valtemp |= bytetemp;
 	            this.CO2val = valtemp;
 	            this.co2_tf.setText(String.valueOf(this.CO2val));
 	            
 	            //Double TVOCval = 0.0;
-	            bytetemp =  Utils.combineBytes(byteArray.get(8), byteArray.get(9));
+	            bytetemp =  Utils.combineBytesToUnsignInt(byteArray.get(8), byteArray.get(9));
 		        valtemp = (bytetemp<<8);
-	            bytetemp = Utils.combineBytes(byteArray.get(10), byteArray.get(11));
+	            bytetemp = Utils.combineBytesToUnsignInt(byteArray.get(10), byteArray.get(11));
 	            valtemp |= bytetemp;
 	            this.TVOCval = valtemp;
 	            this.TVOC_tf.setText(String.valueOf(this.TVOCval));
 	        
 	            
 	            this.TempVal = Utils.convertToFloatFromBytes(( byteArray.subList(12, 20)));
+	           
 	            temperature_tf.setText(String.format("%.2f", this.TempVal));
 	            this.HumidityVal = Utils.convertToFloatFromBytes(( byteArray.subList(20, 28)));
 	            humi_tf.setText(String.format("%.2f", this.HumidityVal));
 	            this.VbatVal = Utils.convertToFloatFromBytes(( byteArray.subList(28, 36)));
+	           
+	           
 	            vbat_tf.setText(String.format("%.2f", this.VbatVal));
 	            
 	            this.yawVal = Utils.convertToFloatFromBytes(( byteArray.subList(36, 44)));
 	            this.pitchVal = Utils.convertToFloatFromBytes(( byteArray.subList(44, 52)));
+	            String s ="";
+	            for (byte b:a.subList(45, 45+8)) {
+	            	s+=(char)b;
+	            }
+	            System.out.println(s);
+	            System.out.println(pitchVal);
+	            
 	            this.rollVal = Utils.convertToFloatFromBytes(( byteArray.subList(52, 60)));
 	            yaw_gp.addPoint(yawVal);
 	            pitch_gp.addPoint(pitchVal);
