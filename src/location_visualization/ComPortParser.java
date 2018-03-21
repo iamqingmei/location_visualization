@@ -156,19 +156,7 @@ public class ComPortParser {
 	}
    	
    	public void showByteBufferInTextField() {
-   		String str = "";
-   		int c = 0;
-		for (byte i: byteBuffer) {
-			if ((char) i != '\n') {
-				str += (char) i;
-				c ++;
-				if (c==50) {
-					str += "\n";
-					c = 0;
-				}
-			}	
-		}
-   		showArea.setText(str);
+   		showArea.setText(ByteBufferToString());
    	}
 
    	
@@ -208,8 +196,11 @@ public class ComPortParser {
    	}
    	
    	public void printByteBuffer() {
-		System.out.println(byteBuffer.toString());
-		String str = "";
+		System.out.println(ByteBufferToString());
+	}
+   	
+   	private String ByteBufferToString() {
+   		String str = "";
 		int c = 0;
 		
 		for (byte i: byteBuffer) {
@@ -222,9 +213,8 @@ public class ComPortParser {
 				}
 			}	
 		}
-		
-		System.out.println(str);
-	}
+		return str;
+   	}
 //   	D1777400
 //   	S4901019A00011E85D14100B96E42DD1777400000000000FF7
 //   	F40000000000000A039C41ACD42F23287C18491BCC20000000

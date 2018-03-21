@@ -108,14 +108,14 @@ public class Location_Visualizer{
 		graph_3.setLayout(new BoxLayout(graph_3, BoxLayout.Y_AXIS));
 		
 		JPanel panel1 = new JPanel();
-		graph_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "mic", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		graph_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "yaw", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		micCheckBox = new JCheckBox("Mic");
 		graph_1.add(micCheckBox);
 		addAttribute("mic", panel1, false);
 		graph_1.add(panel1);
 		
 		JPanel panel2 = new JPanel();
-		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Co2", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "pitch", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		co2CheckBox = new JCheckBox("CO2");
 		graph_2.add(co2CheckBox);
 		comPortParser.setco2TF(addAttribute("Co2", panel2, false));
@@ -123,7 +123,7 @@ public class Location_Visualizer{
 		graph_2.add(panel2);
 		
 		JPanel panel3 = new JPanel();
-		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "ambient", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "roll", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		ambientCheckBox = new JCheckBox("Ambient");
 		graph_3.add(ambientCheckBox);
 		comPortParser.settempTF(addAttribute("Temp", panel3, false));
