@@ -26,6 +26,10 @@ public class ComPortParser {
 	private GraphPloter yaw_gp;
 	private GraphPloter pitch_gp;
 	private GraphPloter roll_gp;
+	private int CO2val, TVOCval;
+	private float TempVal, HumidityVal, VbatVal, pitchVal, yawVal, rollVal, position_x,position_y,airPressureVal, ambTempVal,RMSSoundNoise;
+    private float[] p_matrix = new float[3];
+    
 	protected ComPortParser() {
 	   	// Exists only to defeat instantiation.
    	}
@@ -75,7 +79,7 @@ public class ComPortParser {
    	public void appendByte(byte a) {
    		byteBuffer.add(a);
    		showByteBufferInTextField();
-//   		UpdateMap();
+   		updateGUI();
 	}
    	
    	public void appendByteArray(byte[] a) {
@@ -83,8 +87,30 @@ public class ComPortParser {
 			byteBuffer.add(t);
 		}
 		showByteBufferInTextField();
-		// TODO check S&X starting and ending string
-		if (byteBuffer.size() >= 240) {
+		numberOfReceivedata++;
+		updateGUI();
+   	}
+   	
+   	
+   	public int getNumberOfReceivedata() {
+		return numberOfReceivedata;
+	}
+   	public void setMapComp(LinesComponent lc) {
+   		this.comp = lc;
+   	}
+   	
+   	public void setYawGP(GraphPloter g) {
+		this.yaw_gp = g;
+	}
+   	public void setPitchGP(GraphPloter g) {
+		this.pitch_gp = g;
+	}
+   	public void setRollGP(GraphPloter g) {
+		this.roll_gp = g;
+	}
+   	
+   	private void updateGUI() {
+   		if (byteBuffer.size() >= 240) {
 			ArrayList<Integer> idxS = new ArrayList<>();
 			for (int idx = 0; idx<byteBuffer.size(); idx++) {
 				// put the idx of 'S' in byteBuffer to idxS
@@ -114,41 +140,7 @@ public class ComPortParser {
 				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(idxS.size()-1), byteBuffer.size()));
 			}
 		}
-		numberOfReceivedata++;
-//		UpdateMap();
-   	}
-   	
-   	
-   	public int getNumberOfReceivedata() {
-		return numberOfReceivedata;
 	}
-   	public void setMapComp(LinesComponent lc) {
-   		this.comp = lc;
-   	}
-   	
-   	public void setYawGP(GraphPloter g) {
-		this.yaw_gp = g;
-	}
-   	public void setPitchGP(GraphPloter g) {
-		this.pitch_gp = g;
-	}
-   	public void setRollGP(GraphPloter g) {
-		this.roll_gp = g;
-	}
-   	
-//   	private void UpdateMap() {
-//   		ArrayList<Float> res = ifCoordination();
-//		if( res.size() % 2 != 0){
-//			LOGGER.warning("Coordination has sth wrong!");
-//			return;
-//		}
-//		if (res.size() > 0) {
-//			MapPointManager mapPointManager = MapPointManager.getInstance();
-//			for (int i = 0; i < res.size() / 2; i++) {
-//				comp.setPoints(mapPointManager.addPoint(res.get(2*i), res.get(2*i + 1)), mapPointManager.topPointString(), mapPointManager.bottomPointString());
-//			}
-//		}
-//	}
    	
    	public void showByteBufferInTextField() {
    		String str = "";
@@ -223,7 +215,7 @@ public class ComPortParser {
 //   	000803F0000803F000000002C893C3A67DB2071C347A469D23
 //   	B00000000203A0608203A83211E3A518C1B3A1CX
    	public void parse(ArrayList<Byte> a) {
-   		float RMSSoundNoise = 0;
+   		
    		char start_char = (char) (byte) a.get(0);
    		if (a.size() != 240) {
    			LOGGER.info("size is not 240");
@@ -265,28 +257,28 @@ public class ComPortParser {
 	            valtemp = bytetemp << 8;
 	            bytetemp = Utils.combineBytes(byteArray.get(6), byteArray.get(7));
 	            valtemp |= bytetemp;
-	            float CO2val = (float) (valtemp);
-	            co2_tf.setText(String.valueOf(CO2val));
+	            this.CO2val = valtemp;
+	            this.co2_tf.setText(String.valueOf(this.CO2val));
 	            
 	            //Double TVOCval = 0.0;
 	            bytetemp =  Utils.combineBytes(byteArray.get(8), byteArray.get(9));
 		        valtemp = (bytetemp<<8);
 	            bytetemp = Utils.combineBytes(byteArray.get(10), byteArray.get(11));
 	            valtemp |= bytetemp;
-	            float TVOCval =  (float) (valtemp);
-	            TVOC_tf.setText(String.valueOf(TVOCval));
+	            this.TVOCval = valtemp;
+	            this.TVOC_tf.setText(String.valueOf(this.TVOCval));
 	        
 	            
-	            float TempVal = Utils.convertToFloatFromBytes(( byteArray.subList(12, 20)));
-	            temperature_tf.setText(String.format("%.2f", TempVal));
-	            float HumidityVal = Utils.convertToFloatFromBytes(( byteArray.subList(20, 28)));
-	            humi_tf.setText(String.format("%.2f", HumidityVal));
-	            float VbatVal = Utils.convertToFloatFromBytes(( byteArray.subList(28, 36)));
-	            vbat_tf.setText(String.format("%.2f", VbatVal));
+	            this.TempVal = Utils.convertToFloatFromBytes(( byteArray.subList(12, 20)));
+	            temperature_tf.setText(String.format("%.2f", this.TempVal));
+	            this.HumidityVal = Utils.convertToFloatFromBytes(( byteArray.subList(20, 28)));
+	            humi_tf.setText(String.format("%.2f", this.HumidityVal));
+	            this.VbatVal = Utils.convertToFloatFromBytes(( byteArray.subList(28, 36)));
+	            vbat_tf.setText(String.format("%.2f", this.VbatVal));
 	            
-	            float yawVal = Utils.convertToFloatFromBytes(( byteArray.subList(36, 44)));
-	            float pitchVal = Utils.convertToFloatFromBytes(( byteArray.subList(44, 52)));
-	            float rollVal = Utils.convertToFloatFromBytes(( byteArray.subList(52, 60)));
+	            this.yawVal = Utils.convertToFloatFromBytes(( byteArray.subList(36, 44)));
+	            this.pitchVal = Utils.convertToFloatFromBytes(( byteArray.subList(44, 52)));
+	            this.rollVal = Utils.convertToFloatFromBytes(( byteArray.subList(52, 60)));
 	            yaw_gp.addPoint(yawVal);
 	            pitch_gp.addPoint(pitchVal);
 	            roll_gp.addPoint(rollVal);
@@ -298,29 +290,29 @@ public class ComPortParser {
 //	            
 //	            float speed_x = Utils.convertToFloatFromBytes(( byteArray.subList(100, 108)));
 //	            float speed_y = Utils.convertToFloatFromBytes(( byteArray.subList(108, 116)));
-	            
-	            float position_x = Utils.convertToFloatFromBytes(( byteArray.subList(124, 132)));
-	            float position_y = Utils.convertToFloatFromBytes(( byteArray.subList(132, 140)));
+
+	            this.position_x = Utils.convertToFloatFromBytes(( byteArray.subList(124, 132)));
+	            this.position_y = Utils.convertToFloatFromBytes(( byteArray.subList(132, 140)));
 	            MapPointManager mapPointManager = MapPointManager.getInstance();
-	            comp.setPoints(mapPointManager.addPoint((float)position_x,(float)position_y), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+	            comp.setPoints(mapPointManager.addPoint(this.position_x,this.position_y), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 	            
-	            float[] p_matrix = new float[3];
-	            p_matrix[0] = Utils.convertToFloatFromBytes(( byteArray.subList(148, 156)));
-	            p_matrix[1] = Utils.convertToFloatFromBytes(( byteArray.subList(156, 164)));
-	            p_matrix[2] = Utils.convertToFloatFromBytes(( byteArray.subList(164, 172)));
+	            
+	            this.p_matrix[0] = Utils.convertToFloatFromBytes(( byteArray.subList(148, 156)));
+	            this.p_matrix[1] = Utils.convertToFloatFromBytes(( byteArray.subList(156, 164)));
+	            this.p_matrix[2] = Utils.convertToFloatFromBytes(( byteArray.subList(164, 172)));
 //	            float mag_angle = Utils.convertToFloatFromBytes(( byteArray.subList(172, 180)));
 	            
-	            float airPressureVal = Utils.convertToFloatFromBytes(( byteArray.subList(184, 192)));
-	            pressure_tf.setText((String.format("%.2f", airPressureVal)));
-	            RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(192,200)));
-	            RMSSoundNoiseTF.setText((String.format("%.5f", RMSSoundNoise)));
-	            float ambTempVal = Utils.convertToFloatFromBytes(( byteArray.subList(200, 208)));
-	            amb_tf.setText((String.format("%.2f", ambTempVal)));
+	            this.airPressureVal = Utils.convertToFloatFromBytes(( byteArray.subList(184, 192)));
+	            pressure_tf.setText((String.format("%.2f", this.airPressureVal)));
+	            this.RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(192,200)));
+	            RMSSoundNoiseTF.setText((String.format("%.5f", this.RMSSoundNoise)));
+	            this.ambTempVal = Utils.convertToFloatFromBytes(( byteArray.subList(200, 208)));
+	            amb_tf.setText((String.format("%.2f", this.ambTempVal)));
 	            
 				break;
 			case 2:
-	            RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(4,12)));
-	            RMSSoundNoiseTF.setText((String.format("%.5f", RMSSoundNoise)));
+	            this.RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(4,12)));
+	            RMSSoundNoiseTF.setText((String.format("%.5f", this.RMSSoundNoise)));
 				break;
 			case 3:
 	            // Frequency
