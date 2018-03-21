@@ -1,8 +1,5 @@
 package location_visualization;
 
-import java.awt.List;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -202,7 +199,7 @@ public class ComPortParser {
 //   	000803F0000803F000000002C893C3A67DB2071C347A469D23
 //   	B00000000203A0608203A83211E3A518C1B3A1CX
    	public void parse(ArrayList<Byte> a) {
-   		double RMSSoundNoise = 0;
+   		float RMSSoundNoise = 0;
    		char start_char = (char) (byte) a.get(0);
    		if (a.size() != 240) {
    			LOGGER.info("size is not 240");
@@ -244,7 +241,7 @@ public class ComPortParser {
 	            valtemp = bytetemp << 8;
 	            bytetemp = Utils.combineBytes(byteArray.get(6), byteArray.get(7));
 	            valtemp |= bytetemp;
-	            double CO2val = (double) (valtemp);
+	            float CO2val = (float) (valtemp);
 	            co2_tf.setText(String.valueOf(CO2val));
 	            
 	            //Double TVOCval = 0.0;
@@ -252,53 +249,53 @@ public class ComPortParser {
 		        valtemp = (bytetemp<<8);
 	            bytetemp = Utils.combineBytes(byteArray.get(10), byteArray.get(11));
 	            valtemp |= bytetemp;
-	            double TVOCval =  (double) (valtemp);
+	            float TVOCval =  (float) (valtemp);
 	            TVOC_tf.setText(String.valueOf(TVOCval));
 	        
 	            
-	            double TempVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(12, 20)));
+	            float TempVal = Utils.convertToFloatFromBytes(( byteArray.subList(12, 20)));
 	            temperature_tf.setText(String.format("%.2f", TempVal));
-	            double HumidityVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(20, 28)));
+	            float HumidityVal = Utils.convertToFloatFromBytes(( byteArray.subList(20, 28)));
 	            humi_tf.setText(String.format("%.2f", HumidityVal));
-	            double VbatVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(28, 36)));
+	            float VbatVal = Utils.convertToFloatFromBytes(( byteArray.subList(28, 36)));
 	            vbat_tf.setText(String.format("%.2f", VbatVal));
 	            
-	            double yawVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(36, 44)));
-	            double pitchVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(44, 52)));
-	            double rollVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(52, 60)));
+	            float yawVal = Utils.convertToFloatFromBytes(( byteArray.subList(36, 44)));
+	            float pitchVal = Utils.convertToFloatFromBytes(( byteArray.subList(44, 52)));
+	            float rollVal = Utils.convertToFloatFromBytes(( byteArray.subList(52, 60)));
 	            yaw_gp.addPoint(yawVal);
 	            pitch_gp.addPoint(pitchVal);
 	            roll_gp.addPoint(rollVal);
-	            double yaw_biasVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(60, 68)));
+//	            float yaw_biasVal = Utils.convertToFloatFromBytes(( byteArray.subList(60, 68)));
+//	            
+//	            float AccXval = Utils.convertToFloatFromBytes(( byteArray.subList(68, 76)));
+//	            float AccYval = Utils.convertToFloatFromBytes(( byteArray.subList(76, 84)));
+//	            float AccZval = Utils.convertToFloatFromBytes(( byteArray.subList(84, 92)));
+//	            
+//	            float speed_x = Utils.convertToFloatFromBytes(( byteArray.subList(100, 108)));
+//	            float speed_y = Utils.convertToFloatFromBytes(( byteArray.subList(108, 116)));
 	            
-	            double AccXval = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(68, 76)));
-	            double AccYval = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(76, 84)));
-	            double AccZval = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(84, 92)));
-	            
-	            double speed_x = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(100, 108)));
-	            double speed_y = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(108, 116)));
-	            
-	            double position_x = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(124, 132)));
-	            double position_y = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(132, 140)));
+	            float position_x = Utils.convertToFloatFromBytes(( byteArray.subList(124, 132)));
+	            float position_y = Utils.convertToFloatFromBytes(( byteArray.subList(132, 140)));
 	            MapPointManager mapPointManager = MapPointManager.getInstance();
 	            comp.setPoints(mapPointManager.addPoint((float)position_x,(float)position_y), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 	            
-	            double[] p_matrix = new double[3];
-	            p_matrix[0] = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(148, 156)));
-	            p_matrix[1] = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(156, 164)));
-	            p_matrix[2] = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(164, 172)));
-	            double mag_angle = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(172, 180)));
+	            float[] p_matrix = new float[3];
+	            p_matrix[0] = Utils.convertToFloatFromBytes(( byteArray.subList(148, 156)));
+	            p_matrix[1] = Utils.convertToFloatFromBytes(( byteArray.subList(156, 164)));
+	            p_matrix[2] = Utils.convertToFloatFromBytes(( byteArray.subList(164, 172)));
+//	            float mag_angle = Utils.convertToFloatFromBytes(( byteArray.subList(172, 180)));
 	            
-	            double airPressureVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(184, 192)));
+	            float airPressureVal = Utils.convertToFloatFromBytes(( byteArray.subList(184, 192)));
 	            pressure_tf.setText((String.format("%.2f", airPressureVal)));
-	            RMSSoundNoise = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(192,200)));
+	            RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(192,200)));
 	            RMSSoundNoiseTF.setText((String.format("%.5f", RMSSoundNoise)));
-	            double ambTempVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(200, 208)));
+	            float ambTempVal = Utils.convertToFloatFromBytes(( byteArray.subList(200, 208)));
 	            amb_tf.setText((String.format("%.2f", ambTempVal)));
 	            
 				break;
 			case 2:
-	            RMSSoundNoise = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(4,12)));
+	            RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(4,12)));
 	            RMSSoundNoiseTF.setText((String.format("%.5f", RMSSoundNoise)));
 				break;
 			case 3:

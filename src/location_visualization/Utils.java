@@ -2,6 +2,7 @@ package location_visualization;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 	  // Method for getting the maximum value
@@ -90,7 +91,39 @@ public class Utils {
 	    arrayTemp[3] = bytetemp;
 			return toSingle(arrayTemp);
 		}
-	
+	  
+	  public static float convertToFloatFromBytes(List<Byte> thebyteArray) {
+		    byte[] arrayTemp = {0,0,0,0};
+		    byte bytetemp = combineBytes(thebyteArray.get(0), thebyteArray.get(1));
+		    arrayTemp[0] = bytetemp;
+		    bytetemp = combineBytes(thebyteArray.get(2), thebyteArray.get(3));
+		    arrayTemp[1] = bytetemp;
+		    bytetemp = combineBytes(thebyteArray.get(4), thebyteArray.get(5));
+		    arrayTemp[2] = bytetemp;
+		    bytetemp = combineBytes(thebyteArray.get(6), thebyteArray.get(7));
+		    arrayTemp[3] = bytetemp;
+				return toSingle(arrayTemp);
+			}
+	  
+	  public static float convertToFloatFromBytes(Byte[] thebyteArray) {
+		  // the length of thebyteArray must be 8
+		  if (thebyteArray.length != 8) {
+			  return 0.0f;
+		  }
+		    byte[] arrayTemp = {0,0,0,0};
+		    byte bytetemp = combineBytes(thebyteArray[0], thebyteArray[1]);
+		    arrayTemp[0] = bytetemp;
+		    bytetemp = combineBytes(thebyteArray[2], thebyteArray[3]);
+		    arrayTemp[1] = bytetemp;
+		    bytetemp = combineBytes(thebyteArray[4], thebyteArray[5]);
+		    arrayTemp[2] = bytetemp;
+		    bytetemp = combineBytes(thebyteArray[6], thebyteArray[7]);
+		    arrayTemp[3] = bytetemp;
+				return toSingle(arrayTemp);
+			}
+	  
+	  
+	  
 	  public static float toSingle(byte[] ba) {
 		ByteBuffer buf = ByteBuffer.wrap(ba);
 		float outp = buf.getFloat();
