@@ -257,11 +257,11 @@ public class ComPortParser {
 	        
 	            
 	            double TempVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(12, 20)));
-	            temperature_tf.setText(String.format("%f2", TempVal));
+	            temperature_tf.setText(String.format("%.2f", TempVal));
 	            double HumidityVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(20, 28)));
-	            humi_tf.setText(String.format("%f2", HumidityVal));
+	            humi_tf.setText(String.format("%.2f", HumidityVal));
 	            double VbatVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(28, 36)));
-	            vbat_tf.setText(String.format("%f2", VbatVal));
+	            vbat_tf.setText(String.format("%.2f", VbatVal));
 	            
 	            double yawVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(36, 44)));
 	            double pitchVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(44, 52)));
@@ -290,16 +290,16 @@ public class ComPortParser {
 	            double mag_angle = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(172, 180)));
 	            
 	            double airPressureVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(184, 192)));
-	            pressure_tf.setText((String.format("%f2", airPressureVal)));
+	            pressure_tf.setText((String.format("%.2f", airPressureVal)));
 	            RMSSoundNoise = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(192,200)));
-	            RMSSoundNoiseTF.setText((String.format("%f5", RMSSoundNoise)));
+	            RMSSoundNoiseTF.setText((String.format("%.5f", RMSSoundNoise)));
 	            double ambTempVal = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(200, 208)));
-	            amb_tf.setText((String.format("%f2", ambTempVal)));
+	            amb_tf.setText((String.format("%.2f", ambTempVal)));
 	            
 				break;
 			case 2:
 	            RMSSoundNoise = Utils.convertToFloatFromBytes(new ArrayList<Byte>( byteArray.subList(4,12)));
-	            RMSSoundNoiseTF.setText((String.format("%f5", RMSSoundNoise)));
+	            RMSSoundNoiseTF.setText((String.format("%.5f", RMSSoundNoise)));
 				break;
 			case 3:
 	            // Frequency
