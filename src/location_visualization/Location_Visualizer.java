@@ -499,13 +499,14 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	    autoLoadPanel.add(chckbxAutoLoad);
 	    
 	    JTextArea textArea = new JTextArea(4,10);
+	    JScrollPane scrollPane = new JScrollPane( textArea );
 	    textArea.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 	    textArea.setMargin(new Insets(0, 15, 0, 15));
 	    textArea.setEditable(true);
 //	    textArea.setBackground(new Color(222, 222, 222));
-	   
+	    textArea.setColumns(52); 
 	    comPortParser.setShowArea(textArea);
-	    autoLoadPanel.add(textArea);
+	    autoLoadPanel.add(scrollPane);
 	}
 	
 	private static void initVariablePanel() {
