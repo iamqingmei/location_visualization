@@ -238,7 +238,11 @@ public class ComPortParser {
 			return;
 		}
 		
-		ArrayList<Byte> byteArray = new ArrayList<>(a.subList(1, a.size()-1));
+		ArrayList<Byte> byteArray = new ArrayList<>();
+		for (byte t:a.subList(1, a.size()-1)) {
+			String string = Character.toString((char) t);
+			byteArray.add((byte)Integer.parseInt(string, 16));
+		}
 		
 //		int curCMDCount = Integer.valueOf(Character.toString((char) (byte) byteArray.get(0)) + Character.toString((char) (byte) byteArray.get(1)));
 		int curCMDCount = Utils.combineBytes(byteArray.get(0),byteArray.get(1));
