@@ -1,5 +1,6 @@
 package location_visualization;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class Utils {
@@ -72,4 +73,28 @@ public class Utils {
 	  public static Integer binaryToDecimal(String binary) {
 		  return Integer.parseInt(binary, 2);
 	  }
+	  
+	  public static byte combineBytes(byte a, byte b) {
+		return (byte) ((byte)a << 4 | b);
+	}
+	
+	  public static float convertToFloatFromBytes(ArrayList<Byte> thebyteArray) {
+	    byte[] arrayTemp = {0,0,0,0};
+	    byte bytetemp = combineBytes(thebyteArray.get(0), thebyteArray.get(1));
+	    arrayTemp[0] = bytetemp;
+	    bytetemp = combineBytes(thebyteArray.get(2), thebyteArray.get(3));
+	    arrayTemp[1] = bytetemp;
+	    bytetemp = combineBytes(thebyteArray.get(4), thebyteArray.get(5));
+	    arrayTemp[2] = bytetemp;
+	    bytetemp = combineBytes(thebyteArray.get(6), thebyteArray.get(7));
+	    arrayTemp[3] = bytetemp;
+			return toSingle(arrayTemp);
+		}
+	
+	  public static float toSingle(byte[] ba) {
+		ByteBuffer buf = ByteBuffer.wrap(ba);
+		float outp = buf.getFloat();
+	//			float f = ByteBuffer.wrap(ba).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+		return outp;
+	}
 }
