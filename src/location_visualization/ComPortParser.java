@@ -146,12 +146,14 @@ public class ComPortParser {
    		String str = "";
    		int c = 0;
 		for (byte i: byteBuffer) {
-			str += (char) i;
-			c ++;
-			if (c==50) {
-				str += "\n";
-				c = 0;
-			}
+			if ((char) i != '\n') {
+				str += (char) i;
+				c ++;
+				if (c==50) {
+					str += "\n";
+					c = 0;
+				}
+			}	
 		}
    		showArea.setText(str);
    	}
@@ -198,12 +200,14 @@ public class ComPortParser {
 		int c = 0;
 		
 		for (byte i: byteBuffer) {
-			str += (char) i;
-			c ++;
-			if (c==50) {
-				str += "\n";
-				c = 0;
-			}
+			if ((char) i != '\n') {
+				str += (char) i;
+				c ++;
+				if (c==50) {
+					str += "\n";
+					c = 0;
+				}
+			}	
 		}
 		
 		System.out.println(str);
