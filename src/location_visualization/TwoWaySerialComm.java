@@ -8,6 +8,7 @@ import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 
@@ -112,7 +113,7 @@ public class TwoWaySerialComm
                 {
 	                	if (len > 0) {
 	                		System.out.println("------------");
-	                		comPortParser.appendByteArray(buffer);
+	                		comPortParser.appendByteArray(Arrays.copyOfRange(buffer, 0, len));
 	                	}
                 }
 //                
