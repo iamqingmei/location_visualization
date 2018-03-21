@@ -20,7 +20,7 @@ public class ComPortParser {
 	private JTextField pressure_tf;
 	private JTextField amb_tf;
 	private JTextField vbat_tf;
-	private JTextField RMSSoundNoiseTF;
+	private JTextField RMSSoundNoiseTF, speedx_TF, speedy_TF;
 	private LinesComponent comp;
 	private int CMDCount = -99;
 	private GraphPloter yaw_gp;
@@ -28,6 +28,7 @@ public class ComPortParser {
 	private GraphPloter roll_gp;
 	private int CO2val, TVOCval;
 	private float TempVal, HumidityVal, VbatVal, pitchVal, yawVal, rollVal, position_x,position_y,airPressureVal, ambTempVal,RMSSoundNoise;
+	private float speed_x,speed_y;
     private float[] p_matrix = new float[3];
     
 	protected ComPortParser() {
@@ -67,6 +68,14 @@ public class ComPortParser {
    	public void setambTF(JTextField a) {
 		this.amb_tf = a;
 	}
+   	
+   	public void setSpeedXTF(JTextField a) {
+   		this.speedx_TF = a;
+   	}
+   	
+	public void setSpeedYTF(JTextField a) {
+   		this.speedy_TF = a;
+   	}
    	
    	public void setvbatTF(JTextField a) {
 		this.vbat_tf = a;
@@ -310,9 +319,10 @@ public class ComPortParser {
 //	            float AccYval = Utils.convertToFloatFromBytes(( byteArray.subList(76, 84)));
 //	            float AccZval = Utils.convertToFloatFromBytes(( byteArray.subList(84, 92)));
 //	            
-//	            float speed_x = Utils.convertToFloatFromBytes(( byteArray.subList(100, 108)));
-//	            float speed_y = Utils.convertToFloatFromBytes(( byteArray.subList(108, 116)));
-
+	             speed_x = Utils.convertToFloatFromBytes(( byteArray.subList(100, 108)));
+	            speed_y = Utils.convertToFloatFromBytes(( byteArray.subList(108, 116)));
+	            this.speedx_TF.setText((String.format("%.2f", this.speed_x)));
+	            this.speedy_TF.setText((String.format("%.2f", this.speed_y)));
 	            this.position_x = Utils.convertToFloatFromBytes(( byteArray.subList(124, 132)));
 	            this.position_y = Utils.convertToFloatFromBytes(( byteArray.subList(132, 140)));
 	            MapPointManager mapPointManager = MapPointManager.getInstance();

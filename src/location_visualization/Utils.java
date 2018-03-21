@@ -120,9 +120,9 @@ public class Utils {
 //		return outp;
 //	}
 	  public static float toSingle(int[] intA) {
-		  int theInt = ((intA[0] & 0x7F) << 24)|(intA[1]<<16)|(intA[2]<<8)|(intA[3]);
+		  int theInt = ((intA[3]& 0x7F) << 24)|(intA[2]<<16)|(intA[1]<<8)|(intA[0]);
 		  float f = Float.intBitsToFloat(theInt);
-		  if ((intA[0] & 0x80) > 0) {
+		  if ((intA[3] & 0x80) > 0) {
 			  f = f*-1;//		
 		  }
 		return f;

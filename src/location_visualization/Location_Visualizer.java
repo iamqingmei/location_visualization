@@ -504,7 +504,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	    textArea.setMargin(new Insets(0, 15, 0, 15));
 	    textArea.setEditable(true);
 //	    textArea.setBackground(new Color(222, 222, 222));
-	    textArea.setColumns(52); 
+	    textArea.setColumns(10); 
 	    comPortParser.setShowArea(textArea);
 	    autoLoadPanel.add(scrollPane);
 	}
@@ -521,8 +521,8 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1));
 		comPortParser.setambTF(addAttribute("Ambient", variableGroup1));
 		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1));
-		addAttribute("variable D", variableGroup1);
-		addAttribute("variable E", variableGroup1);
+		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1));
+		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1));
 		JPanel variableGroup2 = new JPanel();
 		variableGroup2.setLayout(new BoxLayout(variableGroup2, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup2);
