@@ -75,7 +75,7 @@ public class ComPortParser {
    	public void appendByte(byte a) {
    		byteBuffer.add(a);
    		showByteBufferInTextField();
-   		UpdateMap();
+//   		UpdateMap();
 	}
    	
    	public void appendByteArray(byte[] a) {
@@ -84,14 +84,38 @@ public class ComPortParser {
 		}
 		showByteBufferInTextField();
 		// TODO check S&X starting and ending string
-		if (byteBuffer.size() == 240) {
-			parse(byteBuffer);
-			byteBuffer.clear();
+		if (byteBuffer.size() >= 240) {
+			ArrayList<Integer> idxS = new ArrayList<>();
+			for (int idx = 0; idx<byteBuffer.size(); idx++) {
+				// put the idx of 'S' in byteBuffer to idxS
+				if ((char)(byte)byteBuffer.get(idx) == 'S') {
+					idxS.add(0);
+				}
+			}
+			if (idxS.size() == 0) {
+				// no 'S' in byteBuffer
+				byteBuffer.clear();
+			}
+			else if (idxS.size() == 1) {
+				// only one 'S' in byteBuffer, remove all useless bytes before 'S'
+				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(0), byteBuffer.size()));
+				if (byteBuffer.size() >= 240) {
+					parse(new ArrayList<>(byteBuffer.subList(0, 240)));
+				}
+			}
+			else { // idxS.size >= 1 
+				// there are many 'S' in byteBuffer
+				for (int idx = 0; idx<idxS.size()-1;idx++) {
+					int dif = idxS.get(idx) - idxS.get(idx + 1);
+					if (dif >= 240) {
+						parse(new ArrayList<>(byteBuffer.subList(idxS.get(idx), idxS.get(idx) + 240)));
+					}
+				}
+				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(idxS.size()-1), byteBuffer.size()));
+			}
 		}
-		
 		numberOfReceivedata++;
-		
-		UpdateMap();
+//		UpdateMap();
    	}
    	
    	
@@ -112,19 +136,19 @@ public class ComPortParser {
 		this.roll_gp = g;
 	}
    	
-   	private void UpdateMap() {
-   		ArrayList<Float> res = ifCoordination();
-		if( res.size() % 2 != 0){
-			LOGGER.warning("Coordination has sth wrong!");
-			return;
-		}
-		if (res.size() > 0) {
-			MapPointManager mapPointManager = MapPointManager.getInstance();
-			for (int i = 0; i < res.size() / 2; i++) {
-				comp.setPoints(mapPointManager.addPoint(res.get(2*i), res.get(2*i + 1)), mapPointManager.topPointString(), mapPointManager.bottomPointString());
-			}
-		}
-	}
+//   	private void UpdateMap() {
+//   		ArrayList<Float> res = ifCoordination();
+//		if( res.size() % 2 != 0){
+//			LOGGER.warning("Coordination has sth wrong!");
+//			return;
+//		}
+//		if (res.size() > 0) {
+//			MapPointManager mapPointManager = MapPointManager.getInstance();
+//			for (int i = 0; i < res.size() / 2; i++) {
+//				comp.setPoints(mapPointManager.addPoint(res.get(2*i), res.get(2*i + 1)), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+//			}
+//		}
+//	}
    	
    	public void showByteBufferInTextField() {
    		String str = "";
