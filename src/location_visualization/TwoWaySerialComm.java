@@ -110,7 +110,6 @@ public class TwoWaySerialComm
             System.out.println(buffer.length);
             try
             {
-            
                 while (( len = this.in.read(buffer)) > -1 )
                 {
 	                	if (len > 0) {
@@ -118,10 +117,6 @@ public class TwoWaySerialComm
 	                		comPortParser.appendByteArray(Arrays.copyOfRange(buffer, 0, len));
 	                	}
                 }
-//                
-
- 
-                
             }
             catch ( IOException e )
             {

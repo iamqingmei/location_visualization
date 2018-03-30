@@ -130,14 +130,34 @@ public class ComPortParser {
 	}
    	
    	private void updateGUI() {
-//   		if (byteBuffer.size() >= 240) {
+   		if (byteBuffer.size() >= 240) {
+   			int firstSIdx = -1;
 //			ArrayList<Integer> idxS = new ArrayList<>();
-//			for (int idx = 0; idx<byteBuffer.size(); idx++) {
-//				// put the idx of 'S' in byteBuffer to idxS
-//				if ((char)(byte)byteBuffer.get(idx) == 'S') {
+			for (int idx = 0; idx<byteBuffer.size(); idx++) {
+				// put the idx of 'S' in byteBuffer to idxS
+				if ((char)(byte)byteBuffer.get(idx) == 'S') {
 //					idxS.add(0);
-//				}
-//			}
+					firstSIdx = idx;
+					break;
+				}
+			}
+			if (firstSIdx != -1) {
+				if (byteBuffer.size() - firstSIdx >= 240) {
+					if (parse(new ArrayList<>(byteBuffer.subList(firstSIdx, firstSIdx+240))) == true) {
+						// it is a valid command
+						// remove all the elements before the first 'S'.
+						this.byteBuffer = new ArrayList<>(byteBuffer.subList(firstSIdx+240, byteBuffer.size()));
+					}
+					else {
+						// it is not a valid command
+						// remove all the elements before and indluding the first 'S'.
+						this.byteBuffer = new ArrayList<>(byteBuffer.subList(firstSIdx+1, byteBuffer.size()));
+					}
+				}
+			}else {
+				// there is no 'S' in the byteBuffer
+				byteBuffer.clear();
+			}
 //			if (idxS.size() == 0) {
 //				// no 'S' in byteBuffer
 //				byteBuffer.clear();
@@ -159,11 +179,11 @@ public class ComPortParser {
 //				}
 //				byteBuffer = new ArrayList<>(byteBuffer.subList(idxS.get(idxS.size()-1), byteBuffer.size()));
 //			}
-//		}
-   		if (byteBuffer.size() == 240) {
-   			parse(byteBuffer);
-   			byteBuffer.clear();
-   		}
+		}
+//   		if (byteBuffer.size() == 240) {
+//   			parse(byteBuffer);
+//   			byteBuffer.clear();
+//   		}
 	}
    	
    	public void showByteBufferInTextField() {
@@ -232,24 +252,24 @@ public class ComPortParser {
 //   	00000000000000000000000000000000000000000000000000
 //   	000803F0000803F000000002C893C3A67DB2071C347A469D23
 //   	B00000000203A0608203A83211E3A518C1B3A1CX
-   	public void parse(ArrayList<Byte> a) {
+   	public boolean parse(ArrayList<Byte> a) {
    		
    		char start_char = (char) (byte) a.get(0);
    		if (a.size() != 240) {
    			LOGGER.info("size is not 240");
    			printByteBuffer();
-   			return;
+   			return false;
    		}
    		char end_char = (char) (byte) a.get(239);
 		if (start_char != 'S') {
 			LOGGER.info("Not start with S");
 			printByteBuffer();
-			return;
+			return false;
 		}
 		if (end_char != 'X') {
 			LOGGER.info("Not end with X");
 			printByteBuffer();
-			return;
+			return false;
 		}
 		
 		ArrayList<Byte> byteArray = new ArrayList<>();
@@ -262,7 +282,7 @@ public class ComPortParser {
 		LOGGER.info("CMDCount: " + curCMDCount);
 		if (curCMDCount == this.CMDCount) {
 			LOGGER.info("CMDCount didn't change: " + curCMDCount);
-			return;
+			return false;
 		}
 		this.CMDCount = curCMDCount;
 		int CMDcountSub = Utils.combineBytes(byteArray.get(2),byteArray.get(3));
@@ -406,6 +426,6 @@ public class ComPortParser {
 			default:
 				break;
 		}
-		
+		return true;
    	}
 }
