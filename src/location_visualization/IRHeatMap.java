@@ -17,18 +17,19 @@ public class IRHeatMap extends JPanel{
 	private 	HeatChart map;
 	
 	public IRHeatMap() {
-		map = new HeatChart(data);
+		
 //		map.setTitle("This is my heat chart title");
 //		map.setXAxisLabel("X Axis");
 //		map.setYAxisLabel("Y Axis");
 		this.setPreferredSize(new java.awt.Dimension(200, 200));
-		map.setShowXAxisValues(false);
-		map.setShowYAxisValues(false);
 		for (int i=0; i<32;i++) {
 			for (int j=0; j<32;j++) {
 				this.data[i][j] = i*0.2 + j*0.01;
 			}
 		}
+		map = new HeatChart(data);
+		map.setShowXAxisValues(false);
+		map.setShowYAxisValues(false);
 		repaint();
 	}
 	
@@ -43,6 +44,7 @@ public class IRHeatMap extends JPanel{
 				this.data[i][j] = d[i*32 + j];
 			}
 		}
+		
 		repaint();
 	}
 	
@@ -58,6 +60,9 @@ public class IRHeatMap extends JPanel{
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+		this.map = new HeatChart(data);
+		this.map.setShowXAxisValues(false);
+		this.map.setShowYAxisValues(false);
         g.drawImage(map.getChartImage(), 0, 0, this); // see javadoc for more info on the parameters 
     }
 }
