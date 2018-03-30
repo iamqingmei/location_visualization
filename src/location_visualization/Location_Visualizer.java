@@ -245,8 +245,9 @@ public class Location_Visualizer{
 		irCheckBox = new JCheckBox("IR Sensor");
 		_IRPanel.add(irCheckBox);
 		
-		
-		_IRPanel.add(new IRHeatMap());
+		IRHeatMap irHeatMap = new IRHeatMap();
+		comPortParser.setIRHeatMap(irHeatMap);
+		_IRPanel.add(irHeatMap);
 		
 		
 	}

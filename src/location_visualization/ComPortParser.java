@@ -22,6 +22,7 @@ public class ComPortParser {
 	private JTextField vbat_tf;
 	private JTextField RMSSoundNoiseTF, speedx_TF, speedy_TF;
 	private LinesComponent comp;
+	private IRHeatMap irHeatMap;
 	private int CMDCount = -99;
 	private GraphPloter yaw_gp;
 	private GraphPloter pitch_gp;
@@ -53,6 +54,10 @@ public class ComPortParser {
    	
    	public void setco2TF(JTextField a) {
 		this.co2_tf = a;
+	}
+   	
+	public void setIRHeatMap(IRHeatMap a) {
+		this.irHeatMap = a;
 	}
    	
    	public void setHumiTF(JTextField a) {
@@ -392,10 +397,12 @@ public class ComPortParser {
                         this.IRimage32x32[CurrentPix] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
                         CurrentPix++;
                     }
+                    
 	            }
-	                
+                if (CurrentPix > 1020){
+                     irHeatMap.setData(IRimage32x32);
+                }   
 				break;
-	   
 			default:
 				break;
 		}

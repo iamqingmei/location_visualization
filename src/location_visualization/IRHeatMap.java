@@ -29,10 +29,26 @@ public class IRHeatMap extends JPanel{
 	
 	public void setData(double[][] d) {
 		this.data = d;
+		repaint();
 	}
 	
-
-			
+	public void setData(double[] d) {
+		for (int i=0; i<32;i++) {
+			for (int j=0; j<32;j++) {
+				this.data[i][j] = d[i*32 + j];
+			}
+		}
+		repaint();
+	}
+	
+	public void setData(float[] d) {
+		for (int i=0; i<32;i++) {
+			for (int j=0; j<32;j++) {
+				this.data[i][j] = d[i*32 + j];
+			}
+		}
+		repaint();
+	}
 			
 	@Override
     protected void paintComponent(Graphics g) {
