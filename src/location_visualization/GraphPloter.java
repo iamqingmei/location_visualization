@@ -17,28 +17,24 @@ public class GraphPloter{
 	private XYSeriesCollection data;
 	private JFreeChart chart;
 	private final ChartPanel chartPanel;
-	private XYSeries series= new XYSeries("Random Data");
-	private int count = 0;
+	private XYSeries seriesYaw= new XYSeries("Yaw");
+	private XYSeries seriesRoll= new XYSeries("Roll");
+	private XYSeries seriesPitch= new XYSeries("Pitch");
+	private int count_yaw = 0;
+	private int count_roll = 0;
+	private int count_pitch = 0;
 	public GraphPloter() {
 	    data = new XYSeriesCollection();
-	    data.addSeries(series);
-//	    chart = ChartFactory.createXYLineChart(
-//	    		"",
-//	        "X", 
-//	        "Y", 
-//	        data,
-//	        PlotOrientation.VERTICAL,
-//	        false,
-//	        true,
-//	        false
-//	    );
+	    data.addSeries(seriesYaw);
+	    data.addSeries(seriesRoll);
+	    data.addSeries(seriesPitch);
 	    chart = ChartFactory.createXYLineChart(
 	    		"",
 	        "", 
 	        "", 
 	        data,
 	        PlotOrientation.VERTICAL,
-	        false,
+	        true,
 	        true,
 	        false
 	    );
@@ -54,13 +50,28 @@ public class GraphPloter{
 		return chartPanel;
 	}
 	
-	public void addPoint(double x, double y) {
-		series.add(x, y);
+	public void addPoint(double x, double y, char c) {
+		if (c=='y') {
+			this.seriesYaw.add(x, y);
+		}else if(c=='r') {
+			this.seriesRoll.add(x, y);
+		}else if (c == 'p') {
+			this.seriesPitch.add(x, y);
+		}
+		
 		chartPanel.repaint();
 	}
-	public void addPoint(double y) {
-		series.add(count, y);
-		count ++;
+	public void addPoint(double y, char c) {
+		if (c=='y') {
+			this.seriesYaw.add(count_yaw, y);
+			count_yaw ++;
+		}else if(c=='r') {
+			this.seriesRoll.add(count_roll, y);
+			count_roll ++;
+		}else if (c == 'p') {
+			this.seriesPitch.add(count_pitch, y);
+			count_pitch++;
+		}
 		chartPanel.repaint();
 	}
 

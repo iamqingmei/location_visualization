@@ -50,7 +50,7 @@ public class MapPointManager {
    
    public ArrayList<ArrayList<Integer>> addPoint(float x, float y) {
 	allPoints.add(new MapPoint(x, y));
-	LOGGER.info("Add new point:" + allPointsToString());
+//	LOGGER.info("Add new point:" + allPointsToString());
 	fitInMapSize();
 	
 	ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
@@ -173,12 +173,7 @@ public class MapPointManager {
 		else {
 			this.start_coor = min_y;
 		}
-		
-		if (this.end_coor-this.start_coor < Parameters.MAP_MAXHEIGHT_COOR) {
-			this.end_coor = this.start_coor + Parameters.MAP_MAXHEIGHT_COOR;
-		}
-		
-		
+			
 		this.scale = ((this.end_coor - this.start_coor) / Parameters.MAP_MAXHEIGHT_COOR);
 		
 //		LOGGER.info(mapParametersToString());

@@ -1,6 +1,7 @@
 package location_visualization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.swing.JTextArea;
@@ -25,8 +26,10 @@ public class ComPortParser {
 	private IRHeatMap irHeatMap;
 	private int CMDCount = -99;
 	private GraphPloter yaw_gp;
-	private GraphPloter pitch_gp;
-	private GraphPloter roll_gp;
+//	private GraphPloter pitch_gp;
+//	private GraphPloter roll_gp;
+	private BarChartPloter amplitudeBar;
+	private SingleLineGraphPloter amplitudePlot;
 	private int CO2val, TVOCval;
 	private float TempVal, HumidityVal, VbatVal, pitchVal, yawVal, rollVal, position_x,position_y,airPressureVal, ambTempVal,RMSSoundNoise;
 	private float speed_x,speed_y;
@@ -40,6 +43,10 @@ public class ComPortParser {
     
 	protected ComPortParser() {
 	   	// Exists only to defeat instantiation.
+		for (int i =0;i<1024;i++) {
+			this.IRimage32x32[i] = 0;
+		}
+		
    	}
    	public static ComPortParser getInstance() {
 	   	if(instance == null) {
@@ -96,6 +103,14 @@ public class ComPortParser {
 		this.RMSSoundNoiseTF = a;
 	}
    	
+   	public void setAmplitudeBar(BarChartPloter a) {
+   		this.amplitudeBar = a;
+   	}
+   	
+   	public void setAmplitudePlot(SingleLineGraphPloter a) {
+   		this.amplitudePlot = a;
+   	}
+   	
    	public void appendByte(byte a) {
    		byteBuffer.add(a);
    		showByteBufferInTextField();
@@ -122,12 +137,12 @@ public class ComPortParser {
    	public void setYawGP(GraphPloter g) {
 		this.yaw_gp = g;
 	}
-   	public void setPitchGP(GraphPloter g) {
-		this.pitch_gp = g;
-	}
-   	public void setRollGP(GraphPloter g) {
-		this.roll_gp = g;
-	}
+//   	public void setPitchGP(GraphPloter g) {
+//		this.pitch_gp = g;
+//	}
+//   	public void setRollGP(GraphPloter g) {
+//		this.roll_gp = g;
+//	}
    	
    	private void updateGUI() {
    		if (byteBuffer.size() >= 240) {
@@ -329,9 +344,11 @@ public class ComPortParser {
 //	            System.out.println(pitchVal);
 	            
 	            this.rollVal = Utils.convertToFloatFromBytes(( byteArray.subList(52, 60)));
-	            yaw_gp.addPoint(yawVal);
-	            pitch_gp.addPoint(pitchVal);
-	            roll_gp.addPoint(rollVal);
+	            yaw_gp.addPoint(yawVal,'y');
+	            yaw_gp.addPoint(pitchVal,'p');
+	            yaw_gp.addPoint(rollVal,'r');
+//	            pitch_gp.addPoint(pitchVal);
+//	            roll_gp.addPoint(rollVal);
 //	            float yaw_biasVal = Utils.convertToFloatFromBytes(( byteArray.subList(60, 68)));
 //	            
 //	            float AccXval = Utils.convertToFloatFromBytes(( byteArray.subList(68, 76)));
@@ -377,12 +394,14 @@ public class ComPortParser {
 	            		IdxHex2Float = 124 + 8 * iqu;
 	                ASound[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
 	            }
+	            this.amplitudeBar.setSeriesSound(this.FSound, this.ASound);
 				break;
 			case 3:
 	            for (int iqu = 0; iqu < 29; iqu++)
 	            {
 	                IdxHex2Float = 4 + 8 * iqu;
 	                RMSNoiseSet[iqu] =Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
+	                amplitudePlot.setSeries(RMSNoiseSet);
 	            }
 				break;
 			case 4:
@@ -398,6 +417,7 @@ public class ComPortParser {
 	                IdxHex2Float = 124 + 8 * iqu;
 	                this.Apressure[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8))); 
 	            }
+	            this.amplitudeBar.setSeriesPressure(this.Fpressure, this.Apressure);
 				break;
 			case 5:
 				int CurrentPix;
@@ -408,8 +428,14 @@ public class ComPortParser {
 	            CurrentPix = valtemp;
 
 	            CurrentPix = CurrentPix - 28;
-	            
-            		for (int iqu = 0; iqu < 28; iqu++){
+
+	            if (CurrentPix < 0) {
+		            System.out.println(CurrentPix);
+		            printByteBuffer();
+	            	return true;
+	            }
+	          
+            	for (int iqu = 0; iqu < 28; iqu++){
                     IdxHex2Float = 4 + 8 * iqu;
                     if (CurrentPix < 1024)
                     {
@@ -420,6 +446,7 @@ public class ComPortParser {
 	            }
                 if (CurrentPix > 1020){
                      irHeatMap.setData(IRimage32x32);
+                     System.out.println(Arrays.toString(IRimage32x32));
                 }   
 				break;
 			default:

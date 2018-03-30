@@ -107,41 +107,42 @@ public class Location_Visualizer{
 		graph_2.setLayout(new BoxLayout(graph_2, BoxLayout.Y_AXIS));
 		graph_3.setLayout(new BoxLayout(graph_3, BoxLayout.Y_AXIS));
 		
-		JPanel panel1 = new JPanel();
-		graph_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "yaw", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		graph_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "yaw/roll/pitch", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+
+
+//		graph_1.add(panel1);
+		
+		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Amplitude", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+
+
+//		graph_2.add(panel2);
+		
+		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Noise", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+
+		
+		JPanel panel4 = new JPanel();
 		micCheckBox = new JCheckBox("Mic");
-		graph_1.add(micCheckBox);
-		addAttribute("mic", panel1, false);
-		graph_1.add(panel1);
-		
-		JPanel panel2 = new JPanel();
-		graph_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "pitch", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel4.add(micCheckBox);
 		co2CheckBox = new JCheckBox("CO2");
-		graph_2.add(co2CheckBox);
-		comPortParser.setco2TF(addAttribute("Co2", panel2, false));
-		comPortParser.setTVOCTF(addAttribute("TVOC", panel2, false));
-		graph_2.add(panel2);
-		
-		JPanel panel3 = new JPanel();
-		graph_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "roll", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel4.add(co2CheckBox);
 		ambientCheckBox = new JCheckBox("Ambient");
-		graph_3.add(ambientCheckBox);
-		comPortParser.settempTF(addAttribute("Temp", panel3, false));
-		comPortParser.setHumiTF(addAttribute("Humi", panel3, false));
-		comPortParser.setpressureTF(addAttribute("Pres", panel3, false));
+		panel4.add(ambientCheckBox);
 		
-		graph_3.add(panel3);
+		graph_3.add(panel4);
+
+
 		
 		GraphPloter graphPloter1 = new GraphPloter();
-		GraphPloter graphPloter2 = new GraphPloter();
-		GraphPloter graphPloter3 = new GraphPloter();
+		BarChartPloter graphPloter2 = new BarChartPloter();
+		SingleLineGraphPloter graphPloter3 = new SingleLineGraphPloter();
 		graph_1.add(graphPloter1.getChartPanel());
 		graph_2.add(graphPloter2.getChartPanel());
 		graph_3.add(graphPloter3.getChartPanel());
 		
 		comPortParser.setYawGP(graphPloter1);
-		comPortParser.setPitchGP(graphPloter2);
-		comPortParser.setRollGP(graphPloter3);
+		comPortParser.setAmplitudeBar(graphPloter2);
+		comPortParser.setAmplitudePlot(graphPloter3);
+//		comPortParser.setRollGP(graphPloter3);
 		
 		_GraphPanel.add(graph_1);
 		_GraphPanel.add(graph_2);
@@ -542,19 +543,20 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
 		int length = 6;
-		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, length));
-		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, length));
-		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, length));
-		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, length));
-		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, length));
+		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
+		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
+		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));
+		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, false));
+		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, false));
 		JPanel variableGroup2 = new JPanel();
 		variableGroup2.setLayout(new BoxLayout(variableGroup2, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup2);
-		addAttribute("variable F", variableGroup2);
-		addAttribute("variable G", variableGroup2);
-		addAttribute("variable H", variableGroup2);
-		addAttribute("variable I", variableGroup2);
-		addAttribute("variable J", variableGroup2);
+		addAttribute("mic", variableGroup2,false);
+		comPortParser.settempTF(addAttribute("Temp", variableGroup2, false));
+		comPortParser.setHumiTF(addAttribute("Humi", variableGroup2, false));
+		comPortParser.setpressureTF(addAttribute("Pres", variableGroup2, false));
+		comPortParser.setco2TF(addAttribute("Co2", variableGroup2, false));
+		comPortParser.setTVOCTF(addAttribute("TVOC", variableGroup2, false));
 		
 		_inputPanel.add(variablePanel);
 		
