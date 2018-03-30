@@ -322,7 +322,7 @@ public class Location_Visualizer{
 		sim_attri_panel.add(lblNewLabel);
 		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		
-		JTextField txtAttribute = new JTextField("0", 4);
+		JTextField txtAttribute = new JTextField("0", 7);
 		
 		
 		lblNewLabel.setLabelFor(txtAttribute);

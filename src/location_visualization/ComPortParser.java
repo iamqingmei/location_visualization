@@ -367,6 +367,7 @@ public class ComPortParser {
 	            RMSSoundNoiseTF.setText((String.format("%.5f", this.RMSSoundNoise)));
 	            
 	            IdxHex2Float = 0;
+	            System.out.println("size: " + byteArray.size());
 	            for (int iqu = 0; iqu < 14; iqu++)
 	            {
 	                IdxHex2Float = 12 + 8 * iqu;
