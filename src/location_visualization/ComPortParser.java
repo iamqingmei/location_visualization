@@ -1,7 +1,6 @@
 package location_visualization;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.swing.JTextArea;
@@ -234,13 +233,12 @@ public class ComPortParser {
    	private String ByteBufferToString() {
    		String str = "";
 		int c = 0;
-		
 		for (byte i: byteBuffer) {
 			if ((char) i != '\n') {
 				str += (char) i;
-				c ++;
-				if (c==50) {
-					str += "\n";
+				c++;
+				if (c>=39) {
+					str+="\n";
 					c = 0;
 				}
 			}	
@@ -368,17 +366,12 @@ public class ComPortParser {
 	            RMSSoundNoiseTF.setText((String.format("%.5f", this.RMSSoundNoise)));
 	            
 	            IdxHex2Float = 0;
-	            System.out.println("size: " + byteArray.size());
+	            
 	            for (int iqu = 0; iqu < 14; iqu++)
 	            {
 	                IdxHex2Float = 12 + 8 * iqu;
 	                FSound[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
 	            }	            
-//	            S0E026D6ECD3B0000524500005145000053450000604300000
-//	            0420000424500008444001860BA9CE69F38F6B28D3D0000404
-//	            200000000000000000000000025419C3F837921BF000000006
-//	            0181041CDCC4C3DB5B1203FA7A2D53F29A0AC64C4477300CC3
-//	            B000000001F3A2ADC193AE57C193AA41D193A1CX
 	            for (int iqu = 0; iqu < 14; iqu++)
 	            {
 	            		IdxHex2Float = 124 + 8 * iqu;

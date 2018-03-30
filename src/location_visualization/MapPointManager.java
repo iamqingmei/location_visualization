@@ -177,7 +177,7 @@ public class MapPointManager {
 		
 		this.scale = ((this.end_coor - this.start_coor) / Parameters.MAP_MAXHEIGHT_COOR);
 		
-		LOGGER.info(mapParametersToString());
+//		LOGGER.info(mapParametersToString());
 	}
 	
 	public String mapParametersToString() {
