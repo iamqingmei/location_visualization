@@ -30,6 +30,7 @@ public class ComPortParser {
 	private float TempVal, HumidityVal, VbatVal, pitchVal, yawVal, rollVal, position_x,position_y,airPressureVal, ambTempVal,RMSSoundNoise;
 	private float speed_x,speed_y;
     private float[] p_matrix = new float[3];
+    private float[] FSound = new float[4];
     
 	protected ComPortParser() {
 	   	// Exists only to defeat instantiation.
@@ -335,10 +336,12 @@ public class ComPortParser {
 			case 2:
 	            this.RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(4,12)));
 	            RMSSoundNoiseTF.setText((String.format("%.5f", this.RMSSoundNoise)));
+	            
+	            // frequency
+	            
 				break;
 			case 3:
-	            // Frequency
-
+				
 				break;
 			case 4:
 				
