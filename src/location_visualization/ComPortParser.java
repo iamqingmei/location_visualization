@@ -278,14 +278,14 @@ public class ComPortParser {
 			byteArray.add((byte)Integer.parseInt(string, 16));
 		}
 		
-		int curCMDCount = Utils.combineBytes(byteArray.get(0),byteArray.get(1));
+		int curCMDCount = Utils.combineBytesToUnsignInt(byteArray.get(0),byteArray.get(1));
 		LOGGER.info("CMDCount: " + curCMDCount);
 		if (curCMDCount == this.CMDCount) {
 			LOGGER.info("CMDCount didn't change: " + curCMDCount);
 			return false;
 		}
 		this.CMDCount = curCMDCount;
-		int CMDcountSub = Utils.combineBytes(byteArray.get(2),byteArray.get(3));
+		int CMDcountSub = Utils.combineBytesToUnsignInt(byteArray.get(2),byteArray.get(3));
 		LOGGER.info("CMDcountSub: " + CMDcountSub);
 		int bytetemp;
 		int IdxHex2Float;
@@ -371,6 +371,7 @@ public class ComPortParser {
 	            for (int iqu = 0; iqu < 14; iqu++)
 	            {
 	                IdxHex2Float = 12 + 8 * iqu;
+	                System.out.println("iqu: " + iqu);
 	                FSound[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
 	            }	            
 	          

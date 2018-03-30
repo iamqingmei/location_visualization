@@ -322,7 +322,28 @@ public class Location_Visualizer{
 		sim_attri_panel.add(lblNewLabel);
 		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		
-		JTextField txtAttribute = new JTextField("0", 7);
+		JTextField txtAttribute = new JTextField("0", 4);
+		
+		
+		lblNewLabel.setLabelFor(txtAttribute);
+		sim_attri_panel.add(txtAttribute);
+		
+		return txtAttribute;
+	}
+	
+	private static JTextField addAttribute(String attiName, JPanel panel, int length) {
+		
+		JPanel sim_attri_panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) sim_attri_panel.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		panel.add(sim_attri_panel);
+		
+		JLabel lblNewLabel = new JLabel(attiName);
+		sim_attri_panel.add(lblNewLabel);
+		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		
+		JTextField txtAttribute = new JTextField("0", length);
 		
 		
 		lblNewLabel.setLabelFor(txtAttribute);
@@ -519,11 +540,12 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 		JPanel variableGroup1 = new JPanel();
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
-		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1));
-		comPortParser.setambTF(addAttribute("Ambient", variableGroup1));
-		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1));
-		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1));
-		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1));
+		int length = 6;
+		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, length));
+		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, length));
+		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, length));
+		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, length));
+		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, length));
 		JPanel variableGroup2 = new JPanel();
 		variableGroup2.setLayout(new BoxLayout(variableGroup2, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup2);
