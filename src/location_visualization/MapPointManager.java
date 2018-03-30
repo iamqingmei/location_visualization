@@ -174,6 +174,10 @@ public class MapPointManager {
 			this.start_coor = min_y;
 		}
 		
+		if (this.end_coor-this.start_coor < Parameters.MAP_MAXHEIGHT_COOR) {
+			this.end_coor = this.start_coor + Parameters.MAP_MAXHEIGHT_COOR;
+		}
+		
 		
 		this.scale = ((this.end_coor - this.start_coor) / Parameters.MAP_MAXHEIGHT_COOR);
 		
