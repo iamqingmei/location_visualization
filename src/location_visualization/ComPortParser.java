@@ -1,6 +1,7 @@
 package location_visualization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.swing.JTextArea;
@@ -31,11 +32,11 @@ public class ComPortParser {
 	private float TempVal, HumidityVal, VbatVal, pitchVal, yawVal, rollVal, position_x,position_y,airPressureVal, ambTempVal,RMSSoundNoise;
 	private float speed_x,speed_y;
     private float[] p_matrix = new float[3];
-    private float[] FSound = new float[4];
-    private float[] ASound = new float[4];
-    private float[] RMSNoiseSet = new float[4];
-    private float[] Fpressure = new float[4];
-    private float[] Apressure = new float[4];
+    private float[] FSound = new float[14];
+    private float[] ASound = new float[14];
+    private float[] RMSNoiseSet = new float[29];
+    private float[] Fpressure = new float[14];
+    private float[] Apressure = new float[14];
     private float[] IRimage32x32 = new float[1024];
     
 	protected ComPortParser() {
@@ -322,12 +323,12 @@ public class ComPortParser {
 	            
 	            this.yawVal = Utils.convertToFloatFromBytes(( byteArray.subList(36, 44)));
 	            this.pitchVal = Utils.convertToFloatFromBytes(( byteArray.subList(44, 52)));
-	            String s ="";
-	            for (byte b:a.subList(45, 45+8)) {
-	            	s+=(char)b;
-	            }
-	            System.out.println(s);
-	            System.out.println(pitchVal);
+//	            String s ="";
+//	            for (byte b:a.subList(45, 45+8)) {
+//	            	s+=(char)b;
+//	            }
+//	            System.out.println(s);
+//	            System.out.println(pitchVal);
 	            
 	            this.rollVal = Utils.convertToFloatFromBytes(( byteArray.subList(52, 60)));
 	            yaw_gp.addPoint(yawVal);
@@ -371,10 +372,13 @@ public class ComPortParser {
 	            for (int iqu = 0; iqu < 14; iqu++)
 	            {
 	                IdxHex2Float = 12 + 8 * iqu;
-	                System.out.println("iqu: " + iqu);
 	                FSound[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
 	            }	            
-	          
+//	            S0E026D6ECD3B0000524500005145000053450000604300000
+//	            0420000424500008444001860BA9CE69F38F6B28D3D0000404
+//	            200000000000000000000000025419C3F837921BF000000006
+//	            0181041CDCC4C3DB5B1203FA7A2D53F29A0AC64C4477300CC3
+//	            B000000001F3A2ADC193AE57C193AA41D193A1CX
 	            for (int iqu = 0; iqu < 14; iqu++)
 	            {
 	            		IdxHex2Float = 124 + 8 * iqu;
