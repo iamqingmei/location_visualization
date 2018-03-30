@@ -29,6 +29,7 @@ public class IRHeatMap extends JPanel{
 				this.data[i][j] = i*0.2 + j*0.01;
 			}
 		}
+		repaint();
 	}
 	
 	public void setData(double[][] d) {
