@@ -520,7 +520,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 	    chckbxAutoLoad.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    autoLoadPanel.add(chckbxAutoLoad);
 	    
-	    JTextArea textArea = new JTextArea(4,10);
+	    JTextArea textArea = new JTextArea(5,14);
 	    JScrollPane scrollPane = new JScrollPane( textArea );
 	    textArea.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 	    textArea.setMargin(new Insets(0, 15, 0, 15));
