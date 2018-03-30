@@ -31,6 +31,11 @@ public class ComPortParser {
 	private float speed_x,speed_y;
     private float[] p_matrix = new float[3];
     private float[] FSound = new float[4];
+    private float[] ASound = new float[4];
+    private float[] RMSNoiseSet = new float[4];
+    private float[] Fpressure = new float[4];
+    private float[] Apressure = new float[4];
+    private float[] IRimage32x32 = new float[1024];
     
 	protected ComPortParser() {
 	   	// Exists only to defeat instantiation.
@@ -243,7 +248,7 @@ public class ComPortParser {
 		}
 		
 		ArrayList<Byte> byteArray = new ArrayList<>();
-		for (byte t:a.subList(1, 209)) {
+		for (byte t:a.subList(1, 239)) {
 			String string = Character.toString((char) t);
 			byteArray.add((byte)Integer.parseInt(string, 16));
 		}
@@ -258,15 +263,14 @@ public class ComPortParser {
 		int CMDcountSub = Utils.combineBytes(byteArray.get(2),byteArray.get(3));
 		LOGGER.info("CMDcountSub: " + CMDcountSub);
 		int bytetemp;
+		int IdxHex2Float;
+		int valtemp;
 		switch (CMDcountSub) {
 			case 1:
 				LOGGER.info("case 1");
 	            //Double CO2val = 0.0;
 	            bytetemp = Utils.combineBytesToUnsignInt(byteArray.get(4), byteArray.get(5));
-	            int valtemp;
-	          
 	            valtemp =  bytetemp << 8;
-	            printByteBuffer();
 	            bytetemp = Utils.combineBytesToUnsignInt(byteArray.get(6), byteArray.get(7));
 	            valtemp |= bytetemp;
 	            this.CO2val = valtemp;
@@ -337,15 +341,61 @@ public class ComPortParser {
 	            this.RMSSoundNoise = Utils.convertToFloatFromBytes(( byteArray.subList(4,12)));
 	            RMSSoundNoiseTF.setText((String.format("%.5f", this.RMSSoundNoise)));
 	            
-	            // frequency
-	            
+	            IdxHex2Float = 0;
+	            for (int iqu = 0; iqu < 14; iqu++)
+	            {
+	                IdxHex2Float = 12 + 8 * iqu;
+	                FSound[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
+	            }	            
+	          
+	            for (int iqu = 0; iqu < 14; iqu++)
+	            {
+	            		IdxHex2Float = 124 + 8 * iqu;
+	                ASound[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
+	            }
 				break;
 			case 3:
-				
+	            for (int iqu = 0; iqu < 29; iqu++)
+	            {
+	                IdxHex2Float = 4 + 8 * iqu;
+	                RMSNoiseSet[iqu] =Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
+	            }
 				break;
 			case 4:
-				
+				IdxHex2Float = 4;
+				this.airPressureVal = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
+				for (int iqu = 0; iqu < 14; iqu++){
+	                IdxHex2Float = 12 + 8 * iqu;
+	                this.Fpressure[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
+	            }
+	            // Amplitude
+	            for (int iqu = 0; iqu < 14; iqu++)
+	            {
+	                IdxHex2Float = 124 + 8 * iqu;
+	                this.Apressure[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8))); 
+	            }
 				break;
+			case 5:
+				int CurrentPix;
+	            bytetemp = Utils.combineBytesToUnsignInt(byteArray.get(234), byteArray.get(235));
+	            valtemp =  bytetemp << 8;
+	            bytetemp = Utils.combineBytesToUnsignInt(byteArray.get(236), byteArray.get(237));
+	            valtemp |= bytetemp;
+	            CurrentPix = valtemp;
+
+	            CurrentPix = CurrentPix - 28;
+	            
+            		for (int iqu = 0; iqu < 28; iqu++){
+                    IdxHex2Float = 4 + 8 * iqu;
+                    if (CurrentPix < 1024)
+                    {
+                        this.IRimage32x32[CurrentPix] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8)));
+                        CurrentPix++;
+                    }
+	            }
+	                
+				break;
+	   
 			default:
 				break;
 		}
