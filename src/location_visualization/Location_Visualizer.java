@@ -210,7 +210,6 @@ public class Location_Visualizer{
 				try {
 					communicationManager.write_to_com_port(command);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
@@ -484,7 +483,6 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 			        }
 			        catch ( Exception ex )
 			        {
-			            // TODO Auto-generated catch block
 			            ex.printStackTrace();
 			        }
 			}

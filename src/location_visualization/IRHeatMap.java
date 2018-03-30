@@ -11,7 +11,6 @@ public class IRHeatMap extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	// TODO 32 bit
 	
 	private double[][] data = new double[32][32];
 	private 	HeatChart map;
