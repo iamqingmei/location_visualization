@@ -24,7 +24,11 @@ public class IRHeatMap extends JPanel{
 		this.setPreferredSize(new java.awt.Dimension(200, 200));
 		map.setShowXAxisValues(false);
 		map.setShowYAxisValues(false);
-
+		for (int i=0; i<32;i++) {
+			for (int j=0; j<32;j++) {
+				this.data[i][j] = i*0.2 + j*0.01;
+			}
+		}
 	}
 	
 	public void setData(double[][] d) {
