@@ -417,7 +417,7 @@ public class ComPortParser {
 	                IdxHex2Float = 124 + 8 * iqu;
 	                this.Apressure[iqu] = Utils.convertToFloatFromBytes(( byteArray.subList(IdxHex2Float, IdxHex2Float+8))); 
 	            }
-	            this.amplitudeBar.setSeriesPressure(this.Fpressure, this.Apressure);
+//	            this.amplitudeBar.setSeriesPressure(this.Fpressure, this.Apressure);
 				break;
 			case 5:
 				int CurrentPix;

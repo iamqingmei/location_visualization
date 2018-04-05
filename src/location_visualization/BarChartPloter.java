@@ -17,12 +17,12 @@ public class BarChartPloter {
 	private XYSeriesCollection data;
 	private JFreeChart barChart;
 	private final ChartPanel chartPanel;
-	private XYSeries seriesPre= new XYSeries("Pressure");
+//	private XYSeries seriesPre= new XYSeries("Pressure");
 	private XYSeries seriesSound = new XYSeries("Sound");
 	
 	public BarChartPloter() {
 	    data = new XYSeriesCollection();
-	    data.addSeries(seriesPre);
+//	    data.addSeries(seriesPre);
 	    data.addSeries(seriesSound);
 		this.barChart = ChartFactory.createXYBarChart("", "", false, "", data, PlotOrientation.VERTICAL, true, true, false);
 	    chartPanel = new ChartPanel(this.barChart);
@@ -30,22 +30,22 @@ public class BarChartPloter {
 		FlowLayout flowLayout = (FlowLayout) chartPanel.getLayout();
 		flowLayout.setVgap(0);
 		flowLayout.setHgap(0);
-//		XYPlot xyPlot = this.barChart.getXYPlot();
-//		XYBarRenderer br = (XYBarRenderer) xyPlot.getRenderer();
-//		br.setMargin(0.02);
+		XYPlot xyPlot = this.barChart.getXYPlot();
+		XYBarRenderer br = (XYBarRenderer) xyPlot.getRenderer();
+		br.setMargin(0.02);
 		
 	}
 	public JPanel getChartPanel() {
 		return chartPanel;
 	}
 	
-	public void setSeriesPressure(float[] x, float[] y) {
-		this.seriesPre.clear();
-		for (int i = 0;i < x.length; i++) {
-			seriesPre.add(x[i], y[i]);
-		}
-		chartPanel.repaint();
-	}
+//	public void setSeriesPressure(float[] x, float[] y) {
+//		this.seriesPre.clear();
+//		for (int i = 0;i < x.length; i++) {
+//			seriesPre.add(x[i], y[i]);
+//		}
+//		chartPanel.repaint();
+//	}
 	
 	public void setSeriesSound(float[] x, float[] y) {
 		this.seriesSound.clear();
