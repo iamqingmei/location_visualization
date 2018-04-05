@@ -28,15 +28,15 @@ public class MapPointManager {
    private ArrayList<MapPoint> allPoints = new ArrayList<MapPoint>();
    private MapPoint pivot_point;
    private float turning_degree;
-   private float scale = 1;
+//   private float scale = 1;
    
-   private float start_coor = 0;
-   private float end_coor = Parameters.MAP_MAXHEIGHT_COOR;
-   
-   float min_x = 0;
-   float max_x = Parameters.MAP_MAXWIDTH_COOR;
-   float min_y = 0;
-   float max_y = Parameters.MAP_MAXHEIGHT_COOR;
+//   private float start_coor = Parameters.MAP_MINWIDTH_COOR;
+//   private float end_coor = Parameters.MAP_MAXHEIGHT_COOR;
+//   
+//   float min_x = Parameters.MAP_MINWIDTH_COOR;
+//   float max_x = Parameters.MAP_MAXWIDTH_COOR;
+//   float min_y = Parameters.MAP_MINHEIGHT_COOR;
+//   float max_y = Parameters.MAP_MAXHEIGHT_COOR;
    
    protected MapPointManager() {
       // Exists only to defeat instantiation.
@@ -48,10 +48,12 @@ public class MapPointManager {
       return instance;
    }
    
+   
+   
    public ArrayList<ArrayList<Integer>> addPoint(float x, float y) {
 	allPoints.add(new MapPoint(x, y));
 //	LOGGER.info("Add new point:" + allPointsToString());
-	fitInMapSize();
+//	fitInMapSize();
 	
 	ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
 	for (MapPoint i : allPoints) {
@@ -63,12 +65,16 @@ public class MapPointManager {
    
    private ArrayList<Integer> getMapCoordination(float x, float y) {
 		ArrayList<Integer> res = new ArrayList<Integer>();
-		x = (x - start_coor) / scale;
-		y = (y - start_coor) / scale;
-		res.add((int) Math.round(x * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN));
-		res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN
-				- y * Parameters.MAP_PIXEL_MULTIPLIER));
+//		x = (x - start_coor) / scale;
+//		y = (y - start_coor) / scale;
+//		res.add((int) Math.round(x * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN));
+//		res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN
+//				- y * Parameters.MAP_PIXEL_MULTIPLIER));
 //		LOGGER.info(res.toString());
+		float scale = Parameters.MAP_SIZE / (Parameters.MAP_MAXHEIGHT_COOR - Parameters.MAP_MINHEIGHT_COOR);
+		res.add((int)Math.round((x - Parameters.MAP_MINWIDTH_COOR)*scale + Parameters.MAP_MARGIN));
+		res.add((int)Math.round(Parameters.MAP_SIZE + Parameters.MAP_MARGIN
+				- (y - Parameters.MAP_MINHEIGHT_COOR) * scale));
 		return res;
 	   }
    
@@ -122,11 +128,11 @@ public class MapPointManager {
 	}
 	
 	public String bottomPointString() {
-		return (start_coor + "," + start_coor);
+		return (Parameters.MAP_MINHEIGHT_COOR + "," + Parameters.MAP_MINHEIGHT_COOR);
 	}
 	
 	public String topPointString() {
-		return ((start_coor + Parameters.MAP_MAXWIDTH_COOR*scale) + "," + (start_coor + Parameters.MAP_MAXHEIGHT_COOR*scale));
+		return (Parameters.MAP_MAXHEIGHT_COOR + "," + Parameters.MAP_MAXHEIGHT_COOR);
 	}
 	
 	
@@ -136,7 +142,7 @@ public class MapPointManager {
 			allPoints.set(i, turnMapPoint(allPoints.get(i)));
 		}
 		LOGGER.info("turn: " + allPointsToString());
-		fitInMapSize();
+//		fitInMapSize();
 		
 		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
 		for (MapPoint i : allPoints) {
@@ -145,45 +151,44 @@ public class MapPointManager {
 		return res;
 	}
 	
-	private void fitInMapSize(){
-		
-		ArrayList<Float> all_x = new ArrayList<Float>();
-		ArrayList<Float> all_y = new ArrayList<Float>();
-		for (MapPoint mapPoint:allPoints) {
-			all_x.add(mapPoint.x);
-			all_y.add(mapPoint.y);
-		}
-
-		this.min_x = Utils.getMin(all_x);
-		this.max_x = Utils.getMax(all_x);
-		this.min_y = Utils.getMin(all_y);
-		this.max_y = Utils.getMax(all_y);
-		
-		// check range
-		if (max_x > max_y) {
-			this.end_coor = max_x;
-		}
-		else {
-			this.end_coor = max_y;
-		}
-		
-		if (min_x < min_y) {
-			this.start_coor = min_x;
-		}
-		else {
-			this.start_coor = min_y;
-		}
-			
-		this.scale = ((this.end_coor - this.start_coor) / Parameters.MAP_MAXHEIGHT_COOR);
-		
-//		LOGGER.info(mapParametersToString());
-	}
+//	private void fitInMapSize(){
+//		
+//		ArrayList<Float> all_x = new ArrayList<Float>();
+//		ArrayList<Float> all_y = new ArrayList<Float>();
+//		for (MapPoint mapPoint:allPoints) {
+//			all_x.add(mapPoint.x);
+//			all_y.add(mapPoint.y);
+//		}
+//
+//		this.min_x = Utils.getMin(all_x);
+//		this.max_x = Utils.getMax(all_x);
+//		this.min_y = Utils.getMin(all_y);
+//		this.max_y = Utils.getMax(all_y);
+//		
+//		// check range
+//		if (max_x > max_y) {
+//			this.end_coor = max_x;
+//		}
+//		else {
+//			this.end_coor = max_y;
+//		}
+//		
+//		if (min_x < min_y) {
+//			this.start_coor = min_x;
+//		}
+//		else {
+//			this.start_coor = min_y;
+//		}
+//			
+//		this.scale = ((this.end_coor - this.start_coor) / Parameters.MAP_MAXHEIGHT_COOR);
+//		
+////		LOGGER.info(mapParametersToString());
+//	}
+	
 	
 	public String mapParametersToString() {
-		return ("scale: " + this.scale + " start_coor: " + 
-				this.start_coor + " min_x: " + this.min_x + 
-				" max_x: " + this.max_x + " min_y: " + this.min_y + " max_y: " + 
-				this.max_y);
+		return ("start_coor: " + Parameters.MAP_MINHEIGHT_COOR +
+				"end_coor: " + Parameters.MAP_MAXHEIGHT_COOR);
 	}
 
 }

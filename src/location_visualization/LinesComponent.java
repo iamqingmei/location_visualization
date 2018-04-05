@@ -111,8 +111,8 @@ public class LinesComponent extends JComponent{
 	    } 
 	    
 	    g.drawString(bottom_left_text, (int)Parameters.MAP_MARGIN/2, 
-	    		(int) (Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN*1.5 + 5));
-	    g.drawString(top_right_text, (int)(Parameters.MAP_MARGIN*1.5 - top_right_text.length()*5 + Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER),
+	    		(int) (Parameters.MAP_SIZE + Parameters.MAP_MARGIN*1.5 + 5));
+	    g.drawString(top_right_text, (int)(Parameters.MAP_MARGIN*1.5 - top_right_text.length()*5 + Parameters.MAP_SIZE),
 	    		(int) (Parameters.MAP_MARGIN/2));
 	}
 	
