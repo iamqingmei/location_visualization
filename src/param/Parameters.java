@@ -8,4 +8,5 @@ public class Parameters {
 	public static float MAX_IR_VAL = 10;
 	public static float MIN_IR_VAL = -10;
 	public static float MIN_SOUND_RM_RANGE = 0.1f;
+	public static int MAP_BACKGOUND_BLOCK_NUM = 64;
 }

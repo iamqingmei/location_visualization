@@ -22,6 +22,7 @@ public class Location_Visualizer{
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
 	private static ComPortParser comPortParser = ComPortParser.getInstance();
+	private static MapBkgBlockManager mapBkgBlockManager = MapBkgBlockManager.getInstance();
 	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
 	// JFrame for the application
 	private static JFrame _appFrame = null;
@@ -40,7 +41,7 @@ public class Location_Visualizer{
 	
 	public static void main(String[] args) {
 		LOGGER.setLevel(Level.INFO);
-	
+		mapBkgBlockManager.setLinesComponent(comp);
 	    init_display();
 	   
 	}
@@ -331,28 +332,7 @@ public class Location_Visualizer{
 		return txtAttribute;
 	}
 	
-	private static JTextField addAttribute(String attiName, JPanel panel, int length) {
-		
-		JPanel sim_attri_panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) sim_attri_panel.getLayout();
-		flowLayout.setVgap(0);
-		flowLayout.setHgap(0);
-		panel.add(sim_attri_panel);
-		
-		JLabel lblNewLabel = new JLabel(attiName);
-		sim_attri_panel.add(lblNewLabel);
-		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		
-		JTextField txtAttribute = new JTextField("0", length);
-		
-		
-		lblNewLabel.setLabelFor(txtAttribute);
-		sim_attri_panel.add(txtAttribute);
-		
-		return txtAttribute;
-	}
-	
-private static JTextField addAttribute(String attiName, JPanel panel, boolean setEditable) {
+	private static JTextField addAttribute(String attiName, JPanel panel, boolean setEditable) {
 		
 		JPanel sim_attri_panel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) sim_attri_panel.getLayout();
@@ -540,7 +520,7 @@ private static JTextField addAttribute(String attiName, JPanel panel, boolean se
 		JPanel variableGroup1 = new JPanel();
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
-		int length = 6;
+		
 		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
 		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
 		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));

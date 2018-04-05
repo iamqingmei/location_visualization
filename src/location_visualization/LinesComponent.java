@@ -14,6 +14,8 @@ public class LinesComponent extends JComponent{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final Color LINE_COLOR = Color.RED;
+	private static final Color BLOCK_COLOR = Color.BLACK;
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Block> blocks = new ArrayList<Block>();
 	private ArrayList<ArrayList<Integer>> points = new ArrayList<ArrayList<Integer>>();
@@ -21,44 +23,42 @@ public class LinesComponent extends JComponent{
 	private String top_right_text = "10,10";
 
 	private static class Line{
-	    final int x1; 
-	    final int y1;
-	    final int x2;
-	    final int y2;   
-//	    final Color color;
+	    final int x1; // pixel
+	    final int y1; // pixel
+	    final int x2; // pixel
+	    final int y2; // pixel
 	
-	    public Line(int x1, int y1, int x2, int y2, Color color) {
+	    public Line(int x1, int y1, int x2, int y2) {
 	        this.x1 = x1;
 	        this.y1 = y1;
 	        this.x2 = x2;
 	        this.y2 = y2;
-//	        this.color = color;
 	    }               
 	}
 	
 	private static class Block{
-	    final int x1; 
-	    final int y1;
-	    final int x2;
-	    final int y2;   
-//	    final Color color;
+	    final int x; 
+	    final int y;
+	    final int width;
+	    final int height;   
 	
-	    public Block(int x1, int y1, int x2, int y2, Color color) {
-	        this.x1 = x1;
-	        this.y1 = y1;
-	        this.x2 = x2;
-	        this.y2 = y2;
-//	        this.color = color;
+	    public Block(int x, int y, int w, int h) {
+	        this.x = x;
+	        this.y = y;
+	        this.width = w;
+	        this.height = h;
 	    }               
 	}
 	
-
-	public void addLine(int x1, int x2, int x3, int x4) {
-	    addLine(x1, x2, x3, x4, Color.black);
+	
+	public void addBlock(int x, int y, int w, int h) {
+	    blocks.add(new Block(x,y,w,h));        
+	    repaint();
 	}
 
-	public void addLine(int x1, int x2, int x3, int x4, Color color) {
-	    lines.add(new Line(x1,x2,x3,x4, color));        
+
+	public void addLine(int x1, int x2, int x3, int x4) {
+	    lines.add(new Line(x1,x2,x3,x4));        
 	    repaint();
 	}
 	
@@ -75,6 +75,11 @@ public class LinesComponent extends JComponent{
 	    repaint();
 	}
 	
+	public void clearBlocks() {
+	    blocks.clear();
+	    repaint();
+	}
+	
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -85,11 +90,19 @@ public class LinesComponent extends JComponent{
 //        g2.setColor(getBackground());
 //        g2.fillRect(0, 0, (int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN));
 //        g2.setColor(Color.WHITE);
-//        
+//       
+	    
+	    for (Block block : blocks) {
+	        g.setColor(BLOCK_COLOR);
+	        g.drawRect(block.x, block.y, block.width, block.height); 
+	    }   
+	    
 	    for (Line line : lines) {
-	        g.setColor(Color.RED);
+	        g.setColor(LINE_COLOR);
 	        g.drawLine(line.x1, line.y1, line.x2, line.y2);
-	    }       
+	    }     
+	    
+
 	    
 	    for (ArrayList<Integer> point: points) {
 	    		g.setColor(Color.RED);
