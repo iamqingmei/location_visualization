@@ -19,8 +19,8 @@ public class LinesComponent extends JComponent{
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Block> blocks = new ArrayList<Block>();
 	private ArrayList<ArrayList<Integer>> points = new ArrayList<ArrayList<Integer>>();
-	private String bottom_left_text = "0,0";
-	private String top_right_text = "10,10";
+//	private String bottom_left_text = "0,0";
+//	private String top_right_text = "10,10";
 
 	private static class Line{
 	    final int x1; // pixel
@@ -109,10 +109,12 @@ public class LinesComponent extends JComponent{
 	    		g.fillOval(point.get(0) - 5 , point.get(1) - 5, 10, 10);
 //	    		System.out.println(point.toString());
 	    } 
-	    
-	    g.drawString(bottom_left_text, (int)Parameters.MAP_MARGIN/2, 
+	    g.setColor(Color.BLACK);
+	    String t = Parameters.MAP_MINHEIGHT_COOR + "," + Parameters.MAP_MINHEIGHT_COOR;
+	    g.drawString(t , (int)Parameters.MAP_MARGIN/2, 
 	    		(int) (Parameters.MAP_SIZE + Parameters.MAP_MARGIN*1.5 + 5));
-	    g.drawString(top_right_text, (int)(Parameters.MAP_MARGIN*1.5 - top_right_text.length()*5 + Parameters.MAP_SIZE),
+	    t = Parameters.MAP_MAXHEIGHT_COOR + "," + Parameters.MAP_MAXHEIGHT_COOR;
+	    g.drawString(t , (int)(Parameters.MAP_MARGIN*1.5 - t.length()*5 + Parameters.MAP_SIZE),
 	    		(int) (Parameters.MAP_MARGIN/2));
 	}
 	
@@ -124,8 +126,8 @@ public class LinesComponent extends JComponent{
 			addLine(points.get(i-1).get(0), points.get(i-1).get(1), points.get(i).get(0), points.get(i).get(1));
 		}
 		
-		this.top_right_text = top;
-		this.bottom_left_text = bottom;
+//		this.top_right_text = top;
+//		this.bottom_left_text = bottom;
 		repaint();
 		
 	}

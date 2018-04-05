@@ -44,7 +44,6 @@ public class MapBkgBlockManager {
 			    	 component.addBlock(Math.round(i*blockPixelSize)+ Parameters.MAP_MARGIN,Math.round(c*blockPixelSize)+ Parameters.MAP_MARGIN,(int)Math.ceil(blockPixelSize),(int)Math.ceil(blockPixelSize));
   	  			}
   	  		}
-  	  		
 		}
 	}
 	
@@ -54,7 +53,7 @@ public class MapBkgBlockManager {
 	    
 	      line = in.readLine();
 	      if (line.startsWith("blkMapSize: ")){
-	    	  		line = line.substring("blkMapSize: ".length(),line.length()-1);
+	    	  		line = line.substring("blkMapSize: ".length(),line.indexOf(";"));
 	    	  		this.totalBlkNumber = Integer.valueOf(line);
 	    	  		setVariables();
 	      }
@@ -65,7 +64,7 @@ public class MapBkgBlockManager {
 	      
 	      line = in.readLine();
 	      if (line.startsWith("min_coor: ")) {
-	    	  		line = line.substring("min_coor: ".length(),line.length()-1);
+	    	  		line = line.substring("min_coor: ".length(),line.indexOf(";"));
 	    	  		Parameters.MAP_MINHEIGHT_COOR = Integer.valueOf(line);
 	    	  		Parameters.MAP_MINWIDTH_COOR = Integer.valueOf(line);
 	      }
@@ -76,7 +75,7 @@ public class MapBkgBlockManager {
 	      
 	      line = in.readLine();
 	      if (line.startsWith("max_coor: ")) {
-  	  		line = line.substring("max_coor: ".length(),line.length()-1);
+  	  		line = line.substring("max_coor: ".length(),line.indexOf(";"));
   	  		Parameters.MAP_MAXHEIGHT_COOR = Integer.valueOf(line);
   	  		Parameters.MAP_MAXWIDTH_COOR = Integer.valueOf(line);
 		    }
