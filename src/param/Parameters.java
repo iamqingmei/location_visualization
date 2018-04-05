@@ -1,6 +1,7 @@
 package param;
 
 public class Parameters {
+	public static int MAP_SIZE = 350;
 	public static float MAP_MAXHEIGHT_COOR = 10;
 	public static float MAP_MAXWIDTH_COOR = 10;
 	public static float MAP_PIXEL_MULTIPLIER = 35;

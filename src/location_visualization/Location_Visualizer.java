@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gnu.io.CommPortIdentifier;
 import param.Parameters;
@@ -21,9 +22,9 @@ public class Location_Visualizer{
 	//logger
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
-	private static ComPortParser comPortParser = ComPortParser.getInstance();
+//	private static ComPortParser comPortParser = ComPortParser.getInstance();
 	private static MapBkgBlockManager mapBkgBlockManager = MapBkgBlockManager.getInstance();
-	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
+//	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
 	// JFrame for the application
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
@@ -140,10 +141,10 @@ public class Location_Visualizer{
 		graph_2.add(graphPloter2.getChartPanel());
 		graph_3.add(graphPloter3.getChartPanel());
 		
-		comPortParser.setYawGP(graphPloter1);
-		comPortParser.setAmplitudeBar(graphPloter2);
-		comPortParser.setAmplitudePlot(graphPloter3);
-//		comPortParser.setRollGP(graphPloter3);
+//		comPortParser.setYawGP(graphPloter1);
+//		comPortParser.setAmplitudeBar(graphPloter2);
+//		comPortParser.setAmplitudePlot(graphPloter3);
+
 		
 		_GraphPanel.add(graph_1);
 		_GraphPanel.add(graph_2);
@@ -207,13 +208,13 @@ public class Location_Visualizer{
 				blArrayList.add(co2CheckBox.isSelected());
 				blArrayList.add(micCheckBox.isSelected());
 				blArrayList.add(ambientCheckBox.isSelected());
-				String command = CommandGenerator.generateCommand(sArrayList, blArrayList);
-//				System.out.println(command);
-				try {
-					communicationManager.write_to_com_port(command);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+//				String command = CommandGenerator.generateCommand(sArrayList, blArrayList);
+////				System.out.println(command);
+//				try {
+//					communicationManager.write_to_com_port(command);
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//				}
 				
 			}
 		});
@@ -247,7 +248,7 @@ public class Location_Visualizer{
 		_IRPanel.add(irCheckBox);
 		
 		IRHeatMap irHeatMap = new IRHeatMap();
-		comPortParser.setIRHeatMap(irHeatMap);
+//		comPortParser.setIRHeatMap(irHeatMap);
 		_IRPanel.add(irHeatMap);
 		
 		
@@ -285,12 +286,38 @@ public class Location_Visualizer{
 	}
 	
 	private static void initMapLayout() {
+		_MapPanel.setLayout(new BoxLayout(_MapPanel, BoxLayout.Y_AXIS));
+		JButton btn_choose_file = new JButton("CHOOSE MAP");
+		btn_choose_file.setFont(new Font("Arial", Font.BOLD, 13));
+		btn_choose_file.setFocusPainted(false);
+		btn_choose_file.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				LOGGER.info("choose map btn clicked");
+				JFileChooser chooser = new JFileChooser();
+		        FileNameExtensionFilter filter = new FileNameExtensionFilter(null,
+		                "txt");
+		        chooser.setFileFilter(filter);
+		        int returnVal = chooser.showOpenDialog(null);
+		        if(returnVal == JFileChooser.APPROVE_OPTION) {
+		            System.out.println("You chose to open this file: " +
+		                    chooser.getSelectedFile().getAbsolutePath());
+		            try {
+						mapBkgBlockManager.loadMapFromTXT(chooser.getSelectedFile().getAbsolutePath());
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		            
+		        }
+			}
+		});
+		_MapPanel.add(btn_choose_file);
 	    comp.setBackground(Color.WHITE);
-	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_MAXWIDTH_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN * 2)));
+	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_SIZE + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_SIZE + Parameters.MAP_MARGIN * 2)));
 	    comp.setBorder(new TitledBorder("Location Visualization"));
 	    _MapPanel.add(comp);
 	    
-	    comPortParser.setMapComp(comp);
+//	    comPortParser.setMapComp(comp);
 	}
 
 	
@@ -421,12 +448,12 @@ public class Location_Visualizer{
 		
 		namePanel.add(new JLabel("Port Name: "));
 		JComboBox<String> comboBox= new JComboBox<String>();  
-	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
-	        comboBox.addItem(obj.getName());
-	      } 
+//	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+//	        comboBox.addItem(obj.getName());
+//	      } 
 	   
-//		comboBox.addItem("COMTesting1");
-//		comboBox.addItem("COMTesting2");
+		comboBox.addItem("COMTesting1");
+		comboBox.addItem("COMTesting2");
 		namePanel.add(comboBox);
 	    
 		baudPanel.add(new JLabel("Baud Rate: "), BorderLayout.LINE_START);
@@ -459,7 +486,7 @@ public class Location_Visualizer{
 						LOGGER.info((String)comboBox.getSelectedItem() + " is selected");
 						
 						
-			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
+//			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
 //			            (new Thread(new KeepMapUpdating())).start();
 			        }
 			        catch ( Exception ex )
@@ -473,19 +500,19 @@ public class Location_Visualizer{
 	    baudPanel.add(btn_stop_port);
 	    btn_stop_port.setFont(new Font("Arial", Font.BOLD, 13));
 	    btn_stop_port.setFocusPainted(false);
-	    btn_stop_port.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				try
-			        {
-						communicationManager.disconnect();
-						LOGGER.info("Disconnected");
-			        }
-			        catch ( Exception ex )
-			        {
-			            ex.printStackTrace();
-			        }
-			}
-		});
+//	    btn_stop_port.addMouseListener(new MouseAdapter() {
+//			public void mousePressed(MouseEvent e) {
+//				try
+//			        {
+//						communicationManager.disconnect();
+//						LOGGER.info("Disconnected");
+//			        }
+//			        catch ( Exception ex )
+//			        {
+//			            ex.printStackTrace();
+//			        }
+//			}
+//		});
 	    
 	    portPanel.add(baudPanel);
 	    _inputPanel.add(portPanel);
@@ -506,7 +533,7 @@ public class Location_Visualizer{
 	    textArea.setEditable(true);
 //	    textArea.setBackground(new Color(222, 222, 222));
 	    textArea.setColumns(10); 
-	    comPortParser.setShowArea(textArea);
+//	    comPortParser.setShowArea(textArea);
 	    autoLoadPanel.add(scrollPane);
 //	    autoLoadPanel.add(textArea);
 	}
@@ -521,20 +548,20 @@ public class Location_Visualizer{
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
 		
-		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
-		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
-		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));
-		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, false));
-		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, false));
+//		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
+//		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
+//		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));
+//		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, false));
+//		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, false));
 		JPanel variableGroup2 = new JPanel();
 		variableGroup2.setLayout(new BoxLayout(variableGroup2, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup2);
 		addAttribute("mic", variableGroup2,false);
-		comPortParser.settempTF(addAttribute("Temp", variableGroup2, false));
-		comPortParser.setHumiTF(addAttribute("Humi", variableGroup2, false));
-		comPortParser.setpressureTF(addAttribute("Pres", variableGroup2, false));
-		comPortParser.setco2TF(addAttribute("Co2", variableGroup2, false));
-		comPortParser.setTVOCTF(addAttribute("TVOC", variableGroup2, false));
+//		comPortParser.settempTF(addAttribute("Temp", variableGroup2, false));
+//		comPortParser.setHumiTF(addAttribute("Humi", variableGroup2, false));
+//		comPortParser.setpressureTF(addAttribute("Pres", variableGroup2, false));
+//		comPortParser.setco2TF(addAttribute("Co2", variableGroup2, false));
+//		comPortParser.setTVOCTF(addAttribute("TVOC", variableGroup2, false));
 		
 		_inputPanel.add(variablePanel);
 		
