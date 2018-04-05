@@ -15,7 +15,7 @@ public class MapBkgBlockManager {
 	protected MapBkgBlockManager() throws IOException {
 	      blkMap = new int[Parameters.MAP_BACKGOUND_BLOCK_NUM][Parameters.MAP_BACKGOUND_BLOCK_NUM];
 	      blockPixelSize = (Parameters.MAP_PIXEL_MULTIPLIER * Parameters.MAP_MAXHEIGHT_COOR / Parameters.MAP_BACKGOUND_BLOCK_NUM);
-	      BufferedReader in = new BufferedReader(new FileReader("../assets/blockMap.txt"));
+	      BufferedReader in = new BufferedReader(new FileReader("src/assets/blockMap.txt"));
 	      String line;
 	      for (int c = 0; c < Parameters.MAP_BACKGOUND_BLOCK_NUM; c++) {
 	    	  		line = in.readLine();
@@ -25,7 +25,6 @@ public class MapBkgBlockManager {
 				}
 			}
 	      in.close();
-	      setBlocks();
 	}
 	
 	
@@ -49,8 +48,11 @@ public class MapBkgBlockManager {
 	private void setBlocks() {
 	    for (int c = 0; c < Parameters.MAP_BACKGOUND_BLOCK_NUM; c++) {
   	  		for (int i = 0; i < Parameters.MAP_BACKGOUND_BLOCK_NUM; i++) {
-			    	 component.addBlock((int) (i*blockPixelSize),(int) (c*blockPixelSize),(int)blockPixelSize,(int)blockPixelSize);
-			}
+  	  			if (this.blkMap[c][i] == 1) {
+			    	 component.addBlock((int) (i*blockPixelSize),(int) (c*blockPixelSize),(int)Math.ceil(blockPixelSize),(int)Math.ceil(blockPixelSize));
+  	  			}
+  	  		}
+  	  		
 		}
 		
 	}

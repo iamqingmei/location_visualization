@@ -94,7 +94,7 @@ public class LinesComponent extends JComponent{
 	    
 	    for (Block block : blocks) {
 	        g.setColor(BLOCK_COLOR);
-	        g.drawRect(block.x, block.y, block.width, block.height); 
+	        g.fillRect(block.x, block.y, block.width, block.height); 
 	    }   
 	    
 	    for (Line line : lines) {
