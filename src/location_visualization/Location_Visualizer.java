@@ -302,15 +302,19 @@ public class Location_Visualizer{
 		            System.out.println("You chose to open this file: " +
 		                    chooser.getSelectedFile().getAbsolutePath());
 		            try {
-						if (mapBkgBlockManager.loadMapFromTXT(chooser.getSelectedFile().getAbsolutePath()) == false) {
+		            		StringBuilder sBuilder = new StringBuilder("Error!");
+						if (mapBkgBlockManager.loadMapFromTXT(chooser.getSelectedFile().getAbsolutePath(),sBuilder) == false) {
 							JOptionPane.showMessageDialog(null,
-								    "Incorrect map file format\nPlease try again",
-								    "Incorrect format",
+								    sBuilder.toString(),
+								    "Incorrect",
 								    JOptionPane.ERROR_MESSAGE);
+							
 						}
-						MapPointManager mapPointManager = MapPointManager.getInstance();
-						comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
-
+						else {
+							MapPointManager mapPointManager = MapPointManager.getInstance();
+							comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+						}
+						
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

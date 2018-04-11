@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Parameter;
 
 import param.Parameters;
 
@@ -47,7 +48,8 @@ public class MapBkgBlockManager {
 		}
 	}
 	
-	public boolean loadMapFromTXT(String f_path) throws IOException {
+	public boolean loadMapFromTXT(String f_path,StringBuilder warning_msg) throws IOException {
+		
 	      BufferedReader in = new BufferedReader(new FileReader(f_path));
 	      String line;
 	    
@@ -59,6 +61,8 @@ public class MapBkgBlockManager {
 	      }
 	      else {
 	    	  in.close();
+	    	  warning_msg.setLength(0);
+	    	  warning_msg.append("Cannot get blkMapSize");
 			return false;
 		}
 	      
@@ -69,6 +73,8 @@ public class MapBkgBlockManager {
 	      }
 	      else {
 	    	  in.close();
+	    	  warning_msg.setLength(0);
+	    	  warning_msg.append("Cannot get min_x_coor");
 	    	  	return false;
 	      }
 	      
@@ -79,6 +85,8 @@ public class MapBkgBlockManager {
 	      }
 	      else {
 	    	  in.close();
+	    	  warning_msg.setLength(0);
+	    	  warning_msg.append("Cannot get min_y_coor");
 	    	  	return false;
 	      }
 	      
@@ -89,6 +97,8 @@ public class MapBkgBlockManager {
 		    }
 		    else {
 		    	in.close();
+		    	  warning_msg.setLength(0);
+		    	  warning_msg.append("Cannot get max_x_coor");
 		  	  	return false;
 		    }
 	      
@@ -99,8 +109,17 @@ public class MapBkgBlockManager {
 		    }
 		    else {
 		    	in.close();
+		    	  warning_msg.setLength(0);
+		    	  warning_msg.append("Cannot get max_y_coor");
 		  	  	return false;
 		    }
+	      
+	      if (Parameters.MAP_MAX_X_COOR - Parameters.MAP_MIN_X_COOR != Parameters.MAP_MAX_Y_COOR - Parameters.MAP_MIN_Y_COOR) {
+	    		in.close();	
+		    	  warning_msg.setLength(0);
+		    	  warning_msg.append("It is not a square! max_y_coor - min_y_coor must equal to max_x_coor - min_x_coor!");
+	    		return false;
+	      }
 	      
 	      for(int c=0; c<totalBlkNumber;c++) {
 	    	  		line = in.readLine();
