@@ -110,10 +110,10 @@ public class LinesComponent extends JComponent{
 //	    		System.out.println(point.toString());
 	    } 
 	    g.setColor(Color.BLACK);
-	    String t = Parameters.MAP_MINHEIGHT_COOR + "," + Parameters.MAP_MINHEIGHT_COOR;
-	    g.drawString(t , (int)Parameters.MAP_MARGIN/2, 
+	    MapPointManager mPointManager = MapPointManager.getInstance();
+	    g.drawString(mPointManager.bottomPointString() , (int)Parameters.MAP_MARGIN/2, 
 	    		(int) (Parameters.MAP_SIZE + Parameters.MAP_MARGIN*1.5 + 5));
-	    t = Parameters.MAP_MAXHEIGHT_COOR + "," + Parameters.MAP_MAXHEIGHT_COOR;
+	    String t = mPointManager.topPointString();
 	    g.drawString(t , (int)(Parameters.MAP_MARGIN*1.5 - t.length()*5 + Parameters.MAP_SIZE),
 	    		(int) (Parameters.MAP_MARGIN/2));
 	}

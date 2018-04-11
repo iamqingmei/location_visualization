@@ -50,17 +50,10 @@ public class MapPointManager {
    
    
    
-   public ArrayList<ArrayList<Integer>> addPoint(float x, float y) {
+   public void addPoint(float x, float y) {
 	allPoints.add(new MapPoint(x, y));
 //	LOGGER.info("Add new point:" + allPointsToString());
 //	fitInMapSize();
-	
-	ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
-	for (MapPoint i : allPoints) {
-		res.add(getMapCoordination(i.x, i.y));
-	}
-
-	return res;
    }
    
    private ArrayList<Integer> getMapCoordination(float x, float y) {
@@ -71,10 +64,10 @@ public class MapPointManager {
 //		res.add((int)Math.round(Parameters.MAP_MAXHEIGHT_COOR * Parameters.MAP_PIXEL_MULTIPLIER + Parameters.MAP_MARGIN
 //				- y * Parameters.MAP_PIXEL_MULTIPLIER));
 //		LOGGER.info(res.toString());
-		float scale = Parameters.MAP_SIZE / (Parameters.MAP_MAXHEIGHT_COOR - Parameters.MAP_MINHEIGHT_COOR);
-		res.add((int)Math.round((x - Parameters.MAP_MINWIDTH_COOR)*scale + Parameters.MAP_MARGIN));
+		float scale = Parameters.MAP_SIZE / (Parameters.MAP_MAX_Y_COOR - Parameters.MAP_MIN_Y_COOR);
+		res.add((int)Math.round((x - Parameters.MAP_MIN_X_COOR)*scale + Parameters.MAP_MARGIN));
 		res.add((int)Math.round(Parameters.MAP_SIZE + Parameters.MAP_MARGIN
-				- (y - Parameters.MAP_MINHEIGHT_COOR) * scale));
+				- (y - Parameters.MAP_MIN_Y_COOR) * scale));
 		return res;
 	   }
    
@@ -128,22 +121,22 @@ public class MapPointManager {
 	}
 	
 	public String bottomPointString() {
-		return (Parameters.MAP_MINHEIGHT_COOR + "," + Parameters.MAP_MINHEIGHT_COOR);
+		return (Parameters.MAP_MIN_X_COOR + "," + Parameters.MAP_MIN_Y_COOR);
 	}
 	
 	public String topPointString() {
-		return (Parameters.MAP_MAXHEIGHT_COOR + "," + Parameters.MAP_MAXHEIGHT_COOR);
+		return (Parameters.MAP_MAX_X_COOR + "," + Parameters.MAP_MAX_Y_COOR);
 	}
 	
 	
-	public ArrayList<ArrayList<Integer>> turn() {
-		
+	public void turn() {
 		for (int i = 0; i < allPoints.size(); i++) {
 			allPoints.set(i, turnMapPoint(allPoints.get(i)));
 		}
 		LOGGER.info("turn: " + allPointsToString());
-//		fitInMapSize();
-		
+	}
+	
+	public ArrayList<ArrayList<Integer>> getAllPoints() {
 		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
 		for (MapPoint i : allPoints) {
 			res.add(getMapCoordination(i.x, i.y));
@@ -187,8 +180,8 @@ public class MapPointManager {
 	
 	
 	public String mapParametersToString() {
-		return ("start_coor: " + Parameters.MAP_MINHEIGHT_COOR +
-				"end_coor: " + Parameters.MAP_MAXHEIGHT_COOR);
+		return ("start_coor: " + bottomPointString() +
+				"end_coor: " + topPointString());
 	}
 
 }

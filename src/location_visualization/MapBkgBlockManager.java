@@ -63,10 +63,9 @@ public class MapBkgBlockManager {
 		}
 	      
 	      line = in.readLine();
-	      if (line.startsWith("min_coor: ")) {
-	    	  		line = line.substring("min_coor: ".length(),line.indexOf(";"));
-	    	  		Parameters.MAP_MINHEIGHT_COOR = Integer.valueOf(line);
-	    	  		Parameters.MAP_MINWIDTH_COOR = Integer.valueOf(line);
+	      if (line.startsWith("min_x_coor: ")) {
+	    	  		line = line.substring("min_x_coor: ".length(),line.indexOf(";"));
+	    	  		Parameters.MAP_MIN_X_COOR = Float.parseFloat(line);
 	      }
 	      else {
 	    	  in.close();
@@ -74,10 +73,29 @@ public class MapBkgBlockManager {
 	      }
 	      
 	      line = in.readLine();
-	      if (line.startsWith("max_coor: ")) {
-  	  		line = line.substring("max_coor: ".length(),line.indexOf(";"));
-  	  		Parameters.MAP_MAXHEIGHT_COOR = Integer.valueOf(line);
-  	  		Parameters.MAP_MAXWIDTH_COOR = Integer.valueOf(line);
+	      if (line.startsWith("min_y_coor: ")) {
+	    	  		line = line.substring("min_y_coor: ".length(),line.indexOf(";"));
+	    	  		Parameters.MAP_MIN_Y_COOR = Float.parseFloat(line);
+	      }
+	      else {
+	    	  in.close();
+	    	  	return false;
+	      }
+	      
+	      line = in.readLine();
+	      if (line.startsWith("max_x_coor: ")) {
+  	  		line = line.substring("max_x_coor: ".length(),line.indexOf(";"));
+  	  		Parameters.MAP_MAX_X_COOR = Float.parseFloat(line);
+		    }
+		    else {
+		    	in.close();
+		  	  	return false;
+		    }
+	      
+	      line = in.readLine();
+	      if (line.startsWith("max_y_coor: ")) {
+  	  		line = line.substring("max_y_coor: ".length(),line.indexOf(";"));
+  	  		Parameters.MAP_MAX_Y_COOR = Float.parseFloat(line);
 		    }
 		    else {
 		    	in.close();
@@ -95,7 +113,5 @@ public class MapBkgBlockManager {
 	      setBlocks();
 	      return true;
 	}
-	
-	
 	
 }

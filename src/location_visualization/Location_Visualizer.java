@@ -308,6 +308,9 @@ public class Location_Visualizer{
 								    "Incorrect format",
 								    JOptionPane.ERROR_MESSAGE);
 						}
+						MapPointManager mapPointManager = MapPointManager.getInstance();
+						comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -428,8 +431,8 @@ public class Location_Visualizer{
 						Float.parseFloat(pivot_y_input.getText()));
 				
 				mapPointManager.setTurningDegree(Float.parseFloat(turning_degree.getText()));
-				
-				comp.setPoints(mapPointManager.turn(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+				mapPointManager.turn();
+				comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 			}
 		});
 		
@@ -597,8 +600,8 @@ public class Location_Visualizer{
 				float x = Float.parseFloat(xInput.getText());
 				float y = Float.parseFloat(yInput.getText());
 				MapPointManager mapPointManager = MapPointManager.getInstance();
-				
-				comp.setPoints(mapPointManager.addPoint(x, y), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+				mapPointManager.addPoint(x, y);
+				comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 			}
 		});
 		coorPanel.add(btn_submit_new_point);
