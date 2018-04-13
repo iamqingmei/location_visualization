@@ -9,6 +9,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gnu.io.CommPortIdentifier;
+import location_visualization.managers.MapBkgBlockManager;
+import location_visualization.managers.MapPointManager;
 import param.Parameters;
 
 import java.util.ArrayList;
@@ -22,9 +24,9 @@ public class Location_Visualizer{
 	//logger
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
-//	private static ComPortParser comPortParser = ComPortParser.getInstance();
+	private static ComPortParser comPortParser = ComPortParser.getInstance();
 	private static MapBkgBlockManager mapBkgBlockManager = MapBkgBlockManager.getInstance();
-//	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
+	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
 	// JFrame for the application
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
@@ -141,9 +143,9 @@ public class Location_Visualizer{
 		graph_2.add(graphPloter2.getChartPanel());
 		graph_3.add(graphPloter3.getChartPanel());
 		
-//		comPortParser.setYawGP(graphPloter1);
-//		comPortParser.setAmplitudeBar(graphPloter2);
-//		comPortParser.setAmplitudePlot(graphPloter3);
+		comPortParser.setYawGP(graphPloter1);
+		comPortParser.setAmplitudeBar(graphPloter2);
+		comPortParser.setAmplitudePlot(graphPloter3);
 
 		
 		_GraphPanel.add(graph_1);
@@ -208,13 +210,13 @@ public class Location_Visualizer{
 				blArrayList.add(co2CheckBox.isSelected());
 				blArrayList.add(micCheckBox.isSelected());
 				blArrayList.add(ambientCheckBox.isSelected());
-//				String command = CommandGenerator.generateCommand(sArrayList, blArrayList);
-////				System.out.println(command);
-//				try {
-//					communicationManager.write_to_com_port(command);
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//				}
+				String command = CommandGenerator.generateCommand(sArrayList, blArrayList);
+//				System.out.println(command);
+				try {
+					communicationManager.write_to_com_port(command);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
 			}
 		});
@@ -248,7 +250,7 @@ public class Location_Visualizer{
 		_IRPanel.add(irCheckBox);
 		
 		IRHeatMap irHeatMap = new IRHeatMap();
-//		comPortParser.setIRHeatMap(irHeatMap);
+		comPortParser.setIRHeatMap(irHeatMap);
 		_IRPanel.add(irHeatMap);
 		
 		
@@ -329,7 +331,7 @@ public class Location_Visualizer{
 	    comp.setBorder(new TitledBorder("Location Visualization"));
 	    _MapPanel.add(comp);
 	    
-//	    comPortParser.setMapComp(comp);
+	    comPortParser.setMapComp(comp);
 	}
 
 	
@@ -460,9 +462,9 @@ public class Location_Visualizer{
 		
 		namePanel.add(new JLabel("Port Name: "));
 		JComboBox<String> comboBox= new JComboBox<String>();  
-//	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
-//	        comboBox.addItem(obj.getName());
-//	      } 
+	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+	        comboBox.addItem(obj.getName());
+	      } 
 	   
 		comboBox.addItem("COMTesting1");
 		comboBox.addItem("COMTesting2");
@@ -498,7 +500,7 @@ public class Location_Visualizer{
 						LOGGER.info((String)comboBox.getSelectedItem() + " is selected");
 						
 						
-//			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
+			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
 //			            (new Thread(new KeepMapUpdating())).start();
 			        }
 			        catch ( Exception ex )
@@ -545,7 +547,7 @@ public class Location_Visualizer{
 	    textArea.setEditable(true);
 //	    textArea.setBackground(new Color(222, 222, 222));
 	    textArea.setColumns(10); 
-//	    comPortParser.setShowArea(textArea);
+	    comPortParser.setShowArea(textArea);
 	    autoLoadPanel.add(scrollPane);
 //	    autoLoadPanel.add(textArea);
 	}
@@ -560,20 +562,20 @@ public class Location_Visualizer{
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
 		
-//		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
-//		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
-//		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));
-//		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, false));
-//		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, false));
+		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
+		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
+		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));
+		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, false));
+		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, false));
 		JPanel variableGroup2 = new JPanel();
 		variableGroup2.setLayout(new BoxLayout(variableGroup2, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup2);
 		addAttribute("mic", variableGroup2,false);
-//		comPortParser.settempTF(addAttribute("Temp", variableGroup2, false));
-//		comPortParser.setHumiTF(addAttribute("Humi", variableGroup2, false));
-//		comPortParser.setpressureTF(addAttribute("Pres", variableGroup2, false));
-//		comPortParser.setco2TF(addAttribute("Co2", variableGroup2, false));
-//		comPortParser.setTVOCTF(addAttribute("TVOC", variableGroup2, false));
+		comPortParser.settempTF(addAttribute("Temp", variableGroup2, false));
+		comPortParser.setHumiTF(addAttribute("Humi", variableGroup2, false));
+		comPortParser.setpressureTF(addAttribute("Pres", variableGroup2, false));
+		comPortParser.setco2TF(addAttribute("Co2", variableGroup2, false));
+		comPortParser.setTVOCTF(addAttribute("TVOC", variableGroup2, false));
 		
 		_inputPanel.add(variablePanel);
 		

@@ -1,4 +1,4 @@
-package location_visualization;
+package location_visualization.managers;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;

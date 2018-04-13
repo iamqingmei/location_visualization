@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
+import location_visualization.managers.MapPointManager;
 import param.Parameters;
 
 public class LinesComponent extends JComponent{

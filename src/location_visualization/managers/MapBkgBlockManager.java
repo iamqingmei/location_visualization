@@ -1,11 +1,10 @@
-package location_visualization;
+package location_visualization.managers;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Parameter;
 
+import location_visualization.LinesComponent;
 import param.Parameters;
 
 public class MapBkgBlockManager {
