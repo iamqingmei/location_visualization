@@ -103,8 +103,6 @@ public class LinesComponent extends JComponent{
 	        g.drawLine(line.x1, line.y1, line.x2, line.y2);
 	    }     
 	    
-
-	    
 	    for (ArrayList<Integer> point: points) {
 	    		g.setColor(Color.RED);
 	    		g.fillOval(point.get(0) - 5 , point.get(1) - 5, 10, 10);

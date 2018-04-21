@@ -9,7 +9,7 @@ import param.Parameters;
 
 public class MapBkgBlockManager {
 	static MapBkgBlockManager instance;
-	private int[][] blkMap; // blkMap has shape of [blkMapSize][blkMapSize]
+	private int[][] blkMap; // blkMap has shape of [blkMapSize][blkMapSize], value is either 0 or 1
 	private float blockPixelSize;
 	private int totalBlkNumber=64;
 	private LinesComponent component;
@@ -20,7 +20,7 @@ public class MapBkgBlockManager {
 	
 	private void setVariables() {
 		blkMap = new int[totalBlkNumber][totalBlkNumber];
-		blockPixelSize = (Parameters.MAP_SIZE / totalBlkNumber);
+		blockPixelSize = (float) (Parameters.MAP_SIZE)/ totalBlkNumber;
 	}
    
 	
@@ -41,7 +41,7 @@ public class MapBkgBlockManager {
 	    for (int c = 0; c < totalBlkNumber; c++) {
   	  		for (int i = 0; i < totalBlkNumber; i++) {
   	  			if (this.blkMap[c][i] == 1) {
-			    	 component.addBlock(Math.round(i*blockPixelSize)+ Parameters.MAP_MARGIN,Math.round(c*blockPixelSize)+ Parameters.MAP_MARGIN,(int)Math.ceil(blockPixelSize),(int)Math.ceil(blockPixelSize));
+			    	 component.addBlock(Math.round(i*blockPixelSize+ Parameters.MAP_MARGIN),Math.round(c*blockPixelSize+ Parameters.MAP_MARGIN),(int)Math.ceil(blockPixelSize),(int)Math.ceil(blockPixelSize));
   	  			}
   	  		}
 		}
@@ -130,6 +130,10 @@ public class MapBkgBlockManager {
 	      in.close();
 	      setBlocks();
 	      return true;
+	}
+	
+	public int[][] getBlkMap(){
+		return this.blkMap;
 	}
 	
 }

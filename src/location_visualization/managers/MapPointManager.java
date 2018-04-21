@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import param.Parameters;
 
 public class MapPointManager {
-	private class MapPoint {
+	public class MapPoint {
 		private float x;
 		private float y;
 		
