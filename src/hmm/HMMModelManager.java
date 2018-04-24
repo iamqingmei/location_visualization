@@ -12,17 +12,17 @@ import param.Parameters;
 import hmm.MapRoadManager;
 
 
-public class ModelManager {
+public class HMMModelManager {
 	private Map<MapRoad, HashMap<MapRoad, Float>> roadToRoadPossibility;
-	private static ModelManager instance;
+	private static HMMModelManager instance;
 	
-	private ModelManager() {
+	private HMMModelManager() {
 		this.roadToRoadPossibility = new HashMap<MapRoad, HashMap<MapRoad, Float>>();
 	}
 	
-	public static ModelManager getInstance() {
+	public static HMMModelManager getInstance() {
 		if (instance == null) {
-			instance = new ModelManager();
+			instance = new HMMModelManager();
 		}
 		return instance;
 	}
@@ -38,6 +38,8 @@ public class ModelManager {
 			roadToRoadPossibility.put(allRoads.get(i),secondKey);
 		}
 	}
+	
+	public 
 	
 	private float calculateRoadToRoadPossibility(MapRoad a, MapRoad b) {
 		if (a==b) {

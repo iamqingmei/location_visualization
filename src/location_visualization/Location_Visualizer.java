@@ -9,6 +9,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gnu.io.CommPortIdentifier;
+import hmm.MapRoadManager;
 import location_visualization.managers.MapBkgBlockManager;
 import location_visualization.managers.MapPointManager;
 import param.Parameters;
@@ -290,6 +291,8 @@ public class Location_Visualizer{
 	
 	private static void initMapLayout() {
 		_MapPanel.setLayout(new BoxLayout(_MapPanel, BoxLayout.Y_AXIS));
+		JPanel mapBtnPanel = new JPanel();
+		
 		JButton btn_choose_file = new JButton("CHOOSE MAP");
 		btn_choose_file.setFont(new Font("Arial", Font.BOLD, 13));
 		btn_choose_file.setFocusPainted(false);
@@ -316,6 +319,7 @@ public class Location_Visualizer{
 						else {
 							MapPointManager mapPointManager = MapPointManager.getInstance();
 							comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+							MapRoadManager.getInstance().setAllRoads(mapBkgBlockManager.getBlkMap());
 						}
 						
 					} catch (IOException e1) {
@@ -326,7 +330,18 @@ public class Location_Visualizer{
 		        }
 			}
 		});
-		_MapPanel.add(btn_choose_file);
+		mapBtnPanel.add(btn_choose_file);
+		
+		JButton btn_adjust = new JButton("HMM Adjust");
+		btn_adjust.setFont(new Font("Arial", Font.BOLD, 13));
+		btn_adjust.setFocusPainted(false);
+		btn_adjust.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				// adjust all the points
+			}
+		});
+		mapBtnPanel.add(btn_adjust);
+		_MapPanel.add(mapBtnPanel);
 	    comp.setBackground(Color.WHITE);
 	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_SIZE + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_SIZE + Parameters.MAP_MARGIN * 2)));
 	    comp.setBorder(new TitledBorder("Location Visualization"));

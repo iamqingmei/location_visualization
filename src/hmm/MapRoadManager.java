@@ -1,7 +1,10 @@
 package hmm;
 
 import java.util.ArrayList;
+import java.util.PrimitiveIterator.OfDouble;
 import java.util.logging.Logger;
+
+import javax.xml.stream.events.EndDocument;
 
 import param.Parameters;
 
@@ -99,8 +102,107 @@ public class MapRoadManager {
 	}
 	
 	public void setAllRoads(int[][] blkMap) {
+		int n = blkMap.length;
 		float oneBlockWidth = (Parameters.MAP_MAX_X_COOR - Parameters.MAP_MIN_X_COOR) / blkMap.length;// in map coordination
 		
+		for (int i = 0; i<n;i++) {
+			int start = -1;
+			int stop = -1;
+			for (int j=0;j<n;j++) {
+				if (blkMap[i][j] == 1) {
+					if (start == -1) {
+						start = j;
+					}
+					stop = j;
+				}
+				else {
+					if (start != -1) {
+						if ((stop != -1) & (start!=stop)){
+							//register 
+							float centerY = (n-i)*oneBlockWidth -oneBlockWidth/2 + Parameters.MAP_MIN_Y_COOR;
+			  	  			float x1 = start*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_X_COOR;
+			  	  			float x2 = stop*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_X_COOR;
+			  	  			registerNewRoad(x1, x2, centerY, centerY, oneBlockWidth);
+						}
+						start = -1;
+						stop = -1;
+					}
+				}
+			}
+		}
+		for (int i = 0; i<n;i++) {
+			int start = -1;
+			int stop = -1;
+			for (int j=0;j<n;j++) {
+				if (blkMap[j][i] == 1) {
+					if (start == -1) {
+						start = j;
+					}
+					stop = j;
+				}
+				else {
+					if (start != -1) {
+						if ((stop != -1) & (start!=stop)){
+							//register 
+							float centerX = i*oneBlockWidth +oneBlockWidth/2 + Parameters.MAP_MIN_X_COOR;
+			  	  			float y1 = (n-start)*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_Y_COOR;
+			  	  			float y2 = (n-stop)*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_Y_COOR;
+			  	  			registerNewRoad(centerX, centerX, y1, y2, oneBlockWidth);
+						}
+						start = -1;
+						stop = -1;
+					}
+				}
+			}
+		}
 		
+	}
+	
+	private void registerNewRoad(float x1, float x2, float y1, float y2, float oneBlockWidth) {
+//		for (MapRoad aMapRoad:this.allRoads) {
+//			if (aMapRoad.direction == Parameters.ROAD_HORIZONTAL) {
+//				if (aMapRoad.starting_coor[0]==x1) {
+//					if(aMapRoad.end_coor[0]==x2) {
+//						if(aMapRoad.starting_coor[1] == y1 + oneBlockWidth) {
+//							aMapRoad.roadWidth = aMapRoad.roadWidth+oneBlockWidth;
+//							aMapRoad.starting_coor[1] = y1 + oneBlockWidth/2;
+//							aMapRoad.end_coor[1] = y1 + oneBlockWidth/2;
+//							return;
+//						}
+//					}
+//				}
+//			}
+//			if (aMapRoad.direction == Parameters.ROAD_VERTICLE) {
+//				if (aMapRoad.starting_coor[1]==y1) {
+//					if(aMapRoad.end_coor[1]==y2) {
+//						if(aMapRoad.starting_coor[0] == x1 - oneBlockWidth) {
+//							aMapRoad.roadWidth = aMapRoad.roadWidth+oneBlockWidth;
+//							aMapRoad.starting_coor[0] = x1 - oneBlockWidth/2;
+//							aMapRoad.end_coor[0] = x1 - oneBlockWidth/2;
+//							return;
+//						}
+//					}
+//				}
+//			}
+//		}
+		addMapRoad(new float[] {x1,y1}, new float[] {x2,y2}, oneBlockWidth);
+	}
+	
+	private boolean contains(ArrayList<int[]> a, int[] l) {
+		for (int[] i:a) {
+			if ((i[0]==l[0]) & (i[1]==l[1])) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private int find(ArrayList<int[]> a, int[] l) {
+		for (int[] i:a) {
+			if ((i[0]==l[0]) & (i[1]==l[1])) {
+				return i[2];
+			}
+		}
+		return -1;
 	}
 }
