@@ -9,6 +9,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gnu.io.CommPortIdentifier;
+import hmm.HMMModelManager;
 import hmm.MapRoadManager;
 import location_visualization.managers.MapBkgBlockManager;
 import location_visualization.managers.MapPointManager;
@@ -25,9 +26,9 @@ public class Location_Visualizer{
 	//logger
 	private final static Logger LOGGER = Logger.getLogger(Location_Visualizer.class.getName());
 	private static LinesComponent comp = new LinesComponent();
-//	private static ComPortParser comPortParser = ComPortParser.getInstance();
+	private static ComPortParser comPortParser = ComPortParser.getInstance();
 	private static MapBkgBlockManager mapBkgBlockManager = MapBkgBlockManager.getInstance();
-//	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
+	private static TwoWaySerialComm communicationManager = new TwoWaySerialComm();
 	// JFrame for the application
 	private static JFrame _appFrame = null;
 	// JPanel for laying out different views
@@ -144,9 +145,9 @@ public class Location_Visualizer{
 		graph_2.add(graphPloter2.getChartPanel());
 		graph_3.add(graphPloter3.getChartPanel());
 		
-//		comPortParser.setYawGP(graphPloter1);
-//		comPortParser.setAmplitudeBar(graphPloter2);
-//		comPortParser.setAmplitudePlot(graphPloter3);
+		comPortParser.setYawGP(graphPloter1);
+		comPortParser.setAmplitudeBar(graphPloter2);
+		comPortParser.setAmplitudePlot(graphPloter3);
 
 		
 		_GraphPanel.add(graph_1);
@@ -212,13 +213,13 @@ public class Location_Visualizer{
 				blArrayList.add(micCheckBox.isSelected());
 				blArrayList.add(ambientCheckBox.isSelected());
 				
-//				String command = CommandGenerator.generateCommand(sArrayList, blArrayList);
-////				System.out.println(command);
-//				try {
-//					communicationManager.write_to_com_port(command);
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//				}
+				String command = CommandGenerator.generateCommand(sArrayList, blArrayList);
+//				System.out.println(command);
+				try {
+					communicationManager.write_to_com_port(command);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
 			}
 		});
@@ -252,7 +253,7 @@ public class Location_Visualizer{
 		_IRPanel.add(irCheckBox);
 		
 		IRHeatMap irHeatMap = new IRHeatMap();
-//		comPortParser.setIRHeatMap(irHeatMap);
+		comPortParser.setIRHeatMap(irHeatMap);
 		_IRPanel.add(irHeatMap);
 		
 		
@@ -318,8 +319,9 @@ public class Location_Visualizer{
 						}
 						else {
 							MapPointManager mapPointManager = MapPointManager.getInstance();
-							comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+							comp.setPoints(mapPointManager.getAllPointsPixelCoor(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 							MapRoadManager.getInstance().setAllRoads(mapBkgBlockManager.getBlkMap());
+							HMMModelManager.getInstance().setRoadToRoadPossibility();
 						}
 						
 					} catch (IOException e1) {
@@ -337,17 +339,33 @@ public class Location_Visualizer{
 		btn_adjust.setFocusPainted(false);
 		btn_adjust.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				// adjust all the points
+				MapPointManager mapPointManager = MapPointManager.getInstance();
+				ArrayList<float[]> adjustedPoints = HMMModelManager.getInstance().adjustPoints(mapPointManager.getAllMapPoints());
+				ArrayList<ArrayList<Integer>> pointsInPixel = new ArrayList<>();
+				for (float[] p:adjustedPoints) {
+					pointsInPixel.add(mapPointManager.getMapCoordination(p[0], p[1]));
+				}
+				comp.setPoints(pointsInPixel, mapPointManager.topPointString(), mapPointManager.bottomPointString());
 			}
 		});
 		mapBtnPanel.add(btn_adjust);
+		
+		JButton btn_save = new JButton("SAVE DATA");
+		btn_save.setFont(new Font("Arial", Font.BOLD, 13));
+		btn_save.setFocusPainted(false);
+		btn_save.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				comPortParser.save(); 
+			}
+		});
+		mapBtnPanel.add(btn_save);
 		_MapPanel.add(mapBtnPanel);
 	    comp.setBackground(Color.WHITE);
 	    comp.setPreferredSize(new Dimension((int)(Parameters.MAP_SIZE + Parameters.MAP_MARGIN * 2), (int)(Parameters.MAP_SIZE + Parameters.MAP_MARGIN * 2)));
 	    comp.setBorder(new TitledBorder("Location Visualization"));
 	    _MapPanel.add(comp);
 	    
-//	    comPortParser.setMapComp(comp);
+	    comPortParser.setMapComp(comp);
 	}
 
 	
@@ -454,7 +472,7 @@ public class Location_Visualizer{
 				
 				mapPointManager.setTurningDegree(Float.parseFloat(turning_degree.getText()));
 				mapPointManager.turn();
-				comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+				comp.setPoints(mapPointManager.getAllPointsPixelCoor(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 			}
 		});
 		
@@ -478,9 +496,9 @@ public class Location_Visualizer{
 		
 		namePanel.add(new JLabel("Port Name: "));
 		JComboBox<String> comboBox= new JComboBox<String>();  
-//	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
-//	        comboBox.addItem(obj.getName());
-//	      } 
+	    for (CommPortIdentifier obj : TwoWaySerialComm.getAvailableSerialPorts()) {
+	        comboBox.addItem(obj.getName());
+	      } 
 	   
 		comboBox.addItem("COMTesting1");
 		comboBox.addItem("COMTesting2");
@@ -516,8 +534,8 @@ public class Location_Visualizer{
 						LOGGER.info((String)comboBox.getSelectedItem() + " is selected");
 						
 						
-//			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
-//			            (new Thread(new KeepMapUpdating())).start();
+			            communicationManager.connect((String)comboBox.getSelectedItem(), Integer.parseInt((String)comboBox_2.getSelectedItem()));
+
 			        }
 			        catch ( Exception ex )
 			        {
@@ -561,11 +579,9 @@ public class Location_Visualizer{
 	    textArea.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 	    textArea.setMargin(new Insets(0, 15, 0, 15));
 	    textArea.setEditable(true);
-//	    textArea.setBackground(new Color(222, 222, 222));
 	    textArea.setColumns(10); 
-//	    comPortParser.setShowArea(textArea);
+	    comPortParser.setShowArea(textArea);
 	    autoLoadPanel.add(scrollPane);
-//	    autoLoadPanel.add(textArea);
 	}
 	
 	private static void initVariablePanel() {
@@ -578,20 +594,20 @@ public class Location_Visualizer{
 		variableGroup1.setLayout(new BoxLayout(variableGroup1, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup1);
 		
-//		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
-//		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
-//		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));
-//		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, false));
-//		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, false));
+		comPortParser.setvbatTF(addAttribute("BatteryVol", variableGroup1, false));
+		comPortParser.setambTF(addAttribute("Ambient", variableGroup1, false));
+		comPortParser.setRMSSoundNoiseTF(addAttribute("RMSSoundNoise", variableGroup1, false));
+		comPortParser.setSpeedXTF(addAttribute("speed x", variableGroup1, false));
+		comPortParser.setSpeedYTF(addAttribute("speed y", variableGroup1, false));
 		JPanel variableGroup2 = new JPanel();
 		variableGroup2.setLayout(new BoxLayout(variableGroup2, BoxLayout.Y_AXIS));
 		variablePanel.add(variableGroup2);
 		addAttribute("mic", variableGroup2,false);
-//		comPortParser.settempTF(addAttribute("Temp", variableGroup2, false));
-//		comPortParser.setHumiTF(addAttribute("Humi", variableGroup2, false));
-//		comPortParser.setpressureTF(addAttribute("Pres", variableGroup2, false));
-//		comPortParser.setco2TF(addAttribute("Co2", variableGroup2, false));
-//		comPortParser.setTVOCTF(addAttribute("TVOC", variableGroup2, false));
+		comPortParser.settempTF(addAttribute("Temp", variableGroup2, false));
+		comPortParser.setHumiTF(addAttribute("Humi", variableGroup2, false));
+		comPortParser.setpressureTF(addAttribute("Pres", variableGroup2, false));
+		comPortParser.setco2TF(addAttribute("Co2", variableGroup2, false));
+		comPortParser.setTVOCTF(addAttribute("TVOC", variableGroup2, false));
 		
 		_inputPanel.add(variablePanel);
 		
@@ -623,7 +639,7 @@ public class Location_Visualizer{
 				float y = Float.parseFloat(yInput.getText());
 				MapPointManager mapPointManager = MapPointManager.getInstance();
 				mapPointManager.addPoint(x, y);
-				comp.setPoints(mapPointManager.getAllPoints(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
+				comp.setPoints(mapPointManager.getAllPointsPixelCoor(), mapPointManager.topPointString(), mapPointManager.bottomPointString());
 			}
 		});
 		coorPanel.add(btn_submit_new_point);

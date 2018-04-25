@@ -56,7 +56,7 @@ public class MapPointManager {
 //	fitInMapSize();
    }
    
-   private ArrayList<Integer> getMapCoordination(float x, float y) {
+   public ArrayList<Integer> getMapCoordination(float x, float y) {
 		ArrayList<Integer> res = new ArrayList<Integer>();
 //		x = (x - start_coor) / scale;
 //		y = (y - start_coor) / scale;
@@ -136,12 +136,16 @@ public class MapPointManager {
 		LOGGER.info("turn: " + allPointsToString());
 	}
 	
-	public ArrayList<ArrayList<Integer>> getAllPoints() {
+	public ArrayList<ArrayList<Integer>> getAllPointsPixelCoor() {
 		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
 		for (MapPoint i : allPoints) {
 			res.add(getMapCoordination(i.x, i.y));
 		}
 		return res;
+	}
+	
+	public ArrayList<MapPoint> getAllMapPoints(){
+		return allPoints;
 	}
 	
 //	private void fitInMapSize(){

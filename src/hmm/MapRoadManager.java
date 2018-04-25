@@ -1,10 +1,7 @@
 package hmm;
 
 import java.util.ArrayList;
-import java.util.PrimitiveIterator.OfDouble;
 import java.util.logging.Logger;
-
-import javax.xml.stream.events.EndDocument;
 
 import param.Parameters;
 
@@ -18,12 +15,23 @@ public class MapRoadManager {
 		private float[] end_coor = new float[2];
 		private String direction;
 		private float roadWidth;
+		private float length;
 		
 		public MapRoad(float[] s, float[] e, String d, float w) {
 			this.direction = d;
 			this.starting_coor = s;
 			this.end_coor = e;
 			this.roadWidth = w;
+			if (this.direction == Parameters.ROAD_HORIZONTAL) {
+				this.length = Math.abs(this.end_coor[0]-this.starting_coor[0]);
+			}
+			else{
+				this.length = Math.abs(this.end_coor[1]-this.starting_coor[1]);
+			}
+		}
+		
+		public float getLength() {
+			return this.length;
 		}
 		
 		public float getRoadWidth() {
@@ -97,6 +105,41 @@ public class MapRoadManager {
 		}
 	}
 	
+	public float[] projectPointTORoad(MapRoad aMapRoad, float[] point) {
+		float x;
+		float y;
+		if (aMapRoad.direction == Parameters.ROAD_HORIZONTAL) {
+			y = aMapRoad.starting_coor[1];
+			if((point[0]>=aMapRoad.starting_coor[0])&(point[0]<=aMapRoad.end_coor[0])){
+				x = point[0];
+			}
+			else {
+				if (Math.abs(point[0]-aMapRoad.end_coor[0]) < Math.abs(point[0]-aMapRoad.starting_coor[0])){
+					x = aMapRoad.end_coor[0];
+				}
+				else {
+					x = aMapRoad.starting_coor[0];
+				}
+			}
+			
+		}
+		else {
+			x = aMapRoad.starting_coor[0];
+			if((point[1]>=aMapRoad.starting_coor[1])&(point[1]<=aMapRoad.end_coor[1])){
+				y = point[1];
+			}
+			else {
+				if (Math.abs(point[1]-aMapRoad.end_coor[1]) < Math.abs(point[1]-aMapRoad.starting_coor[1])){
+					y = aMapRoad.end_coor[1];
+				}
+				else {
+					y = aMapRoad.starting_coor[1];
+				}
+			}
+		}
+		return new float[] {x,y};
+	}
+	
 	public ArrayList<MapRoad> getAllRoads(){
 		return allRoads;
 	}
@@ -120,8 +163,8 @@ public class MapRoadManager {
 						if ((stop != -1) & (start!=stop)){
 							//register 
 							float centerY = (n-i)*oneBlockWidth -oneBlockWidth/2 + Parameters.MAP_MIN_Y_COOR;
-			  	  			float x1 = start*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_X_COOR;
-			  	  			float x2 = stop*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_X_COOR;
+			  	  			float x1 = start*oneBlockWidth + Parameters.MAP_MIN_X_COOR;
+			  	  			float x2 = (stop)*oneBlockWidth + Parameters.MAP_MIN_X_COOR;
 			  	  			registerNewRoad(x1, x2, centerY, centerY, oneBlockWidth);
 						}
 						start = -1;
@@ -145,8 +188,8 @@ public class MapRoadManager {
 						if ((stop != -1) & (start!=stop)){
 							//register 
 							float centerX = i*oneBlockWidth +oneBlockWidth/2 + Parameters.MAP_MIN_X_COOR;
-			  	  			float y1 = (n-start)*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_Y_COOR;
-			  	  			float y2 = (n-stop)*oneBlockWidth + oneBlockWidth/2 + Parameters.MAP_MIN_Y_COOR;
+			  	  			float y1 = (n-start)*oneBlockWidth + Parameters.MAP_MIN_Y_COOR;
+			  	  			float y2 = (n-stop)*oneBlockWidth + Parameters.MAP_MIN_Y_COOR;
 			  	  			registerNewRoad(centerX, centerX, y1, y2, oneBlockWidth);
 						}
 						start = -1;
