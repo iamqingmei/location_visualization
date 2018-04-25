@@ -501,8 +501,8 @@ public class Location_Visualizer{
 	        comboBox.addItem(obj.getName());
 	      } 
 	   
-		comboBox.addItem("COMTesting1");
-		comboBox.addItem("COMTesting2");
+//		comboBox.addItem("COMTesting1");
+//		comboBox.addItem("COMTesting2");
 		namePanel.add(comboBox);
 	    
 		baudPanel.add(new JLabel("Baud Rate: "), BorderLayout.LINE_START);
