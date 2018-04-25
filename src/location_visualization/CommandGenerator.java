@@ -5,6 +5,7 @@ import java.util.Collections;
 
 
 public class CommandGenerator {
+	// Generate Commante from simmulation panel settings.
 	static Integer CMDcnt = 0;
 	public static String generateCommand(ArrayList<String> s, ArrayList<Boolean> enable) {
 		CMDcnt++;

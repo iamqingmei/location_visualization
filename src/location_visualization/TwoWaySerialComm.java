@@ -14,6 +14,7 @@ import java.util.HashSet;
 
 public class TwoWaySerialComm
 {
+	// this class manages the input and output stream from the serial port 
 	private int baud_rate;
 	private OutputStream out;
 	private InputStream in;

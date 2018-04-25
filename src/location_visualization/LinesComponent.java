@@ -10,9 +10,9 @@ import location_visualization.managers.MapPointManager;
 import param.Parameters;
 
 public class LinesComponent extends JComponent{
-
+	
 	/**
-	 * 
+	 * Draw lines on map
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Color LINE_COLOR = Color.RED;

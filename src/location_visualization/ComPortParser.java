@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -15,6 +16,9 @@ import location_visualization.managers.MapPointManager;
 
 
 public class ComPortParser {
+	// This class parse all the command received 
+	// show the parsed values to the corresponding text field or graph.
+	// save the parsed values
 	private final static Logger LOGGER = Logger.getLogger(ComPortParser.class.getName());
 	private ArrayList<Byte> byteBuffer = new ArrayList<>();
 	private static ComPortParser instance = null;
@@ -491,14 +495,18 @@ public class ComPortParser {
    	}
    	
    	public void save() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+   		// save content and clear buffer
+   		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
         new File("./data/").mkdirs();
-   		try (PrintWriter out = new PrintWriter("./data/" + timestamp+".txt")) {
+   		try (PrintWriter out = new PrintWriter("./data/" + sdf.format(timestamp)+".csv")) {
    		    out.println(saveContent.toString());
+   	   		saveContent.setLength(0);
+   	   		saveContent.append("TYPE,VALUE,TIMESTAMP");
    		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-   		
+
    		
    	}
 }

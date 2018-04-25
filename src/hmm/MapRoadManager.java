@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 import param.Parameters;
 
 public class MapRoadManager {
+	// generate all the MapRoad objects
+	// calculate distance from point to road
+	// project point to road
 	private ArrayList<MapRoad> allRoads;
 	private static MapRoadManager instance = null;
 	private final static Logger LOGGER = Logger.getLogger(MapRoadManager.class.getName());
@@ -50,6 +53,10 @@ public class MapRoadManager {
 		}
 		
 		public float getDistanceFromPointToRoad(float x, float y) {
+			// return the distance from the point to the road
+			// if the point is in the range of the road, 
+			// return the perpendicular distance
+			// else return the shortest euclidean distance from the point to the edge of the road.
 			if (this.direction == Parameters.ROAD_HORIZONTAL) {
 				if ((x<this.end_coor[0]) & (x>this.starting_coor[0])){
 					return Math.abs(y-this.starting_coor[1]);
@@ -106,6 +113,8 @@ public class MapRoadManager {
 	}
 	
 	public float[] projectPointTORoad(MapRoad aMapRoad, float[] point) {
+		// project a point to the road
+		// return the projected coordination
 		float x;
 		float y;
 		if (aMapRoad.direction == Parameters.ROAD_HORIZONTAL) {
@@ -145,6 +154,7 @@ public class MapRoadManager {
 	}
 	
 	public void setAllRoads(int[][] blkMap) {
+		// from blkMap matrix generate roads
 		int n = blkMap.length;
 		float oneBlockWidth = (Parameters.MAP_MAX_X_COOR - Parameters.MAP_MIN_X_COOR) / blkMap.length;// in map coordination
 		

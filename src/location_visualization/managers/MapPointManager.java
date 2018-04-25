@@ -6,9 +6,10 @@ import java.util.logging.Logger;
 import param.Parameters;
 
 public class MapPointManager {
+	// This class manages all the map points
 	public class MapPoint {
-		private float x;
-		private float y;
+		private float x; // coordination
+		private float y; // coordination
 		
 		public MapPoint(float theX, float theY) {
 			this.x = theX;
@@ -57,6 +58,7 @@ public class MapPointManager {
    }
    
    public ArrayList<Integer> getMapCoordination(float x, float y) {
+	   // convert coordination to pixel in map
 		ArrayList<Integer> res = new ArrayList<Integer>();
 //		x = (x - start_coor) / scale;
 //		y = (y - start_coor) / scale;
